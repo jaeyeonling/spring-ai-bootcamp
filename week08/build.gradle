@@ -1,0 +1,6 @@
+// Week 08: Multi-Agent workflow patterns (Chain, Routing, Orchestrator-Worker)
+// Note: No vector store needed — this week uses only LLM chat for agent workflows
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+}

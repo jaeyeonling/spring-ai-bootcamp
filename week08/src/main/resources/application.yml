@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: week08-multi-agent
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.2
+
+# 워크플로우 설정
+workflow:
+  # 선택 가능: "chain", "orchestrator"
+  pattern: orchestrator
+  timeout-seconds: 60

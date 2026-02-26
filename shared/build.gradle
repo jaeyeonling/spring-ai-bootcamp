@@ -1,0 +1,9 @@
+// shared: common utilities, domain objects, test helpers
+// No Spring Boot executable jar — this is a library module
+bootJar.enabled = false
+jar.enabled = true
+
+dependencies {
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+}

@@ -1,0 +1,28 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"   # REST API + Dashboard (http://localhost:6333/dashboard)
+      - "6334:6334"   # gRPC (used by Spring AI for performance)
+    volumes:
+      - qdrant-data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+
+  # week03-app은 로컬 빌드를 사용합니다.
+  # 먼저 Dockerfile이 필요합니다. 없다면 Qdrant만 실행하고 앱은 로컬에서 실행하세요:
+  #   docker compose up -d qdrant
+  #   ./gradlew :week03:bootRun
+  week03-app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      SPRING_AI_VECTORSTORE_QDRANT_HOST: qdrant
+      SPRING_AI_VECTORSTORE_QDRANT_PORT: 6334
+    depends_on:
+      - qdrant
+
+volumes:
+  qdrant-data:

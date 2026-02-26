@@ -1,0 +1,7 @@
+// Week 04: Advanced RAG — ReRanker, Query Transformation, Strategy pattern
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+    implementation 'org.springframework.ai:spring-ai-tika-document-reader'
+}

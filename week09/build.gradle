@@ -1,0 +1,7 @@
+// Week 09: MCP (Model Context Protocol) server with Spring Boot Starter
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+    implementation 'org.springframework.ai:spring-ai-starter-mcp-server'
+}

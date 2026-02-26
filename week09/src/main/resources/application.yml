@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: week09-mcp-server
+  # MCP STDIO 모드 사용 시 웹 서버를 비활성화해야 합니다.
+  # SSE 모드를 사용하려면 아래 줄을 제거하고 spring.ai.mcp.server.transport를 설정하세요.
+  main:
+    web-application-type: none
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.1
+      embedding:
+        options:
+          model: text-embedding-3-small
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+        collection-name: week09-faq
+        initialize-schema: true
+    mcp:
+      server:
+        name: week09-ai-tools
+        version: 1.0.0
+
+# FAQ 문서 경로
+faq:
+  file-path: ../data/faq.md

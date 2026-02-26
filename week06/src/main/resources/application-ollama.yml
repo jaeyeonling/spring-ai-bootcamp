@@ -1,0 +1,26 @@
+# Ollama profile — activated with: --spring.profiles.active=ollama
+# Switches the entire AI backend to local Ollama inference.
+# No external API calls. No API keys needed.
+
+spring:
+  ai:
+    openai:
+      # Disable OpenAI auto-configuration when using Ollama
+      # spring.ai.openai.enabled is not a valid Spring AI 1.1.2 property.
+      # Instead, set a dummy API key to prevent startup failure.
+      api-key: ${OPENAI_API_KEY:unused}
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: llama3.2
+          temperature: 0.1
+          num-predict: 512
+      embedding:
+        options:
+          model: nomic-embed-text
+
+# To run Ollama locally:
+#   docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+#   docker exec -it ollama ollama pull llama3.2
+#   docker exec -it ollama ollama pull nomic-embed-text

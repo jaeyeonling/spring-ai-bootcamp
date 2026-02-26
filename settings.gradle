@@ -1,0 +1,13 @@
+rootProject.name = 'spring-ai-bootcamp'
+
+include 'shared'
+include 'week01'
+include 'week02'
+include 'week03'
+include 'week04'
+include 'week05'
+include 'week06'
+include 'week07'
+include 'week08'
+include 'week09'
+include 'week10'
