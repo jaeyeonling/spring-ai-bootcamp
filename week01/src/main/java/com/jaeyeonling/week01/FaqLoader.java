@@ -22,10 +22,15 @@ public class FaqLoader {
      * FAQ 파일을 읽어 전체 내용을 반환합니다.
      */
     public String loadDocument(String filePath) {
-        // TODO: 파일을 읽어 문자열로 반환하세요.
-        //   파일이 존재하지 않는 경우를 처리하세요 (명확한 에러 발생).
-
-        throw new UnsupportedOperationException("구현하세요");
+        try {
+            Path path = Path.of(filePath);
+            if (!Files.exists(path)) {
+                throw new IllegalArgumentException("FAQ 파일을 찾을 수 없습니다: " + filePath);
+            }
+            return Files.readString(path);
+        } catch (IOException e) {
+            throw new RuntimeException("FAQ 파일 읽기 실패: " + filePath, e);
+        }
     }
 
     /**
@@ -38,12 +43,11 @@ public class FaqLoader {
      * @return 텍스트 청크 목록, 각 청크는 하나의 Q&A 섹션을 포함
      */
     public List<String> splitIntoChunks(String content) {
-        // TODO: 내용을 의미 있는 청크로 분할하세요.
-        //   단순 방법: "### "로 분할 (각 Q&A 섹션)
-        //   빈 청크는 필터링.
-        //   더 나은 컨텍스트를 위해 상위 섹션 헤더 (## 배송, ## 반품 등)를
-        //   포함하는 것도 좋습니다 — 하지만 1주차에서는 선택 사항입니다.
-
-        throw new UnsupportedOperationException("구현하세요");
+        // "### "를 구분자로 분할 — 각 Q&A 섹션을 하나의 청크로 만든다.
+        // split()이 구분자를 버리므로, 분할 후 "### "를 다시 붙여서 헤더를 보존한다.
+        return Arrays.stream(content.split("(?=### )"))
+                .map(String::trim)
+                .filter(chunk -> !chunk.isBlank())
+                .toList();
     }
 }

@@ -10,6 +10,8 @@ package com.jaeyeonling.week01;
  * 4. 토큰 사용량과 함께 답변을 반환합니다
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ChatController {
 
+    private static final Logger log = LoggerFactory.getLogger(ChatController.class);
+
     private final ChatService chatService;
 
     public ChatController(ChatService chatService) {
@@ -28,11 +32,22 @@ public class ChatController {
 
     @PostMapping("/chat")
     public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
-        // TODO: 요청 검증 (question이 비어있으면 안 됨)
-        // TODO: chatService.answer()를 호출하고 결과를 반환
-        // TODO: 에러를 우아하게 처리 (스택 트레이스가 아닌 500 메시지 반환)
+        log.info("[요청] POST /api/chat — question: \"{}\"", request.question());
 
-        throw new UnsupportedOperationException("구현하세요 — mission/MISSION.md 참고");
+        // 요청 검증: question이 null이거나 공백이면 400 Bad Request
+        if (request.question() == null || request.question().isBlank()) {
+            log.warn("[요청 거부] 빈 질문 → 400 Bad Request");
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            ChatResponse response = chatService.answer(request.question());
+            log.info("[응답] 200 OK — answer 길이: {} 글자, 토큰: {}", response.answer().length(), response.tokenUsage().totalTokens());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("[응답] 500 Internal Server Error — {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     public record ChatRequest(String question) {}

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -35,6 +36,7 @@ class ChatControllerTest {
                 .content("""
                     {"question": "환불은 어떻게 받나요?"}
                     """))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.answer").isNotEmpty())
             .andExpect(jsonPath("$.answer").isString());
@@ -48,6 +50,7 @@ class ChatControllerTest {
                 .content("""
                     {"question": "어떤 결제 방법을 지원하나요?"}
                     """))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.tokenUsage").exists())
             .andExpect(jsonPath("$.tokenUsage.totalTokens").isNumber());
@@ -61,6 +64,7 @@ class ChatControllerTest {
                 .content("""
                     {"question": "반품 정책이 어떻게 되나요?"}
                     """))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.answer").isNotEmpty())
             // 답변이 사소하지 않아야 합니다 (20자 이상)
@@ -77,6 +81,7 @@ class ChatControllerTest {
                 .content("""
                     {"question": ""}
                     """))
+            .andDo(print())
             .andExpect(status().isBadRequest());
     }
 }

@@ -1,32 +1,72 @@
 package com.jaeyeonling.week01;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * FAQ 문서를 사용해 질문에 답하는 핵심 서비스.
  *
- * 여러분이 할 일:
- * 1. FAQ 문서를 로드하고 청크로 분할합니다
- * 2. 각 청크를 벡터로 임베딩합니다
- * 3. 질문이 들어오면 가장 관련 있는 청크를 찾습니다
- * 4. 해당 청크를 컨텍스트로 프롬프트를 구성합니다
- * 5. LLM을 호출하고 토큰 사용량과 함께 답변을 반환합니다
- *
- * 원하는 방식으로 접근할 수 있습니다. 가장 단순한 방법
- * (전체 FAQ를 프롬프트에 넣기)은 지금은 동작하지만
- * 곧 한계에 부딪힐 겁니다. 그때 hints/ 폴더를 확인하세요.
+ * RAG (Retrieval-Augmented Generation) 흐름:
+ *   1. 앱 시작 시 FAQ 문서를 청크로 분할하고 각 청크를 임베딩 → InMemoryVectorStore에 저장
+ *   2. 질문이 들어오면 질문도 임베딩 → 코사인 유사도로 관련 청크 검색
+ *   3. 검색된 청크를 컨텍스트로 프롬프트 구성 → LLM 호출
+ *   4. 토큰 사용량과 함께 답변 반환
  */
 @Service
 public class ChatService {
 
+    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
+
     private final ChatClient chatClient;
     private final EmbeddingModel embeddingModel;
+    private final InMemoryVectorStore vectorStore;
+    private final FaqLoader faqLoader;
 
-    public ChatService(ChatClient.Builder chatClientBuilder, EmbeddingModel embeddingModel) {
+    @Value("${faq.file-path}")
+    private String faqFilePath;
+
+    // 검색할 청크 수 — 적을수록 토큰 절감, 많을수록 정확도 향상
+    private static final int TOP_K = 3;
+
+    public ChatService(ChatClient.Builder chatClientBuilder,
+                       EmbeddingModel embeddingModel,
+                       InMemoryVectorStore vectorStore,
+                       FaqLoader faqLoader) {
         this.chatClient = chatClientBuilder.build();
         this.embeddingModel = embeddingModel;
+        this.vectorStore = vectorStore;
+        this.faqLoader = faqLoader;
+    }
+
+    /**
+     * 앱 시작 시 FAQ를 로드하고 벡터 스토어를 초기화합니다.
+     * @PostConstruct 대신 첫 요청 시 lazy 초기화로 처리.
+     */
+    private synchronized void ensureInitialized() {
+        if (vectorStore.size() == 0) {
+            log.info("=== 벡터 스토어 초기화 시작 ===");
+
+            String document = faqLoader.loadDocument(faqFilePath);
+            log.info("[로드] FAQ 파일: {}, 문서 길이: {} 글자", faqFilePath, document.length());
+
+            List<String> chunks = faqLoader.splitIntoChunks(document);
+            log.info("[청킹] {} 개의 청크로 분할", chunks.size());
+            for (int i = 0; i < chunks.size(); i++) {
+                log.debug("[청킹] 청크[{}]: {}...", i, chunks.get(i).substring(0, Math.min(80, chunks.get(i).length())).replace("\n", " "));
+            }
+
+            vectorStore.addAll(chunks, embeddingModel);
+            log.info("[임베딩] {} 개의 청크를 벡터로 변환하여 저장 완료", chunks.size());
+            log.info("=== 벡터 스토어 초기화 완료 ===");
+        }
     }
 
     /**
@@ -36,23 +76,61 @@ public class ChatService {
      * @return 답변과 토큰 사용량이 포함된 ChatController.ChatResponse
      */
     public ChatController.ChatResponse answer(String question) {
-        // TODO: 1단계 — FAQ 문서 로드 (힌트: FaqLoader 참고)
-        //   FAQ 파일을 어떻게 찾나요? 프로젝트 루트 기준 ../data/faq.md에 있습니다.
-        //   application.yml로 경로를 설정 가능하게 만들 수도 있습니다.
+        ensureInitialized();
 
-        // TODO: 2단계 — FAQ의 관련 섹션 찾기
-        //   옵션 A (단순): 전체 문서를 컨텍스트로 사용.
-        //   옵션 B (개선): 청크로 분할, 임베딩, 유사도로 검색.
-        //   A로 시작하세요. 토큰 비용을 보면 B를 원하게 됩니다.
+        log.info("=== RAG 파이프라인 시작 ===");
+        log.info("[질문] {}", question);
 
-        // TODO: 3단계 — 컨텍스트로 프롬프트 구성 후 LLM 호출
-        //   chatClient.prompt().system(...).user(...).call() 사용
-        //   시스템 프롬프트는 LLM이 제공된 컨텍스트에만 기반해 답하도록 지시해야 합니다.
+        // 1단계: 질문을 임베딩 → 관련 청크 검색 (RAG의 R)
+        float[] queryVector = embeddingModel.embed(question);
+        log.info("[R: 임베딩] 질문 → {}차원 벡터 (앞 5개: {})", queryVector.length,
+                Arrays.toString(Arrays.copyOf(queryVector, Math.min(5, queryVector.length))));
 
-        // TODO: 4단계 — 응답에서 토큰 사용량 추출
-        //   전체 응답(메타데이터 포함)을 얻으려면 .call().content() 대신
-        //   .call().chatResponse()를 사용하세요.
+        List<String> relevantChunks = vectorStore.search(queryVector, TOP_K);
+        log.info("[R: 검색] top-{} 청크 검색 완료", relevantChunks.size());
+        for (int i = 0; i < relevantChunks.size(); i++) {
+            String chunk = relevantChunks.get(i);
+            log.info("[R: 검색] #{}: {}...", i + 1, chunk.substring(0, Math.min(100, chunk.length())).replace("\n", " "));
+        }
 
-        throw new UnsupportedOperationException("구현하세요 — 작동하는 가장 단순한 방법부터 시작하세요");
+        String context = String.join("\n\n---\n\n", relevantChunks);
+
+        // 2단계: 검색된 컨텍스트로 프롬프트 구성 → LLM 호출 (RAG의 G)
+        String systemPrompt = """
+                당신은 초록 코퍼레이션의 고객지원 도우미입니다.
+                아래 FAQ 내용만을 기반으로 질문에 답하세요.
+                FAQ에 없는 내용은 "해당 내용은 FAQ에서 찾을 수 없습니다"라고 답하세요.
+                
+                FAQ 내용:
+                """ + context;
+
+        log.info("[A: 증강] 시스템 프롬프트 구성 완료 (길이: {} 글자, 컨텍스트에 {} 개 청크 포함)", systemPrompt.length(), relevantChunks.size());
+        log.debug("[A: 증강] 시스템 프롬프트 전문:\n{}", systemPrompt);
+
+        log.info("[G: 생성] LLM 호출 시작...");
+        ChatResponse chatResponse = chatClient.prompt()
+                .system(systemPrompt)
+                .user(question)
+                .call()
+                .chatResponse();
+
+        String answer = chatResponse.getResult().getOutput().getText();
+        log.info("[G: 생성] LLM 응답 수신 (길이: {} 글자)", answer.length());
+        log.info("[G: 생성] 답변: {}", answer);
+
+        // 3단계: 토큰 사용량 추출
+        var usage = chatResponse.getMetadata().getUsage();
+        log.info("[비용] 토큰 사용량 — 프롬프트: {}, 완성: {}, 합계: {}",
+                usage.getPromptTokens(), usage.getCompletionTokens(), usage.getTotalTokens());
+        log.info("=== RAG 파이프라인 완료 ===");
+
+        return new ChatController.ChatResponse(
+                answer,
+                new ChatController.TokenUsage(
+                        usage.getPromptTokens().intValue(),
+                        usage.getCompletionTokens().intValue(),
+                        usage.getTotalTokens().intValue()
+                )
+        );
     }
 }

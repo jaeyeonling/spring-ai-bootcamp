@@ -26,11 +26,12 @@ public class InMemoryVectorStore {
      * FAQ를 로드한 후 시작 시 한 번 호출하세요.
      */
     public void addAll(List<String> texts, EmbeddingModel embeddingModel) {
-        // TODO: 각 텍스트에 대해 embeddingModel.embed(text)를 사용해 임베딩 벡터를 생성하고
-        //   EmbeddedChunk로 저장하세요.
-        //   힌트: embeddingModel.embed(text)는 float[]를 반환합니다
-
-        throw new UnsupportedOperationException("구현하세요");
+        // embeddingModel.embed(text) → float[] 벡터 반환
+        // 각 청크를 EmbeddedChunk(text, vector) 로 래핑해서 store에 추가
+        for (String text : texts) {
+            float[] vector = embeddingModel.embed(text);
+            store.add(new EmbeddedChunk(text, vector));
+        }
     }
 
     /**
@@ -41,24 +42,41 @@ public class InMemoryVectorStore {
      * @return 유사도 순으로 정렬된 (높은 것 먼저) 가장 유사한 청크들의 텍스트
      */
     public List<String> search(float[] queryVector, int topK) {
-        // TODO: 저장된 각 청크에 대해 queryVector와의 코사인 유사도를 계산하세요.
-        //   유사도 내림차순으로 정렬. 상위 K개 텍스트를 반환.
-        //   아래 cosineSimilarity()를 참고하세요.
-
-        throw new UnsupportedOperationException("구현하세요");
+        // 모든 청크에 대해 유사도를 계산하고, 내림차순 정렬 후 상위 topK개 텍스트만 반환
+        return store.stream()
+                .sorted((a, b) -> Double.compare(
+                        cosineSimilarity(b.vector(), queryVector),
+                        cosineSimilarity(a.vector(), queryVector)))
+                .limit(topK)
+                .map(EmbeddedChunk::text)
+                .toList();
     }
 
     /**
      * 두 벡터의 코사인 유사도.
      * -1과 1 사이의 값을 반환합니다. 높을수록 더 유사합니다.
+     *
+     * 공식: dot(a, b) / (|a| * |b|)
+     *   dot(a, b)  = Σ a[i] * b[i]         — 내적 (두 벡터가 같은 방향일수록 큰 값)
+     *   |v|        = √(Σ v[i]²)            — L2 놈 (벡터의 크기)
      */
     public static double cosineSimilarity(float[] a, float[] b) {
-        // TODO: 코사인 유사도를 구현하세요.
-        //   공식: dot(a, b) / (magnitude(a) * magnitude(b))
-        //   여기서 dot(a,b) = sum(a[i] * b[i])
-        //   magnitude(x) = sqrt(sum(x[i] * x[i]))
+        double dot = 0.0;
+        double normA = 0.0;
+        double normB = 0.0;
 
-        throw new UnsupportedOperationException("구현하세요");
+        for (int i = 0; i < a.length; i++) {
+            dot   += (double) a[i] * b[i];
+            normA += (double) a[i] * a[i];
+            normB += (double) b[i] * b[i];
+        }
+
+        // 영벡터(모든 값이 0)에 대한 안전 처리
+        if (normA == 0.0 || normB == 0.0) {
+            return 0.0;
+        }
+
+        return dot / (Math.sqrt(normA) * Math.sqrt(normB));
     }
 
     public int size() {

@@ -1,3 +1,5 @@
+logging.level.com.jaeyeonling: DEBUG
+
 spring:
   application:
     name: week01-faq-chatbot
