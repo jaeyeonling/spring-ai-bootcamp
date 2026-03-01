@@ -3,6 +3,8 @@ package com.jaeyeonling.week02;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.evaluation.EvaluationRequest;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +29,8 @@ import java.util.List;
  */
 @Component
 public class EvaluationRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(EvaluationRunner.class);
 
     private final ChatService chatService;
     private final RelevancyEvaluator evaluator;
@@ -47,11 +52,7 @@ public class EvaluationRunner {
      * @return 예상 답변이 포함된 테스트 질문 목록
      */
     public List<TestQuestion> loadTestQuestions(String filePath) throws IOException {
-        // TODO: Jackson ObjectMapper를 사용해 JSON 파일을 역직렬화하세요.
-        //   파일은 "question"과 "expected_answer" 필드를 가진 객체의 JSON 배열입니다.
-        //   objectMapper.readValue(new File(filePath), new TypeReference<List<TestQuestion>>() {}) 사용
-
-        throw new UnsupportedOperationException("구현하세요");
+        return objectMapper.readValue(new File(filePath), new TypeReference<>() {});
     }
 
     /**
@@ -60,44 +61,81 @@ public class EvaluationRunner {
      * @param testQuestions 평가할 질문들
      */
     public EvaluationReport runEvaluation(List<TestQuestion> testQuestions) {
-        // TODO: 각 테스트 질문에 대해:
-        //   1. chatService.answerQuestion(tq.question())을 호출해 챗봇의 답변 가져오기
-        //   2. 다음으로 EvaluationRequest 구성:
-        //      - 질문 (사용자 쿼리)
-        //      - Document로 래핑된 예상 답변 (평가기를 위한 컨텍스트)
-        //      - 실제 답변 (생성된 응답)
-        //   3. evaluator.evaluate(request)를 호출해 EvaluationResponse 얻기
-        //   4. response.isPass()로 답변의 관련성 여부 확인
-        //   5. 통과/실패 수 추적
-        //   6. 실패한 질문을 세부 정보와 함께 로그에 기록 (예상 vs 실제, 피드백)
-        //
-        //   모든 질문 처리 후 정확도를 계산하고 EvaluationReport를 반환하세요.
+        int passed = 0;
+        int failed = 0;
+        List<FailedQuestion> failures = new ArrayList<>();
 
-        throw new UnsupportedOperationException("구현하세요");
+        for (int i = 0; i < testQuestions.size(); i++) {
+            TestQuestion tq = testQuestions.get(i);
+            log.info("[평가 {}/{}] Q: {}", i + 1, testQuestions.size(), tq.question());
+
+            try {
+                // 1. 챗봇 답변 가져오기
+                String actualAnswer = chatService.answerQuestion(tq.question());
+                log.info("[평가 {}/{}] A: {}", i + 1, testQuestions.size(),
+                        actualAnswer.substring(0, Math.min(100, actualAnswer.length())));
+
+                // 2. EvaluationRequest 구성
+                // - 기대 답변을 Document로 래핑 (평가기의 컨텍스트 역할)
+                // - 실제 답변과 질문을 함께 전달
+                EvaluationRequest request = new EvaluationRequest(
+                        tq.question(),
+                        List.of(new Document(tq.expectedAnswer())),
+                        actualAnswer
+                );
+
+                // 3. 관련성 평가
+                EvaluationResponse response = evaluator.evaluate(request);
+                boolean isPass = response.isPass();
+
+                if (isPass) {
+                    passed++;
+                    log.info("[평가 {}/{}] → PASS", i + 1, testQuestions.size());
+                } else {
+                    failed++;
+                    String feedback = response.getScore() != 0
+                            ? "Score: " + response.getScore()
+                            : "Not relevant";
+                    failures.add(new FailedQuestion(
+                            tq.question(), tq.expectedAnswer(), actualAnswer, feedback));
+                    log.warn("[평가 {}/{}] → FAIL | Expected: {}...", i + 1, testQuestions.size(),
+                            tq.expectedAnswer().substring(0, Math.min(80, tq.expectedAnswer().length())));
+                }
+            } catch (Exception e) {
+                failed++;
+                failures.add(new FailedQuestion(
+                        tq.question(), tq.expectedAnswer(), "ERROR: " + e.getMessage(), e.getClass().getSimpleName()));
+                log.error("[평가 {}/{}] → ERROR: {}", i + 1, testQuestions.size(), e.getMessage());
+            }
+        }
+
+        int total = testQuestions.size();
+        double accuracy = total > 0 ? (double) passed / total * 100.0 : 0.0;
+
+        return new EvaluationReport(total, passed, failed, accuracy, failures);
     }
 
     /**
      * 형식화된 평가 보고서를 콘솔에 출력합니다.
      */
     public void printReport(EvaluationReport report) {
-        // TODO: 다음을 보여주는 명확한 요약을 출력하세요:
-        //   - 총 질문 수
-        //   - 통과 수
-        //   - 실패 수
-        //   - 정확도 백분율
-        //   - 세부 정보가 포함된 실패 질문 목록
-        //
-        //   출력 예시:
-        //   === 평가 보고서 ===
-        //   총계: 30 | 통과: 22 | 실패: 8 | 정확도: 73.3%
-        //
-        //   실패:
-        //     Q: "일본으로 배송이 가능한가요?"
-        //     예상: "현재 불가합니다. 해외 배송..."
-        //     실제: "표준 및 익스프레스 배송을 제공합니다..."
-        //     피드백: 답변이 해외 배송을 다루지 않습니다...
+        System.out.println();
+        System.out.println("=== 평가 보고서 ===");
+        System.out.printf("총계: %d | 통과: %d | 실패: %d | 정확도: %.1f%%%n",
+                report.total(), report.passed(), report.failed(), report.accuracy());
 
-        throw new UnsupportedOperationException("구현하세요");
+        if (!report.failures().isEmpty()) {
+            System.out.println();
+            System.out.println("실패 목록:");
+            for (FailedQuestion fq : report.failures()) {
+                System.out.println("  ─────────────────────────────────");
+                System.out.printf("  Q: %s%n", fq.question());
+                System.out.printf("  Expected: %s%n", fq.expectedAnswer());
+                System.out.printf("  Actual:   %s%n", fq.actualAnswer());
+                System.out.printf("  Feedback: %s%n", fq.feedback());
+            }
+        }
+        System.out.println();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.jaeyeonling.week02;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,13 +17,13 @@ public class MarkdownHeaderChunker implements ChunkingStrategy {
 
     @Override
     public List<String> split(String content) {
-        // TODO: "###" 헤더로 내용을 분할하세요.
-        //   각 청크는 하나의 Q&A 섹션(헤더 + 본문)이어야 합니다.
-        //   빈 청크는 필터링하세요.
-        //
-        //   힌트: "(?=### )"와 같은 정규식으로 구분자를 유지하면서 분할하세요.
-        //   참고: 1주차 FaqLoader.splitIntoChunks()
+        if (content == null || content.isBlank()) {
+            return List.of();
+        }
 
-        throw new UnsupportedOperationException("구현하세요");
+        return Arrays.stream(content.split("(?=### )"))
+                .map(String::trim)
+                .filter(chunk -> !chunk.isBlank())
+                .toList();
     }
 }
