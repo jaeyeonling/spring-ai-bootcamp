@@ -1,5 +1,6 @@
 package com.jaeyeonling.week02;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,8 +15,7 @@ import java.util.List;
  *   청크 2: [D E F G H]     ← 청크 1과 D, E를 공유
  *   청크 3: [G H I J K]     ← 청크 2와 G, H를 공유
  *
- * Spring AI는 이 개념을 구현한 TokenTextSplitter를 제공합니다.
- * 직접 사용하거나 로직을 직접 구현할 수 있습니다.
+ * 단어를 토큰의 대략적인 대체로 사용합니다.
  */
 public class TokenWindowChunker implements ChunkingStrategy {
 
@@ -33,23 +33,42 @@ public class TokenWindowChunker implements ChunkingStrategy {
 
     @Override
     public List<String> split(String content) {
-        // TODO: 내용을 `chunkSize` 토큰 정도의 겹치는 창으로 분할하세요.
-        //
-        //   옵션 A — Spring AI의 TokenTextSplitter 사용:
-        //     import org.springframework.ai.transformer.splitter.TokenTextSplitter;
-        //     TokenTextSplitter splitter = new TokenTextSplitter(chunkSize, ...);
-        //     List<Document> docs = splitter.apply(List.of(new Document(content)));
-        //     return docs.stream().map(Document::getText).toList();
-        //
-        //   옵션 B — 직접 구현:
-        //     1. 내용을 단어로 분할 (토큰의 대략적인 대체)
-        //     2. `chunkSize` 단어의 청크 생성
-        //     3. 각 새 청크는 이전 청크보다 `chunkSize - overlap` 단어 뒤에서 시작
-        //     4. 빈 청크 필터링
-        //
-        //   어느 방법이든 괜찮습니다. 핵심은 오버랩이 왜 도움이 되는지 이해하는 것입니다.
+        if (content == null || content.isBlank()) {
+            return List.of();
+        }
 
-        throw new UnsupportedOperationException("구현하세요");
+        String[] words = content.split("\\s+");
+        if (words.length <= chunkSize) {
+            return List.of(content.trim());
+        }
+
+        List<String> chunks = new ArrayList<>();
+        int step = chunkSize - overlap;
+        int start = 0;
+
+        while (start < words.length) {
+            int end = Math.min(start + chunkSize, words.length);
+            String chunk = joinWords(words, start, end);
+
+            if (!chunk.isBlank()) {
+                chunks.add(chunk);
+            }
+
+            start += step;
+        }
+
+        return chunks;
+    }
+
+    private String joinWords(String[] words, int from, int to) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = from; i < to; i++) {
+            if (i > from) {
+                sb.append(" ");
+            }
+            sb.append(words[i]);
+        }
+        return sb.toString();
     }
 
     public int getChunkSize() {
