@@ -13,8 +13,8 @@ public class Week02Application {
 
     @Bean
     public ChunkingStrategy chunkingStrategy() {
-        // TokenWindowChunker: 고정 크기 슬라이딩 윈도우 + 오버랩
-        // chunkSize=100 단어, overlap=20 단어
-        return new TokenWindowChunker(100, 20);
+        // 실험 6: MarkdownHeaderChunker 복원 + 프롬프트 개선 (Few-shot + CoT)
+        // 실험 4 대비 프롬프트만 변경하는 대조 실험
+        return new MarkdownHeaderChunker();
     }
 }
