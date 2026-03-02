@@ -13,8 +13,8 @@ public class Week02Application {
 
     @Bean
     public ChunkingStrategy chunkingStrategy() {
-        // 기준선: Week 01과 동일한 ### 분할
-        // TokenWindowChunker로 교체하여 비교 가능
-        return new MarkdownHeaderChunker();
+        // TokenWindowChunker: 고정 크기 슬라이딩 윈도우 + 오버랩
+        // chunkSize=100 단어, overlap=20 단어
+        return new TokenWindowChunker(100, 20);
     }
 }
