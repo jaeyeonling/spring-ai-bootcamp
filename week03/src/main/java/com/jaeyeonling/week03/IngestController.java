@@ -28,12 +28,24 @@ public class IngestController {
 
     @PostMapping(value = "/ingest", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<IngestResponse> ingest(@RequestParam("file") MultipartFile file) {
-        // TODO: 파일 검증 (비어있으면 안 됨, 지원 형식 확인)
-        // TODO: ingestionService.ingest(file)을 호출해 ETL 파이프라인 실행
-        // TODO: 파일명과 청크 수 반환
-        // TODO: 에러를 우아하게 처리 (스택 트레이스가 아닌 500 메시지 반환)
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        throw new UnsupportedOperationException("구현하세요 — mission/MISSION.md 참고");
+        try {
+            int chunks = ingestionService.ingest(file);
+            return ResponseEntity.ok(new IngestResponse(
+                    file.getOriginalFilename(),
+                    chunks,
+                    "성공적으로 인제스트되었습니다"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(new IngestResponse(
+                    file.getOriginalFilename(),
+                    0,
+                    "인제스트 실패: " + e.getMessage()
+            ));
+        }
     }
 
     public record IngestResponse(

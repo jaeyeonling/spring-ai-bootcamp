@@ -39,24 +39,27 @@ public class IngestionService {
      * @return 생성되어 저장된 청크 수
      */
     public int ingest(MultipartFile file) throws IOException {
-        // TODO: 1단계 — TikaDocumentReader를 사용해 파일 읽기
-        //   MultipartFile 바이트에서 Resource를 생성하세요.
-        //   ByteArrayResource를 사용하고 원본 파일명을 보존하기 위해 getFilename()을 오버라이드하세요.
-        //   그런 다음: new TikaDocumentReader(resource).get()
+        // 1단계 — TikaDocumentReader를 사용해 파일 읽기
+        Resource resource = new ByteArrayResource(file.getBytes()) {
+            @Override
+            public String getFilename() {
+                return file.getOriginalFilename();
+            }
+        };
+        List<Document> rawDocuments = new TikaDocumentReader(resource).get();
 
-        // TODO: 2단계 — TokenTextSplitter를 사용해 청크로 분할
-        //   TokenTextSplitter 생성 (기본값 사용 가능: 청크당 ~800 토큰).
-        //   원시 문서에 적용: splitter.apply(rawDocuments)
+        // 2단계 — TokenTextSplitter를 사용해 청크로 분할
+        TokenTextSplitter splitter = new TokenTextSplitter();
+        List<Document> chunks = splitter.apply(rawDocuments);
 
-        // TODO: 3단계 — 각 청크에 메타데이터 추가
-        //   결과를 역추적할 수 있도록 "source"를 원본 파일명으로 설정하세요.
-        //   chunk.getMetadata().put("source", file.getOriginalFilename())
+        // 3단계 — 각 청크에 메타데이터 추가
+        for (Document chunk : chunks) {
+            chunk.getMetadata().put("source", file.getOriginalFilename());
+        }
 
-        // TODO: 4단계 — VectorStore를 통해 Qdrant에 저장
-        //   vectorStore.add(chunks) — 임베딩과 저장을 한 번에 처리합니다.
+        // 4단계 — VectorStore를 통해 Qdrant에 저장
+        vectorStore.add(chunks);
 
-        // TODO: 생성된 청크 수 반환
-
-        throw new UnsupportedOperationException("구현하세요 — hints/HINT_02.md 참고");
+        return chunks.size();
     }
 }

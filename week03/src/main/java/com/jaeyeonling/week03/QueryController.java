@@ -32,51 +32,52 @@ public class QueryController {
 
     public QueryController(ChatClient.Builder chatClientBuilder, VectorStore vectorStore) {
         this.vectorStore = vectorStore;
-
-        // TODO: RAG를 위한 기본 시스템 프롬프트로 ChatClient를 빌드하세요.
-        //   Spring AI 1.1.2에서는 chatClientBuilder.defaultSystem(...)을 사용해
-        //   시스템 프롬프트를 설정하세요. 실제 컨텍스트 주입은 아래
-        //   query 메서드에서 수동으로 처리합니다.
-        //   자세한 내용은 hints/HINT_03.md를 참고하세요.
-
         this.chatClient = chatClientBuilder.build();
     }
 
     @PostMapping("/query")
     public ResponseEntity<QueryResponse> query(@RequestBody QueryRequest request) {
-        // TODO: 요청 검증 (question이 비어있으면 안 됨)
+        if (request.question() == null || request.question().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        // TODO: 먼저 vectorStore에서 관련 컨텍스트 문서를 검색하세요.
-        //   List<Document> sources = vectorStore.similaritySearch(
-        //       SearchRequest.builder().query(request.question()).topK(5).build()
-        //   );
+        // 1. VectorStore에서 관련 컨텍스트 문서 검색
+        List<Document> sources = vectorStore.similaritySearch(
+                SearchRequest.builder().query(request.question()).topK(5).build()
+        );
 
-        // TODO: 검색된 문서에서 컨텍스트 문자열을 구성하세요.
-        //   String context = sources.stream()
-        //       .map(Document::getText)
-        //       .collect(java.util.stream.Collectors.joining("\n\n"));
+        // 2. 검색된 문서에서 컨텍스트 문자열 구성
+        String context = sources.stream()
+                .map(Document::getText)
+                .collect(java.util.stream.Collectors.joining("\n\n"));
 
-        // TODO: 시스템 프롬프트에 컨텍스트를 주입하여 chatClient를 호출하세요.
-        //   ChatResponse response = chatClient.prompt()
-        //       .system("다음 컨텍스트만을 사용하여 질문에 답하세요:\n\n" + context)
-        //       .user(request.question())
-        //       .call()
-        //       .chatResponse();
+        // 3. 시스템 프롬프트에 컨텍스트를 주입하여 ChatClient 호출
+        ChatResponse response = chatClient.prompt()
+                .system("다음 컨텍스트만을 사용하여 질문에 답하세요. " +
+                        "컨텍스트에 답이 없으면 '해당 내용은 FAQ에서 찾을 수 없습니다'라고 답하세요. " +
+                        "질문과 동일한 언어로 답변하세요.\n\n" + context)
+                .user(request.question())
+                .call()
+                .chatResponse();
 
-        // TODO: ChatResponse에서 답변 텍스트 추출
-        //   response.getResult().getOutput().getText()
+        // 4. 답변 텍스트 추출
+        String answer = response.getResult().getOutput().getText();
 
-        // TODO: ChatResponse에서 토큰 사용량 추출
-        //   response.getMetadata().getUsage()
+        // 5. 토큰 사용량 추출
+        var usage = response.getMetadata().getUsage();
+        TokenUsage tokenUsage = new TokenUsage(
+                usage.getPromptTokens(),
+                usage.getCompletionTokens(),
+                usage.getTotalTokens()
+        );
 
-        // TODO: 각 소스 Document의 메타데이터 "source" 필드를 소스 레이블로 변환하세요.
-        //   sources.stream()
-        //       .map(doc -> (String) doc.getMetadata().getOrDefault("source", "unknown"))
-        //       .distinct().toList()
+        // 6. 소스 목록 추출
+        List<String> sourceLabels = sources.stream()
+                .map(doc -> (String) doc.getMetadata().getOrDefault("source", "unknown"))
+                .distinct()
+                .toList();
 
-        // TODO: 답변, 소스, 토큰 사용량이 포함된 QueryResponse 반환
-
-        throw new UnsupportedOperationException("구현하세요 — mission/MISSION.md 참고");
+        return ResponseEntity.ok(new QueryResponse(answer, sourceLabels, tokenUsage));
     }
 
     public record QueryRequest(String question) {}
