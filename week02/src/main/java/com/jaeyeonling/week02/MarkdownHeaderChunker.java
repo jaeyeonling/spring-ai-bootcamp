@@ -1,20 +1,21 @@
 package com.jaeyeonling.week02;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * "###" 헤더로 마크다운 문서를 분할하는 청커.
  *
- * 이것은 1주차의 단순한 방식입니다 — 각 Q&A 쌍이 하나의 청크가 됩니다.
- * 작동하긴 하지만 청크가 상위 섹션 컨텍스트를 잃습니다.
- * 예를 들어 "반품 배송비"에 관한 청크는 "반품 및 교환" 섹션에
- * 속한다는 정보가 없습니다.
+ * 각 Q&A 쌍(### 섹션)이 하나의 청크가 되며,
+ * 상위 ## 섹션 헤더를 접두사로 붙여 카테고리 컨텍스트를 보존합니다.
+ * 예: "## 반품 및 교환\n\n### 반품 정책이 어떻게 되나요?\n..."
  *
  * TokenWindowChunker와 비교하기 위한 기준선으로 사용하세요.
  */
 public class MarkdownHeaderChunker implements ChunkingStrategy {
+
+    private static final String SECTION_HEADER_PREFIX = "## ";
+    private static final String QA_HEADER_PREFIX = "### ";
 
     @Override
     public List<String> split(String content) {
@@ -22,30 +23,48 @@ public class MarkdownHeaderChunker implements ChunkingStrategy {
             return List.of();
         }
 
-        // "### " 앞에서 split — 각 Q&A 섹션이 하나의 청크
-        String[] rawChunks = content.split("(?=### )");
-        List<String> result = new ArrayList<>();
+        List<String> chunks = new ArrayList<>();
         String sectionHeader = "";
+        StringBuilder currentChunk = new StringBuilder();
 
-        for (String raw : rawChunks) {
-            String trimmed = raw.trim();
-            if (trimmed.isBlank()) {
-                continue;
-            }
+        for (String line : content.lines().toList()) {
+            if (isSectionHeader(line)) {
+                sectionHeader = line.trim();
+            } else if (isQaHeader(line)) {
+                // 이전 Q&A 청크가 있으면 저장
+                addChunkIfPresent(chunks, currentChunk);
 
-            if (!trimmed.startsWith("### ")) {
-                // ## 섹션 헤더 — 다음 ### 청크에 붙일 접두사로 보관
-                sectionHeader = trimmed;
-            } else {
-                // ### Q&A 청크 — 섹션 헤더가 있으면 앞에 붙여서 컨텍스트 보존
+                // 새 Q&A 청크 시작 — 섹션 헤더를 접두사로 붙임
+                currentChunk = new StringBuilder();
                 if (!sectionHeader.isEmpty()) {
-                    result.add(sectionHeader + "\n\n" + trimmed);
-                } else {
-                    result.add(trimmed);
+                    currentChunk.append(sectionHeader).append("\n\n");
                 }
+                currentChunk.append(line.trim());
+            } else if (currentChunk.length() > 0) {
+                // Q&A 본문 라인 추가
+                currentChunk.append("\n").append(line.trim());
             }
         }
 
-        return result;
+        // 마지막 청크 저장
+        addChunkIfPresent(chunks, currentChunk);
+
+        return chunks;
+    }
+
+    private boolean isSectionHeader(String line) {
+        return line.trim().startsWith(SECTION_HEADER_PREFIX)
+                && !line.trim().startsWith(QA_HEADER_PREFIX);
+    }
+
+    private boolean isQaHeader(String line) {
+        return line.trim().startsWith(QA_HEADER_PREFIX);
+    }
+
+    private void addChunkIfPresent(List<String> chunks, StringBuilder chunk) {
+        String text = chunk.toString().trim();
+        if (!text.isEmpty()) {
+            chunks.add(text);
+        }
     }
 }

@@ -95,20 +95,25 @@ class ChunkingStrategyTest {
         }
 
         @Test
-        @DisplayName("[버그] ## 헤더가 이전 ### 청크 본문에 포함되어 섹션 전환이 안 된다")
-        void sectionHeaderNotUpdatedBecauseEmbeddedInPreviousChunk() {
+        @DisplayName("섹션이 바뀌면 새 ## 헤더가 청크에 반영된다")
+        void sectionHeaderChangesAcrossSections() {
             List<String> chunks = chunker.split(SAMPLE_FAQ);
 
-            // 현재 구현의 한계:
-            // split("(?=### )") 하면 "## 반품 및 교환" 이 "### 해외 배송이 가능한가요?" 청크의
-            // 꼬리에 딸려가므로, sectionHeader가 "## 배송" 에서 갱신되지 않음.
-            //
-            // 따라서 "반품 정책" 청크에도 "## 배송" 이 붙는 버그가 있음.
-            assertThat(chunks.get(2))
-                    .as("반품 정책 청크에 '## 반품 및 교환' 대신 '## 배송'이 붙는 버그")
-                    .contains("## 배송")
-                    .contains("### 반품 정책이 어떻게 되나요?")
-                    .doesNotContain("## 반품 및 교환");
+            // "배송" 섹션 청크 (index 0, 1)
+            assertThat(chunks.get(0)).startsWith("## 배송");
+            assertThat(chunks.get(0)).contains("### 배송은 얼마나 걸리나요?");
+            assertThat(chunks.get(1)).startsWith("## 배송");
+            assertThat(chunks.get(1)).contains("### 해외 배송이 가능한가요?");
+
+            // "반품 및 교환" 섹션 청크 (index 2, 3)
+            assertThat(chunks.get(2)).startsWith("## 반품 및 교환");
+            assertThat(chunks.get(2)).contains("### 반품 정책이 어떻게 되나요?");
+            assertThat(chunks.get(3)).startsWith("## 반품 및 교환");
+            assertThat(chunks.get(3)).contains("### 반품 배송비는 얼마인가요?");
+
+            // "계정" 섹션 청크 (index 4)
+            assertThat(chunks.get(4)).startsWith("## 계정");
+            assertThat(chunks.get(4)).contains("### 어떻게 가입하나요?");
         }
 
         @Test
