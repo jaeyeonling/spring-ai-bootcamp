@@ -92,6 +92,28 @@ Spring AI의 `VectorStore.similaritySearch()`가 내부에서 쿼리 텍스트�
 
 서버를 재시작할 때마다 이 비용이 반복된다. Qdrant는 $0, 0초.
 
+### 영속성 실측 검증
+
+`PersistenceTest`를 통해 실제로 검증했다:
+
+```bash
+# 1단계: ingest + query (데이터를 Qdrant에 저장)
+./gradlew :week03:test --tests "*.QueryControllerTest"   # ✅ 5개 통과
+
+# 2단계: 새로운 Spring Context에서 query만 실행 (ingest 없음)
+./gradlew :week03:test --tests "*.PersistenceTest"       # ✅ 2개 통과
+```
+
+2단계는 **완전히 새로운 JVM + Spring Context**에서 실행된다.
+인메모리였다면 데이터가 없어 실패한다. Qdrant는 Docker 볼륨에 데이터가 살아있으므로 통과한다.
+
+| 시나리오 | 인메모리 (예상) | Qdrant (실측) |
+|---|---|---|
+| 1단계: ingest → query | ✅ 통과 | ✅ 통과 |
+| 2단계: query만 (재시작 후) | ❌ 실패 — 데이터 없음 | ✅ 통과 — 데이터 유지 |
+
+이것이 벡터 DB 전환의 가장 직접적인 체감 포인트다.
+
 ---
 
 ## 종합
