@@ -82,6 +82,63 @@ class ChunkingStrategyTest {
 
             assertThat(chunks).isEmpty();
         }
+
+        @Test
+        @DisplayName("## 섹션 헤더가 ### 청크의 접두사로 붙는다")
+        void sectionHeaderIsPrependedToChunks() {
+            List<String> chunks = chunker.split(SAMPLE_FAQ);
+
+            // "배송" 섹션의 첫 번째 청크는 "## 배송" 헤더로 시작해야 함
+            assertThat(chunks.get(0)).startsWith("## 배송");
+            // 그 뒤에 ### Q&A 내용이 이어져야 함
+            assertThat(chunks.get(0)).contains("### 배송은 얼마나 걸리나요?");
+        }
+
+        @Test
+        @DisplayName("[버그] ## 헤더가 이전 ### 청크 본문에 포함되어 섹션 전환이 안 된다")
+        void sectionHeaderNotUpdatedBecauseEmbeddedInPreviousChunk() {
+            List<String> chunks = chunker.split(SAMPLE_FAQ);
+
+            // 현재 구현의 한계:
+            // split("(?=### )") 하면 "## 반품 및 교환" 이 "### 해외 배송이 가능한가요?" 청크의
+            // 꼬리에 딸려가므로, sectionHeader가 "## 배송" 에서 갱신되지 않음.
+            //
+            // 따라서 "반품 정책" 청크에도 "## 배송" 이 붙는 버그가 있음.
+            assertThat(chunks.get(2))
+                    .as("반품 정책 청크에 '## 반품 및 교환' 대신 '## 배송'이 붙는 버그")
+                    .contains("## 배송")
+                    .contains("### 반품 정책이 어떻게 되나요?")
+                    .doesNotContain("## 반품 및 교환");
+        }
+
+        @Test
+        @DisplayName("## 헤더 자체는 독립 청크로 생성되지 않는다")
+        void sectionHeaderIsNotAStandaloneChunk() {
+            List<String> chunks = chunker.split(SAMPLE_FAQ);
+
+            // 모든 청크는 ### 으로 시작하는 Q&A를 포함해야 함 (## 만 있는 청크는 없어야 함)
+            assertThat(chunks)
+                    .allSatisfy(chunk -> assertThat(chunk).contains("### "));
+        }
+
+        @Test
+        @DisplayName("## 헤더 없이 ### 만 있는 문서도 정상 분할된다")
+        void worksWithoutSectionHeaders() {
+            String noSectionHeaders = """
+                    ### 질문 1
+                    답변 1입니다.
+                    
+                    ### 질문 2
+                    답변 2입니다.
+                    """;
+
+            List<String> chunks = chunker.split(noSectionHeaders);
+
+            assertThat(chunks).hasSize(2);
+            // ## 헤더가 없으므로 ### 내용만 있어야 함
+            assertThat(chunks.get(0)).startsWith("### 질문 1");
+            assertThat(chunks.get(1)).startsWith("### 질문 2");
+        }
     }
 
     @Nested
