@@ -1,5 +1,6 @@
 package com.jaeyeonling.week02;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,9 +22,30 @@ public class MarkdownHeaderChunker implements ChunkingStrategy {
             return List.of();
         }
 
-        return Arrays.stream(content.split("(?=### )"))
-                .map(String::trim)
-                .filter(chunk -> !chunk.isBlank())
-                .toList();
+        // "### " 앞에서 split — 각 Q&A 섹션이 하나의 청크
+        String[] rawChunks = content.split("(?=### )");
+        List<String> result = new ArrayList<>();
+        String sectionHeader = "";
+
+        for (String raw : rawChunks) {
+            String trimmed = raw.trim();
+            if (trimmed.isBlank()) {
+                continue;
+            }
+
+            if (!trimmed.startsWith("### ")) {
+                // ## 섹션 헤더 — 다음 ### 청크에 붙일 접두사로 보관
+                sectionHeader = trimmed;
+            } else {
+                // ### Q&A 청크 — 섹션 헤더가 있으면 앞에 붙여서 컨텍스트 보존
+                if (!sectionHeader.isEmpty()) {
+                    result.add(sectionHeader + "\n\n" + trimmed);
+                } else {
+                    result.add(trimmed);
+                }
+            }
+        }
+
+        return result;
     }
 }
