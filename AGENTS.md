@@ -71,6 +71,9 @@ weekNN/
 │   ├── HINT_01.md           # 핵심 개념 힌트
 │   ├── HINT_02.md           # 구현 패턴 힌트
 │   └── HINT_03.md           # 거의 정답 코드 힌트
+├── notes/                   # 구현 노트 (미션 완료 후 기록)
+│   ├── NOTES.md             # 구현 로그: 흐름, 핵심 포인트, 배운 것
+│   └── CONCEPT_*.md         # 해당 주차 핵심 개념 노트
 ├── src/main/java/           # TODO가 있는 스켈레톤 코드
 ├── src/main/resources/      # application.yml
 ├── src/test/java/           # 인수 테스트 (통과 = 미션 완료)
