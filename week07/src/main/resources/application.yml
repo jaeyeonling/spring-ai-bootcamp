@@ -22,6 +22,9 @@ spring:
 reflection:
   max-retries: 2
 
+data:
+  file-path: ${DATA_FILE_PATH:../data/faq.md}
+
 server:
   port: 8080
 

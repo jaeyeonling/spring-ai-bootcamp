@@ -3,14 +3,15 @@ package com.jaeyeonling.week07;
 /**
  * RAG 기반 질문과 툴 호출 질문을 모두 처리하는 REST 컨트롤러.
  *
- * LLM이 툴 간에 자동으로 라우팅합니다 — 수동 if/else 로직 없음.
- * 등록된 모든 @Tool 빈이 ChatClient에 전달되고, 모델이
- * 사용자의 질문에 따라 어떤 툴을 호출할지 결정합니다.
+ * HTTP 요청/응답만 담당합니다. LLM 호출과 툴 선택은 ChatService,
+ * 검증 로직은 ReflectionService에 위임합니다.
+ *
+ * LLM이 툴 간에 자동으로 라우팅하므로 수동 if/else 로직이 없습니다.
+ * 새 툴을 추가해도 이 클래스를 수정할 필요가 없습니다.
  */
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,18 +24,11 @@ public class ChatController {
 
     private static final Logger log = LoggerFactory.getLogger(ChatController.class);
 
-    private final ChatClient chatClient;
-    private final OrderTools orderTools;
-    private final FaqSearchTool faqSearchTool;
+    private final ChatService chatService;
     private final ReflectionService reflectionService;
 
-    public ChatController(ChatClient.Builder builder,
-                          OrderTools orderTools,
-                          FaqSearchTool faqSearchTool,
-                          ReflectionService reflectionService) {
-        this.chatClient = builder.build();
-        this.orderTools = orderTools;
-        this.faqSearchTool = faqSearchTool;
+    public ChatController(ChatService chatService, ReflectionService reflectionService) {
+        this.chatService = chatService;
         this.reflectionService = reflectionService;
     }
 
@@ -48,13 +42,7 @@ public class ChatController {
         }
 
         log.info("chat 요청: {}", request.question());
-        String answer = chatClient.prompt()
-                .system("당신은 도움이 되는 고객 지원 담당자입니다. " +
-                        "주문, 매출, 회사 정책에 관한 질문에 답하기 위해 사용 가능한 툴을 사용하세요.")
-                .user(request.question())
-                .tools(orderTools, faqSearchTool)
-                .call()
-                .content();
+        String answer = chatService.chat(request.question());
 
         return ResponseEntity.ok(new ChatResponse(answer, false));
     }
@@ -69,8 +57,7 @@ public class ChatController {
         }
 
         log.info("chat/verified 요청: {}", request.question());
-        String answer = reflectionService.chatWithReflection(
-                request.question(), orderTools, faqSearchTool);
+        String answer = reflectionService.chatWithReflection(request.question());
 
         return ResponseEntity.ok(new ChatResponse(answer, true));
     }

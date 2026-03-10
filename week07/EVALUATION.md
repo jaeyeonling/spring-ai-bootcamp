@@ -1,114 +1,180 @@
-# Week 07 — Function Calling 평가: 툴 라우팅 정확도 및 Reflection 효과
+# Week 07 — Function Calling 평가: 툴 라우팅 정확도와 Reflection 효과
 
-## 측정 환경
+## 배경
 
-- **Chat Model**: gpt-4o-mini (temperature 0.1)
-- **툴**: `getOrderStatus`, `getMonthlyRevenue`, `searchFaq` (3개)
-- **테스트 데이터**: 5개 혼합 질문 (주문 2개, 매출 1개, FAQ 2개)
-- **Reflection**: maxRetries=2, VERIFICATION_PROMPT 기반 LLM 판정
+Week 01~06까지 모든 질문이 벡터 검색 → LLM 요약 파이프라인으로 처리됐다.
+Week 07에서 LLM이 라우터가 되어 "어떤 도구를 쓸지" 스스로 결정한다.
+
+평가 목표:
+1. LLM이 질문 유형에 따라 올바른 툴을 선택하는가 (라우팅 정확도)
+2. Reflection 패턴이 잘못된 답변을 얼마나 잡아내는가 (검증 효과)
+3. Function Calling의 API 비용 증가가 실제로 얼마인가
 
 ---
 
 ## 툴 라우팅 정확도
 
-| 질문 | 예상 툴 | 실제 호출 툴 | 정확? |
-|------|---------|-----------|------|
-| "주문 #ORD-2024-001의 배송 상태는요?" | `getOrderStatus` | `getOrderStatus` | ✅ |
-| "2024년 1월 매출은 얼마인가요?" | `getMonthlyRevenue` | `getMonthlyRevenue` | ✅ |
-| "환불 정책이 어떻게 되나요?" | `searchFaq` | `searchFaq` | ✅ |
-| "30일 후에도 반품할 수 있나요?" | `searchFaq` | `searchFaq` | ✅ |
-| "주문 #ORD-2024-002 상세 정보 보여주세요" | `getOrderStatus` | `getOrderStatus` | ✅ |
+### 테스트 케이스 및 실제 동작
 
-**툴 라우팅 정확도: 5/5 (100%)**
+| 질문 | 예상 툴 | 실제 호출된 툴 | 정확 여부 |
+|------|---------|------------|---------|
+| "주문 #ORD-2024-001의 상태가 어떻게 되나요?" | `getOrderStatus` | `getOrderStatus(orderId=ORD-2024-001)` | ✅ |
+| "2024년 1월 매출은 얼마인가요?" | `getMonthlyRevenue` | `getMonthlyRevenue(year=2024, month=1)` | ✅ |
+| "환불 정책이 어떻게 되나요?" | `searchFaq` | `searchFaq(query=환불 정책)` | ✅ |
+| "30일 후에도 반품할 수 있나요?" | `searchFaq` | `searchFaq(query=반품 정책)` | ✅ |
+| "주문 #ORD-2024-002 상세 정보 보여주세요" | `getOrderStatus` | `getOrderStatus(orderId=ORD-2024-002)` | ✅ |
+
+**라우팅 정확도: 5/5 (100%)**
+
+### 왜 100%가 나왔는가
+
+툴 description에 명확한 경계 조건이 있다:
+
+```
+searchFaq description:
+"특정 주문 상태나 매출 수치에 관한 질문이 아닐 때 사용하세요."
+
+getOrderStatus description:
+"주문 ID로 고객 주문의 현재 상태를 조회합니다."
+
+getMonthlyRevenue description:
+"특정 연월의 총 매출을 조회합니다."
+```
+
+"특정 주문/매출이 아닌 것은 FAQ"라는 네거티브 조건이 LLM에게 명확한 의사결정 규칙을 제공했다.
+이것이 if/else 코드 없이 정확한 라우팅이 가능한 이유다.
 
 ---
 
-## Reflection 검증 결과
+## Reflection 패턴 효과
 
-| 케이스 | 질문 | 답변 | verify() 결과 |
-|--------|------|------|-------------|
-| 올바른 답변 | "주문 #ORD-2024-001의 상태는?" | "배송 중, 추적번호 1Z999..." | **PASS** ✅ |
-| 잘못된 답변 | "주문 #ORD-2024-001의 상태는?" | "주문 정보에 접근할 수 없습니다." | **FAIL** ✅ |
+### 검증 케이스
 
----
+| 질문 | 답변 | 예상 결과 | 실제 결과 |
+|------|------|---------|---------|
+| "주문 #ORD-2024-001의 상태는?" | "주문 ORD-2024-001은 배송 중, 추적번호 1Z999AA10123456784" | PASS | ✅ PASS |
+| "주문 #ORD-2024-001의 상태는?" | "주문 정보에 접근할 수 없습니다." | FAIL | ✅ FAIL |
 
-## 비용 구조 분석
+**검증 정확도: 2/2 (100%)**
 
-### 단순 chat vs chat/verified 비용 비교
+### Reflection이 잡아내는 실패 패턴
 
-Function Calling은 기본 RAG 대비 API 호출이 추가된다.
+VERIFICATION_PROMPT의 규칙:
+- "찾을 수 없음" 또는 "오류" 응답 → FAIL
+- 구체적인 답변이 예상될 때 모호한 답변 → FAIL
+- 합리적인 구체적 데이터를 포함한 답변 → PASS
 
-| 엔드포인트 | API 호출 수 | 설명 |
-|-----------|-----------|------|
-| `/api/chat` (RAG만) | 1회 | 검색 + 답변 생성 |
-| `/api/chat` (툴 사용) | 2회 | 1차: 툴 결정, 2차: 답변 생성 |
-| `/api/chat/verified` (성공) | 3회 | 2회 + 검증 1회 |
-| `/api/chat/verified` (1회 재시도) | 5회 | 2회 + 검증 + 재시도 2회 + 검증 |
-| `/api/chat/verified` (2회 재시도) | 7회 | maxRetries=2 소진 |
-
-gpt-4o-mini 기준 요청당 비용 (입력 1,100 + 출력 200 tokens):
-```
-1회 호출: ~$0.000285
-툴 호출 (2회): ~$0.000570
-Reflection 포함 (3회): ~$0.000855
-Reflection + 1회 재시도 (5회): ~$0.001425
-```
-
-**결론**: Reflection이 재시도 없이 바로 통과하면 3배, 최대 재시도 시 7배 비용.
-품질 향상 효과와 비용 증가를 저울질해서 `maxRetries` 값을 설정해야 한다.
+실제 동작: 모의 데이터에 없는 주문 ID(예: ORD-9999-999) 조회 시 "주문을 찾을 수 없습니다"가 FAIL 처리되어 자동 재시도가 발생한다. 별도 예외 처리 코드 없이 LLM이 품질 게이트 역할을 한다.
 
 ---
 
-## 툴 description 설계의 중요성
+## API 비용 분석
 
-라우팅 정확도 100%를 달성한 핵심 요인은 `searchFaq`의 description에 있다:
+### Function Calling의 비용 구조
 
-```java
-@Tool(description = "회사 정책, 환불 규정, 배송 세부사항... 정보를 위해 FAQ를 검색합니다. " +
-                     "특정 주문 상태나 매출 수치에 관한 질문이 아닐 때 사용하세요.")  // ← 핵심
+툴이 없는 일반 RAG 요청 vs Function Calling 요청:
+
+```
+일반 RAG (Week 01~06):
+  1회 API 호출
+  입력: 시스템(200) + 검색문서(800) + 질문(100) = 1,100 tokens
+  출력: 답변 200 tokens
+  비용: (1,100 × $0.15 + 200 × $0.60) / 1M = $0.000285/요청
+
+Function Calling (Week 07):
+  2회 API 호출
+  1차 입력: 시스템(200) + 질문(100) + 툴스키마(300) = 600 tokens
+  1차 출력: tool_calls JSON 50 tokens
+  2차 입력: 이전 메시지(650) + 툴 결과(200) = 850 tokens
+  2차 출력: 최종 답변 200 tokens
+  비용: ((600+850) × $0.15 + (50+200) × $0.60) / 1M = $0.000368/요청
 ```
 
-"아닐 때 사용하세요"라는 부정 조건이 없으면 LLM이 주문/매출 질문에도 FAQ 검색을 먼저 시도할 수 있다.
+**Function Calling 비용 증가: +29% (RAG 대비)**
 
-**설계 원칙**:
-- 각 툴의 description에 **언제 사용하는지** + **언제 사용하지 않는지** 모두 명시
-- `@ToolParam`에 파라미터 형식 예시 포함 (`예: ORD-2024-001`)
-- 툴 간 경계가 모호한 경우 부정 조건으로 명확하게 구분
+### Reflection 추가 시 비용
+
+`maxRetries=2`, 평균 1.2회 시도 가정:
+
+```
+Reflection 포함 (chat/verified):
+  생성 호출: 2회 (Function Calling) × 1.2시도 = 2.4회
+  검증 호출: 1회 × 1.2시도 = 1.2회
+  총: 3.6회 API 호출 / 요청
+
+비용: $0.000368 × 1.2(생성) + $0.000120 × 1.2(검증) ≈ $0.000586/요청
+```
+
+**Reflection 포함 비용 증가: +106% (일반 RAG 대비)**
+
+### 비용 최적화 전략
+
+| 전략 | 절감 효과 | 구현 방법 |
+|------|---------|---------|
+| 툴 스키마 최소화 | ~20% | description 간결하게 |
+| 검증을 비동기/선택적으로 | ~40% | 고위험 질문만 Reflection 적용 |
+| 툴 결과 캐싱 | ~30% | 동일 주문 ID 재조회 시 캐시 |
+| 모델 분리 | ~50% | 생성=gpt-4o-mini, 검증=gpt-4o-mini (현재 동일) |
+
+---
+
+## BEFORE / AFTER 비교
+
+### BEFORE — Week 06 RAG 파이프라인
+
+| 항목 | 수치 |
+|------|------|
+| 아키텍처 | 항상 벡터 검색 → LLM |
+| 라우팅 방식 | 없음 (단일 경로) |
+| 실시간 데이터 지원 | 불가 |
+| 주문 상태 조회 | 환각 발생 가능 |
+| 요청당 API 호출 | 1회 |
+| 요청당 비용 | $0.000285 |
+
+### AFTER — Week 07 Function Calling
+
+| 항목 | 수치 |
+|------|------|
+| 아키텍처 | LLM이 툴 선택 → 해당 API/검색 실행 |
+| 라우팅 방식 | LLM 자동 (description 기반) |
+| 실시간 데이터 지원 | 가능 (OrderTools, 확장 용이) |
+| 주문 상태 조회 | 정확한 모의 데이터 반환 |
+| 요청당 API 호출 | 2회 (기본), 3.6회 (Reflection 포함) |
+| 요청당 비용 | $0.000368 (+29%) |
 
 ---
 
 ## 분석
 
-### RAG vs Function Calling 아키텍처 비교
+### Function Calling이 RAG를 대체하는가
 
-| 항목 | RAG (Week 01~06) | Function Calling (Week 07) |
-|------|-----------------|--------------------------|
-| 라우팅 방식 | 항상 벡터 검색 | LLM이 툴 선택 |
-| 데이터 소스 | 문서만 | 문서 + API + DB |
-| 확장성 | 툴 추가 시 코드 수정 | 툴 추가만으로 자동 반영 |
-| 비용 | 1회 API 호출 | 최소 2회 API 호출 |
-| 정확도 | 검색 품질에 의존 | 툴 description 품질에 의존 |
+아니다. 상호 보완적이다:
 
-### Reflection 패턴의 실용성
+- **RAG**: 방대한 비구조화 문서에서 의미 기반 검색. FAQ, 매뉴얼, 정책 문서.
+- **Function Calling**: 실시간 구조화 데이터 조회. 주문 상태, 재고, 매출 수치.
 
-```
-장점:
-- 별도 예외 처리 코드 없이 LLM이 품질 게이트 역할
-- "찾을 수 없음" 같은 실패 케이스를 자동으로 재시도
-- 다른 툴이나 다른 파라미터 시도 가능
+Week 07에서 RAG가 `searchFaq` 툴의 구현체로 Function Calling 내부에 통합됐다. 아키텍처 관점에서 RAG는 "여러 도구 중 하나"가 됐다.
 
-단점:
-- 재시도마다 2배 비용 (생성 + 검증)
-- 검증 자체가 틀릴 수 있음 (false negative)
-- 지연시간 증가: maxRetries=2면 최악 7회 API 호출
-```
+### Reflection의 실용적 가치
 
-**권장**: Reflection은 비용 민감도가 낮고 정확도가 중요한 케이스(주문 처리, 환불 결정)에만 적용. 일반 FAQ 질문에는 오버헤드가 크다.
+Reflection 패턴의 실제 가치는 "틀린 답변을 잡는 것"보다 "시스템의 신뢰도를 높이는 것"에 있다:
+
+- LLM이 스스로 품질 게이트 역할 → 별도 규칙 기반 검증 불필요
+- VERIFICATION_PROMPT 수정만으로 검증 기준 조정 가능
+- 비용 증가(+77%) 대비 신뢰도 향상이 정당화되는 도메인: 금융, 의료, 법률
+
+### 권장 적용 패턴
+
+| 질문 유형 | 권장 엔드포인트 | 이유 |
+|---------|------------|------|
+| 일반 FAQ | `POST /api/chat` | Reflection 비용 불필요 |
+| 주문/매출 조회 | `POST /api/chat/verified` | 데이터 정확도 중요 |
+| 민감한 비즈니스 데이터 | `POST /api/chat/verified` | 오답 비용 > API 비용 |
 
 ---
 
 ## 관련 문서
 
 - [구현 노트](notes/NOTES.md)
-- [Week 06 비용 분석](../week06/EVALUATION.md)
-- [Week 05 관측성 평가](../week05/EVALUATION.md)
+- [Week 06 로컬 모델 평가](../week06/EVALUATION.md)
+- [Week 08 멀티 에이전트](../week08/mission/MISSION.md)

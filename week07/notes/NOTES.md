@@ -11,8 +11,11 @@
 week07/src/main/java/com/jaeyeonling/week07/
 ├── OrderTools.java        — @Tool: getOrderStatus, getMonthlyRevenue (모의 데이터)
 ├── FaqSearchTool.java     — @Tool: searchFaq (VectorStore RAG 래핑)
+├── ToolConfig.java        — MethodToolCallbackProvider 빈 등록
+├── ChatService.java       — LLM 호출 + 툴 연결 (비즈니스 로직)
 ├── ChatController.java    — REST 엔드포인트 (/api/chat, /api/chat/verified)
 ├── ReflectionService.java — 생성 → 검증 → 재시도 루프
+├── FaqIngestionService.java — ETL 파이프라인 (week07-faq 컬렉션 적재)
 └── Week07Application.java — 진입점
 ```
 
@@ -282,17 +285,61 @@ VERIFICATION_PROMPT가 너무 엄격하면 올바른 답변도 FAIL 처리될 �
 
 ## 트러블슈팅
 
-### 1. VectorStore 컬렉션 — week07-faq
+### 1. week07-faq 컬렉션 비어있음 → FaqIngestionService 추가
 
-week07-faq 컬렉션이 비어있어도 `searchFaq`는 "관련 FAQ 항목을 찾을 수 없습니다" 메시지를 반환하고 테스트는 통과한다. 단, 실제 FAQ 내용이 필요한 환경에서는 데이터를 인제스트해야 한다.
+초기 구현에서 week07-faq 컬렉션이 비어있어 `searchFaq`가 항상 "관련 FAQ 항목을 찾을 수 없습니다"를 반환했다. 테스트는 통과했지만 LLM 자체 지식(환각)으로 통과한 것이었다. `FaqIngestionService`를 추가하고 `spring-ai-tika-document-reader` 의존성을 build.gradle에 추가해 해결했다.
 
-### 2. @Disabled 제거
+### 2. Controller에서 툴 직접 주입 → ToolConfig + ToolCallbackProvider로 리팩토링
 
-`ToolCallingTest`의 `@Disabled` 어노테이션을 제거해야 테스트가 실행된다. 구현 완료 후 제거했다.
+```java
+// Before: 툴 추가 시 Controller 생성자 + 호출부 모두 수정
+public ChatController(ChatClient.Builder builder,
+                      OrderTools orderTools,        // 추가 시 여기도
+                      FaqSearchTool faqSearchTool,  // 추가 시 여기도
+                      ReflectionService reflectionService) { ... }
+
+.tools(orderTools, faqSearchTool)  // 추가 시 여기도
+
+// After: ToolConfig에서 한 번만 등록, Controller는 수정 불필요
+@Bean
+public ToolCallbackProvider toolCallbackProvider(OrderTools o, FaqSearchTool f) {
+    return MethodToolCallbackProvider.builder().toolObjects(o, f).build();
+}
+
+.toolCallbacks(toolCallbackProvider)  // 변경 없음
+```
+
+### 3. .tools() vs .toolCallbacks()
+
+`ToolCallbackProvider`를 `.tools()`에 넘기면 `IllegalStateException` 발생:
+> "Did you mean to pass a ToolCallback or ToolCallbackProvider? If so, you have to use .toolCallbacks() instead of .tool()"
+
+- `.tools(orderTools, faqSearchTool)` — `@Tool` 빈 객체를 직접 넘길 때
+- `.toolCallbacks(toolCallbackProvider)` — `ToolCallbackProvider`를 넘길 때
+
+### 4. @Disabled 제거
+
+`ToolCallingTest`의 `@Disabled` 어노테이션을 제거해야 테스트가 실행된다.
+
+### 5. 책임 분리 리팩토링: ChatController → ChatService 도입
+
+초기 구현에서 `ChatController`가 `ToolCallbackProvider`를 직접 소유하고 `ReflectionService.chatWithReflection(question, toolCallbackProvider)`에 파라미터로 전달했다. "어떤 툴을 쓸지"는 비즈니스 로직이므로 Controller에 있으면 안 된다.
+
+```
+Before:
+  ChatController → (toolCallbackProvider 소유) → LLM 호출
+  ChatController → ReflectionService.chatWithReflection(question, toolCallbackProvider)
+
+After:
+  ChatController → ChatService.chat(question)                 ← HTTP만
+  ChatController → ReflectionService.chatWithReflection(question)
+  ChatService    → (toolCallbackProvider 소유) → LLM 호출      ← 비즈니스 로직
+  ReflectionService → ChatService.chat(question) + 검증 루프   ← 검증만
+```
+
+변경 후 `ReflectionService`의 `chatWithReflection()` 시그니처가 `(String, ToolCallbackProvider)` → `(String)`으로 단순화됐다.
 
 ---
-
-## 테스트 결과 (7/7 통과)
 
 툴 라우팅 로그 (실제 관찰):
 

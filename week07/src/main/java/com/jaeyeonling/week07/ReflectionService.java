@@ -24,11 +24,6 @@ public class ReflectionService {
 
     private static final Logger log = LoggerFactory.getLogger(ReflectionService.class);
 
-    private static final String SYSTEM_PROMPT = """
-            당신은 도움이 되는 고객 지원 담당자입니다.
-            주문, 매출, 회사 정책에 관한 질문에 답하기 위해 사용 가능한 툴을 사용하세요.
-            특정 데이터가 필요한 질문에는 항상 툴을 사용하세요 — 답을 꾸며내지 마세요.""";
-
     private static final String VERIFICATION_PROMPT = """
             당신은 품질 검사자입니다. 다음 답변이
             사용자의 질문을 올바르고 완전하게 다루는지 평가하세요.
@@ -41,13 +36,16 @@ public class ReflectionService {
 
             "PASS" 또는 "FAIL: <간단한 이유>"로만 응답하세요.""";
 
-    private final ChatClient chatClient;
+    private final ChatService chatService;
+    private final ChatClient verifierClient;
     private final int maxRetries;
 
     public ReflectionService(
+            ChatService chatService,
             ChatClient.Builder builder,
             @Value("${reflection.max-retries:2}") int maxRetries) {
-        this.chatClient = builder.build();
+        this.chatService = chatService;
+        this.verifierClient = builder.build();
         this.maxRetries = maxRetries;
     }
 
@@ -55,23 +53,17 @@ public class ReflectionService {
      * Reflection을 사용한 채팅: 답변 생성, 검증, 필요하면 재시도.
      *
      * @param userMessage 사용자의 질문
-     * @param tools       LLM에 제공할 툴 빈들
      * @return 검증된 답변 (또는 최대 재시도 후 최선의 답변)
      */
-    public String chatWithReflection(String userMessage, Object... tools) {
+    public String chatWithReflection(String userMessage) {
         String result = null;
 
         for (int attempt = 0; attempt <= maxRetries; attempt++) {
-            // 1단계: 생성
-            result = chatClient.prompt()
-                    .system(SYSTEM_PROMPT)
-                    .user(userMessage)
-                    .tools(tools)
-                    .call()
-                    .content();
+            // 1단계: 생성 (ChatService가 툴 연결을 담당)
+            result = chatService.chat(userMessage);
 
             // 2단계: 검증
-            String verification = chatClient.prompt()
+            String verification = verifierClient.prompt()
                     .system(VERIFICATION_PROMPT)
                     .user("질문: %s\n답변: %s".formatted(userMessage, result))
                     .call()
@@ -100,7 +92,7 @@ public class ReflectionService {
      * @return 답변이 검증을 통과하면 true
      */
     public boolean verify(String question, String answer) {
-        String verification = chatClient.prompt()
+        String verification = verifierClient.prompt()
                 .system(VERIFICATION_PROMPT)
                 .user("질문: %s\n답변: %s".formatted(question, answer))
                 .call()
