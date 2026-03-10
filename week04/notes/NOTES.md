@@ -1,6 +1,7 @@
 # Week 04 — 검색 개선: ReRanker, 쿼리 변환, Strategy 패턴
 
-> **미션**: Top-1 정확도 40% → 60% 이상으로 향상. ReRanking / 쿼리 변환 / Strategy 패턴 적용.
+> **미션**: ReRanking / 쿼리 변환 / Strategy 패턴을 적용해 검색 품질을 개선하라.
+> 미션 예상값은 Top-1 40% → 60% 이상이었으나, 실측 Baseline이 이미 82%였다. 판정 방식(LLM 기반)의 차이가 원인. 자세한 내용은 [EVALUATION.md](../EVALUATION.md) 참고.
 
 ## 관련 개념
 
@@ -42,7 +43,7 @@ List<Document> (코사인 유사도 순)
 ```
 
 가장 단순. 쿼리를 임베딩하고 코사인 유사도로 상위 K개를 반환한다.  
-예상 Top-1 정확도: ~40% (벡터 검색의 기본 한계)
+실측 Top-1 정확도: **82%** — 미션 예상값(40%)보다 훨씬 높았다. 대형 청크 구조에서 벡터 검색이 이미 충분히 잘 동작했기 때문이다.
 
 ---
 
@@ -193,17 +194,6 @@ Week 04에서 처음으로 K가 **평가 지표**로서 의미를 갖는다:
 
 ---
 
-## 테스트 결과
-
-모든 3개 전략에서 기본 테스트 4개 모두 통과:
-
-- [x] `strategyIsInjected` — 활성 프로파일의 전략이 정상 주입
-- [x] `retrieveReturnsResults` — 유효한 쿼리에 비어있지 않은 결과 반환
-- [x] `retrieveRespectsTopK` — topK 파라미터 준수
-- [x] `retrievedDocumentsHaveContent` — 검색된 문서에 비어있지 않은 내용
-
----
-
 ## RAGAS 스타일 평가
 
 **RAGAS (Retrieval Augmented Generation Assessment)** 는 RAG 시스템을 단계별로 분리해서 측정하는 평가 프레임워크다. Python 라이브러리로도 존재하지만, Week 04에서는 라이브러리를 쓰는 게 아니라 **접근 방식**을 따른다.
@@ -281,7 +271,7 @@ return cosineSimilarity(expectedVector, docVector) >= 0.7;
 
 **문제**: 구조적 한계.
 - `expected_answer`는 1~2문장 (짧음)
-- FAQ 문서 청크는 수백~수천 자 (김)
+- FAQ 문서 청크는 수백~수천 자 (긺)
 - 긴 문서 전체를 임베딩하면 벡터가 "평균적인 방향"을 가리키게 됨
 - 짧은 `expected_answer`의 임베딩과 코사인 유사도가 구조적으로 낮아짐
 
@@ -316,6 +306,17 @@ return response.startsWith("YES");
 
 ---
 
+## 테스트 결과
+
+모든 3개 전략에서 기본 테스트 4개 모두 통과:
+
+- [x] `strategyIsInjected` — 활성 프로파일의 전략이 정상 주입
+- [x] `retrieveReturnsResults` — 유효한 쿼리에 비어있지 않은 결과 반환
+- [x] `retrieveRespectsTopK` — topK 파라미터 준수
+- [x] `retrievedDocumentsHaveContent` — 검색된 문서에 비어있지 않은 내용
+
+---
+
 ## 평가 결과
 
 | 전략           | Top-1 정확도 | Top-5 정확도 | 평균 지연시간 (ms) |
@@ -341,8 +342,6 @@ return response.startsWith("YES");
 
 ## 다음 주차로 연결
 
-Week 05에서 개선할 것:
-- QueryTransform 전략은 LLM 호출이 많아 지연시간이 크게 증가 → Week 05 관측성(Micrometer, OTel)으로 측정
+Week 05에서 이어지는 것:
+- QueryTransform 전략은 LLM 호출이 많아 지연시간이 크게 증가 → Week 05 관측성(Micrometer, OTel)으로 어느 스팬에서 병목이 생기는지 측정
 - 전략별 지연시간 차이를 Jaeger 트레이싱으로 시각화
-
-→ [Week 05 구현 노트](../../week05/notes/NOTES.md)
