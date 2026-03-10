@@ -259,7 +259,7 @@ Qdrant 전용 헬스 엔드포인트: `GET /healthz`, 준비 상태: `GET /ready
 
 ## 테스트 결과
 
-모든 5개 테스트 통과 (기본 프로파일 — OpenAI):
+### Java 테스트 (5/5 통과, 기본 프로파일 — OpenAI)
 
 - [x] `serviceIsInjectable` — ModelRoutingService 빈 주입
 - [x] `activeProviderIsNotEmpty` — `OpenAiChatModel` 반환 확인
@@ -268,6 +268,20 @@ Qdrant 전용 헬스 엔드포인트: `GET /healthz`, 준비 상태: `GET /ready
 - [x] `applicationContextLoads` — Spring 컨텍스트 정상 로드
 
 **활성 공급자 확인**: 로그에서 `ModelRoutingService가 ChatModel로 초기화됨: OpenAiChatModel` 확인.
+
+### K8s 실제 배포 검증 (docker-desktop, v1.34.1)
+
+```bash
+kubectl apply -f week06/k8s/  # 10개 리소스 생성
+```
+
+| 리소스 | 상태 | 비고 |
+|--------|------|------|
+| `qdrant` Deployment | Running ✅ | 이미지 pull 1.6초 |
+| Qdrant liveness (`/healthz`) | `healthz check passed` ✅ | port-forward 직접 확인 |
+| Qdrant readiness (`/readyz`) | `all shards are ready` ✅ | port-forward 직접 확인 |
+| `ollama` Deployment | Running ✅ | `Ollama is running` 응답 확인 (port-forward) |
+| Services, Ingress | created ✅ | |
 
 ---
 
