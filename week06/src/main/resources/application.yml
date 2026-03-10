@@ -2,6 +2,9 @@ spring:
   application:
     name: week06-local-models
   ai:
+    model:
+      chat: openai
+      embedding: openai
     openai:
       api-key: ${OPENAI_API_KEY}
       chat:

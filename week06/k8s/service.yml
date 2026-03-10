@@ -56,23 +56,25 @@ spec:
   type: ClusterIP
 
 ---
-# TODO: Add an Ingress resource for external access
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: chatbot-ingress
-#   annotations:
-#     nginx.ingress.kubernetes.io/rewrite-target: /
-# spec:
-#   ingressClassName: nginx
-#   rules:
-#     - host: chatbot.example.com
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: chatbot-service
-#                 port:
-#                   number: 80
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chatbot-ingress
+  labels:
+    app: chatbot
+    week: "06"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: chatbot.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chatbot-service
+                port:
+                  number: 80

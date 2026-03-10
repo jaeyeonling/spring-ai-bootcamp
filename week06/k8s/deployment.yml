@@ -2,8 +2,16 @@
 # Validate with: kubectl apply --dry-run=client -f k8s/
 
 ---
-# TODO: Create a Secret for sensitive configuration (API keys, etc.)
-# kubectl create secret generic chatbot-secrets --from-literal=openai-api-key=sk-...
+apiVersion: v1
+kind: Secret
+metadata:
+  name: chatbot-secrets
+  labels:
+    app: chatbot
+    week: "06"
+type: Opaque
+stringData:
+  openai-api-key: "sk-placeholder"  # kubectl create secret generic chatbot-secrets --from-literal=openai-api-key=sk-...
 
 ---
 apiVersion: apps/v1
@@ -40,7 +48,11 @@ spec:
               value: "6334"
             - name: SPRING_AI_OLLAMA_BASE_URL
               value: "http://ollama-service:11434"
-            # TODO: Add any additional environment variables needed
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chatbot-secrets
+                  key: openai-api-key
           resources:
             requests:
               cpu: "500m"
@@ -96,10 +108,23 @@ spec:
             limits:
               cpu: "500m"
               memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 6333
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 6333
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
           volumeMounts:
             - name: qdrant-storage
               mountPath: /qdrant/storage
-          # TODO: Add liveness and readiness probes for Qdrant
       volumes:
         - name: qdrant-storage
           persistentVolumeClaim:

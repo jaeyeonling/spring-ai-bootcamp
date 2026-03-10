@@ -4,6 +4,9 @@
 
 spring:
   ai:
+    model:
+      chat: ollama
+      embedding: ollama
     openai:
       # Disable OpenAI auto-configuration when using Ollama
       # spring.ai.openai.enabled is not a valid Spring AI 1.1.2 property.
