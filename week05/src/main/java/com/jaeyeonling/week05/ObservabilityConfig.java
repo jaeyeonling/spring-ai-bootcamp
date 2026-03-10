@@ -35,7 +35,7 @@ public class ObservabilityConfig {
      * 벡터 저장소(Qdrant)를 위한 커스텀 헬스 인디케이터.
      * Qdrant에 연결 가능하면 UP을 보고하고, 그렇지 않으면 DOWN을 보고합니다.
      */
-    @Bean
+    @Bean("vectorStoreHealthIndicator")
     public HealthIndicator vectorStoreHealth() {
         return () -> {
             try (Socket socket = new Socket()) {
@@ -57,7 +57,7 @@ public class ObservabilityConfig {
      * OpenAI API를 위한 커스텀 헬스 인디케이터.
      * API 키가 설정되어 있고 API에 연결 가능하면 UP을 보고합니다.
      */
-    @Bean
+    @Bean("openAiHealthIndicator")
     public HealthIndicator openAiHealth() {
         return () -> {
             // TODO: OpenAI API 연결을 확인하세요.

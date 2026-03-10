@@ -240,22 +240,74 @@ spring.ai.chat.client.observations:
 
 ## 테스트 결과
 
-> 구현 후 채울 것
+모든 8개 테스트 통과:
 
-- [ ] `actuatorHealthReturns200` — `/actuator/health` → HTTP 200
-- [ ] `actuatorHealthIncludesCustomIndicators` — openAi, vectorStore 컴포넌트 존재
-- [ ] `actuatorMetricsListsMetrics` — `/actuator/metrics` → 메트릭 목록 반환
-- [ ] `customRagMetricsAreRegistered` — 4개 커스텀 메트릭 등록 확인
-- [ ] `metricsServiceIsInjectable` — MetricsService 빈 주입
-- [ ] `evaluationServiceIsInjectable` — EvaluationService 빈 주입
-- [ ] `batchEvaluationProducesResults` — 배치 평가 실행 및 결과 생성
-- [ ] `incidentDiagnosisIdentifiesRootCause` — 인시던트 근본 원인 판별
+- [x] `actuatorHealthReturns200` — `/actuator/health` → HTTP 200
+- [x] `actuatorHealthIncludesCustomIndicators` — openAi, vectorStore 컴포넌트 존재
+- [x] `actuatorMetricsListsMetrics` — `/actuator/metrics` → 메트릭 목록 반환
+- [x] `customRagMetricsAreRegistered` — 4개 커스텀 메트릭 등록 확인
+- [x] `metricsServiceIsInjectable` — MetricsService 빈 주입
+- [x] `evaluationServiceIsInjectable` — EvaluationService 빈 주입
+- [x] `batchEvaluationProducesResults` — 배치 평가 실행 및 결과 생성
+- [x] `incidentDiagnosisIdentifiesRootCause` — 인시던트 근본 원인 판별
+
+**트러블슈팅 1: 빈 이름 충돌**
+
+`@Bean("vectorStore")`로 헬스 인디케이터를 등록하면 Spring AI 자동설정 빈(`QdrantVectorStore`)과 충돌한다.
+Spring Boot는 `HealthIndicator` 접미사를 자동 제거하여 Actuator 응답에 표시한다.
+
+```java
+// 틀림 — Spring AI가 이미 "vectorStore" 빈을 등록함
+@Bean("vectorStore")
+
+// 맞음 — HealthIndicator 접미사 제거 후 "vectorStore"로 표시됨
+@Bean("vectorStoreHealthIndicator")
+```
+
+**트러블슈팅 2: FactCheckingEvaluator 생성자**
+
+`protected` 생성자라 직접 호출 불가. 팩토리 메서드를 써야 한다.
+
+```java
+// 틀림
+new FactCheckingEvaluator(chatClientBuilder);
+
+// 맞음
+FactCheckingEvaluator.builder(chatClientBuilder).build();
+```
+
+---
+
+## 벤치마크 결과 (test_questions.json, 50개)
+
+| 지표 | 실측값 |
+|------|--------|
+| 관련성 통과율 | 66.0% (33/50) |
+| 평균 관련성 점수 | 0.66 |
+| 환각 탐지 | 9건 / 50문제 (18%) |
+| 질문당 평균 지연시간 | 4,406 ms |
+
+Week 04 Baseline(검색만, 155ms)과 비교하면 지연시간이 28배 증가했다.
+검색(~150ms) + 답변 생성(~2,000ms) + 관련성 평가(~1,000ms) + 팩트체킹(~1,200ms) 순으로 쌓인다.
+
+**인시던트 진단 결과** (두 케이스 모두 `retrieval` 실패):
+
+| 케이스 | 근본 원인 | 환각 여부 |
+|--------|---------|--------|
+| 전자제품 배송 기간 | retrieval | YES |
+| 맞춤 제작 반품 | retrieval | YES |
+
+한국어 질문 + 영어 FAQ 조합에서 관련성이 0으로 나온 것이 원인으로 보인다.
+Week 04에서 확인했던 cross-language 임베딩 불일치 문제가 `diagnoseIncident`에서도 동일하게 나타난다.
 
 ---
 
 ## 배운 것 / 느낀 것
 
-> 구현 후 채울 것
+1. **관측성은 "무엇이 문제인가"를 코드로 판단하는 것이다.** 장애 발생 시 로그를 뒤지는 대신, `diagnoseIncident()`가 검색 실패 vs 생성 실패를 자동으로 판별한다.
+2. **환각 탐지는 생각보다 많이 잡힌다.** 50문제 중 9건(18%)이 팩트 불일치로 판정됐다. FAQ에 없는 내용을 LLM이 자신 있게 만들어낸 경우들이다.
+3. **평가 파이프라인 자체가 느리다.** 질문당 4,400ms — 검색보다 LLM 평가 호출 2회가 병목이다. 운영 환경에서는 배치 평가를 비동기/별도 스케줄로 분리해야 한다.
+4. **빈 이름은 Spring 생태계 전체와 충돌할 수 있다.** `vectorStore`, `openAi` 같은 범용 이름은 Spring AI 자동설정이 먼저 사용한다. 커스텀 빈에는 충분히 구체적인 이름을 붙여야 한다.
 
 ---
 

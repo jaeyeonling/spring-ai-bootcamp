@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -98,52 +100,44 @@ class ObservabilityTest {
     @Test
     @DisplayName("[통합] 배치 평가가 실행되고 결과를 생성한다")
     void batchEvaluationProducesResults() {
-        // TODO: test_questions.json에서 테스트 질문 로드
-        //
-        // List<EvaluationService.TestCase> testCases = List.of(
-        //     new EvaluationService.TestCase(
-        //         "반품 정책이 어떻게 되나요?",
-        //         "30일 이내에 반품 가능합니다"
-        //     ),
-        //     new EvaluationService.TestCase(
-        //         "어떤 결제 방법을 지원하나요?",
-        //         "신용카드, PayPal, 계좌이체를 지원합니다"
-        //     )
-        // );
-        //
-        // List<EvaluationService.EvaluationResult> results =
-        //     evaluationService.runBatchEvaluation(testCases);
-        //
-        // assertThat(results).hasSize(2);
-        // for (var result : results) {
-        //     assertThat(result.answer()).isNotBlank();
-        //     assertThat(result.relevancyScore()).isBetween(0.0, 1.0);
-        // }
+        List<EvaluationService.TestCase> testCases = List.of(
+            new EvaluationService.TestCase(
+                "반품 정책이 어떻게 되나요?",
+                "30일 이내에 반품 가능합니다"
+            ),
+            new EvaluationService.TestCase(
+                "어떤 결제 방법을 지원하나요?",
+                "신용카드, PayPal, 계좌이체를 지원합니다"
+            )
+        );
 
-        // 플레이스홀더 — 파이프라인 구현 후 위 주석 해제
-        assertThat(evaluationService).isNotNull();
+        List<EvaluationService.EvaluationResult> results =
+            evaluationService.runBatchEvaluation(testCases);
+
+        assertThat(results).hasSize(2);
+        for (var result : results) {
+            assertThat(result.answer()).isNotBlank();
+            assertThat(result.relevancyScore()).isBetween(0.0, 1.0);
+        }
     }
 
     @Test
     @DisplayName("[통합] 인시던트 진단이 근본 원인을 파악한다")
     void incidentDiagnosisIdentifiesRootCause() {
-        // TODO: 미션의 두 가지 인시던트 사례를 테스트하세요:
-        //
-        // 사례 1: "전자제품 배송 기간이 어떻게 되나요?"
-        //   잘못된 답변: "모든 주문에 무료 배송을 제공합니다"
-        //
-        // 사례 2: "맞춤 제작 상품을 반품할 수 있나요?"
-        //   잘못된 답변: "30일 이내에 반품할 수 있습니다"
-        //
-        // var diagnosis1 = evaluationService.diagnoseIncident(
-        //     "전자제품 배송 기간이 어떻게 되나요?",
-        //     "모든 주문에 무료 배송을 제공합니다"
-        // );
-        // assertThat(diagnosis1.rootCause()).isIn("retrieval", "generation");
-        // assertThat(diagnosis1.evidence()).isNotBlank();
-        // assertThat(diagnosis1.suggestedFix()).isNotBlank();
+        var diagnosis1 = evaluationService.diagnoseIncident(
+            "전자제품 배송 기간이 어떻게 되나요?",
+            "모든 주문에 무료 배송을 제공합니다"
+        );
+        assertThat(diagnosis1.rootCause()).isIn("retrieval", "generation");
+        assertThat(diagnosis1.evidence()).isNotBlank();
+        assertThat(diagnosis1.suggestedFix()).isNotBlank();
 
-        // 플레이스홀더 — 진단 구현 후 위 주석 해제
-        assertThat(evaluationService).isNotNull();
+        var diagnosis2 = evaluationService.diagnoseIncident(
+            "맞춤 제작 상품을 반품할 수 있나요?",
+            "30일 이내에 반품할 수 있습니다"
+        );
+        assertThat(diagnosis2.rootCause()).isIn("retrieval", "generation");
+        assertThat(diagnosis2.evidence()).isNotBlank();
+        assertThat(diagnosis2.suggestedFix()).isNotBlank();
     }
 }
