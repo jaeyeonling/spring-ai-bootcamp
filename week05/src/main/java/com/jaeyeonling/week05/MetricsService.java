@@ -71,10 +71,7 @@ public class MetricsService {
      * @param durationMs 검색 시간 (밀리초)
      */
     public void recordSearchLatency(long durationMs) {
-        // TODO: searchLatency 타이머를 사용해 시간을 기록하세요.
-        // searchLatency.record(Duration.ofMillis(durationMs));
-
-        throw new UnsupportedOperationException("검색 지연시간 기록을 구현하세요");
+        searchLatency.record(Duration.ofMillis(durationMs));
     }
 
     /**
@@ -83,10 +80,7 @@ public class MetricsService {
      * @param count 결과 수
      */
     public void recordSearchResultCount(int count) {
-        // TODO: searchResultCount 분포 요약을 사용해 수를 기록하세요.
-        // searchResultCount.record(count);
-
-        throw new UnsupportedOperationException("검색 결과 수 기록을 구현하세요");
+        searchResultCount.record(count);
     }
 
     /**
@@ -97,32 +91,19 @@ public class MetricsService {
      * @param model            모델 이름 (비용 계산에 사용)
      */
     public void recordTokenUsage(long promptTokens, long completionTokens, String model) {
-        // TODO: 총 토큰 수와 예상 비용을 기록하세요.
-        //
-        // 1단계 — 토큰 사용량 카운터 증가:
-        //   long total = promptTokens + completionTokens;
-        //   tokenUsageCounter.increment(total);
-        //
-        // 2단계 — 비용 카운터 계산 및 증가.
-        // gpt-4o-mini 비용 단가:
-        //   입력:  1M 토큰당 $0.15
-        //   출력:  1M 토큰당 $0.60
-        //
-        //   double cost = (promptTokens * 0.15 / 1_000_000.0)
-        //               + (completionTokens * 0.60 / 1_000_000.0);
-        //   tokenCostCounter.increment(cost);
+        long total = promptTokens + completionTokens;
+        tokenUsageCounter.increment(total);
 
-        throw new UnsupportedOperationException("토큰 사용량 기록을 구현하세요");
+        double cost = (promptTokens * 0.15 / 1_000_000.0)
+                    + (completionTokens * 0.60 / 1_000_000.0);
+        tokenCostCounter.increment(cost);
     }
 
     /**
      * 환각 탐지 카운터를 증가시킵니다.
      */
     public void incrementHallucinationCount() {
-        // TODO: hallucinationCounter를 증가시키세요.
-        // hallucinationCounter.increment();
-
-        throw new UnsupportedOperationException("환각 카운터 증가를 구현하세요");
+        hallucinationCounter.increment();
     }
 
     /**
@@ -131,9 +112,6 @@ public class MetricsService {
      * @param score 0.0 ~ 1.0 사이의 품질 점수
      */
     public void updateQualityScore(double score) {
-        // TODO: 품질 점수 게이지를 뒷받침하는 atomic reference를 업데이트하세요.
-        // qualityScore.set(score);
-
-        throw new UnsupportedOperationException("품질 점수 업데이트를 구현하세요");
+        qualityScore.set(score);
     }
 }

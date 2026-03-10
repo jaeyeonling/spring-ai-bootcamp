@@ -1,10 +1,14 @@
 package com.jaeyeonling.week05;
 
 import io.micrometer.observation.ObservationRegistry;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 /**
  * RAG 파이프라인을 위한 관찰 가능성 설정.
@@ -17,6 +21,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ObservabilityConfig {
 
+    @Value("${spring.ai.vectorstore.qdrant.host:localhost}")
+    private String qdrantHost;
+
+    @Value("${spring.ai.vectorstore.qdrant.port:6334}")
+    private int qdrantPort;
+
     // TODO: ObservationRegistry는 Spring Boot가 자동 설정합니다.
     //       Micrometer Tracing이 observation을 자동으로 OTel 스팬으로 브릿징합니다.
     //       기본 설정에는 수동 빈 정의가 필요하지 않습니다.
@@ -28,30 +38,18 @@ public class ObservabilityConfig {
     @Bean
     public HealthIndicator vectorStoreHealth() {
         return () -> {
-            // TODO: Qdrant에 연결 가능한지 확인하세요.
-            //
-            // 옵션:
-            // 1. QdrantClient를 주입하고 헬스/핑 엔드포인트 호출
-            // 2. 단순 검색을 시도하고 예외 확인
-            // 3. Qdrant 포트에 TCP 소켓 체크 사용
-            //
-            // 예시:
-            // try {
-            //     qdrantClient.healthCheck();
-            //     return Health.up()
-            //         .withDetail("store", "qdrant")
-            //         .withDetail("host", "localhost:6334")
-            //         .build();
-            // } catch (Exception e) {
-            //     return Health.down(e)
-            //         .withDetail("store", "qdrant")
-            //         .build();
-            // }
-
-            return Health.unknown()
-                .withDetail("store", "qdrant")
-                .withDetail("status", "아직 구현되지 않음")
-                .build();
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress(qdrantHost, qdrantPort), 1000);
+                return Health.up()
+                    .withDetail("store", "qdrant")
+                    .withDetail("host", qdrantHost + ":" + qdrantPort)
+                    .build();
+            } catch (Exception e) {
+                return Health.down(e)
+                    .withDetail("store", "qdrant")
+                    .withDetail("host", qdrantHost + ":" + qdrantPort)
+                    .build();
+            }
         };
     }
 
