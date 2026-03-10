@@ -1,31 +1,43 @@
 package com.jaeyeonling.week04;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
+import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * 검색 전략 테스트.
+ * 검색 전략 평가 베이스 클래스.
  *
- * 이 테스트들은 각 전략 구현이 올바르게 작동하는지 검증합니다.
- * 실행: ./gradlew :week04:test
+ * 정답 판정 방식: LLM 기반 관련성 판정 (실무 기준)
+ *   - expected_answer의 핵심 정보가 검색된 문서에 포함되어 있는지 LLM에게 질문
+ *   - "YES" / "NO"로만 응답하도록 프롬프트 설계
+ *   - 단순 키워드 매칭이나 전체 문서 임베딩 유사도보다 정확
  *
- * 참고: 이 테스트들은 실제 OpenAI API를 호출하며 실행 중인 Qdrant 인스턴스가 필요합니다.
- * OPENAI_API_KEY가 설정되어 있고 Qdrant가 localhost:6334에서 실행 중이어야 합니다.
+ * 각 전략별 테스트 클래스가 이 클래스를 상속하여 @ActiveProfiles만 다르게 선언한다.
  */
 @SpringBootTest
-@ActiveProfiles("baseline")
-class RetrievalStrategyTest {
+abstract class RetrievalStrategyTest {
 
     @Autowired
-    private RetrievalStrategy retrievalStrategy;
+    RetrievalStrategy retrievalStrategy;
+
+    @Autowired
+    ChatClient.Builder chatClientBuilder;
+
+    @Value("${data.test-questions-path}")
+    String testQuestionsPath;
 
     @Test
     @DisplayName("전략이 활성 프로파일에 따라 주입된다")
@@ -72,26 +84,80 @@ class RetrievalStrategyTest {
 
     // -----------------------------------------------------------------------
     // 평가 테스트 — 전략 정확도 비교
-    // 이것들은 단위 테스트보다 벤치마크에 가깝습니다. 전략을 평가하고
-    // 비교 표를 채우기 위해 수동으로 실행하세요.
     // -----------------------------------------------------------------------
 
     @Test
     @DisplayName("[평가] 현재 전략의 Top-1 및 Top-5 정확도 측정")
-    void evaluateCurrentStrategy() {
-        // TODO: ../../data/test_questions.json에서 테스트 질문 로드
-        //
-        // 각 테스트 질문에 대해:
-        // 1. retrievalStrategy.retrieve(question, 5) 실행
-        // 2. 예상 답변 문서가 1위에 있는지 확인 (Top-1)
-        // 3. 예상 답변 문서가 1-5위 안에 있는지 확인 (Top-5)
-        //
-        // 결과 출력:
-        // System.out.printf("전략: %s%n", retrievalStrategy.getName());
-        // System.out.printf("Top-1 정확도: %.1f%%%n", top1Accuracy);
-        // System.out.printf("Top-5 정확도: %.1f%%%n", top5Accuracy);
+    void evaluateCurrentStrategy() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        List<TestQuestion> questions = mapper.readValue(
+                new File(testQuestionsPath),
+                new TypeReference<>() {});
 
-        // 플레이스홀더 — 테스트 질문 로드 후 구현
-        assertThat(retrievalStrategy).isNotNull();
+        int top1Hits = 0;
+        int top5Hits = 0;
+        long totalLatency = 0;
+
+        for (TestQuestion q : questions) {
+            long start = System.currentTimeMillis();
+            List<Document> results = retrievalStrategy.retrieve(q.question(), 5);
+            totalLatency += System.currentTimeMillis() - start;
+
+            if (containsAnswer(results.subList(0, 1), q.expectedAnswer())) {
+                top1Hits++;
+            }
+            if (containsAnswer(results, q.expectedAnswer())) {
+                top5Hits++;
+            }
+        }
+
+        int total = questions.size();
+        double top1Accuracy = 100.0 * top1Hits / total;
+        double top5Accuracy = 100.0 * top5Hits / total;
+        long avgLatency = totalLatency / total;
+
+        System.out.println();
+        System.out.printf("=== 평가 결과: %s ===%n", retrievalStrategy.getName());
+        System.out.printf("총 질문 수  : %d%n", total);
+        System.out.printf("Top-1 정확도: %.1f%% (%d/%d)%n", top1Accuracy, top1Hits, total);
+        System.out.printf("Top-5 정확도: %.1f%% (%d/%d)%n", top5Accuracy, top5Hits, total);
+        System.out.printf("평균 지연시간: %d ms%n", avgLatency);
+        System.out.println();
+
+        assertThat(retrievalStrategy.getName()).isNotBlank();
     }
+
+    boolean containsAnswer(List<Document> docs, String expectedAnswer) {
+        // 실무 기준: LLM에게 "이 문서들에 예상 답변의 핵심 정보가 포함되어 있는가?"를 질문
+        String context = docs.stream()
+                .map(Document::getText)
+                .collect(Collectors.joining("\n\n---\n\n"));
+
+        String prompt = """
+                다음 문서들을 읽고, 예상 답변의 핵심 정보가 문서에 포함되어 있는지 판단하세요.
+
+                예상 답변: %s
+
+                문서:
+                %s
+
+                위 문서들에 예상 답변의 핵심 정보(숫자, 날짜, 고유명사, 핵심 사실)가 포함되어 있으면 YES,
+                없으면 NO로만 답하세요.
+                """.formatted(expectedAnswer, context);
+
+        String response = chatClientBuilder.build()
+                .prompt()
+                .user(prompt)
+                .call()
+                .content()
+                .trim()
+                .toUpperCase();
+
+        return response.startsWith("YES");
+    }
+
+    public record TestQuestion(
+            String question,
+            @JsonProperty("expected_answer") String expectedAnswer
+    ) {}
 }

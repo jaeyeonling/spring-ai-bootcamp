@@ -37,5 +37,24 @@ subprojects {
 
     tasks.named('test') {
         useJUnitPlatform()
+        testLogging {
+            showStandardStreams = true
+        }
+
+        // 루트의 .env 파일을 읽어 테스트 환경변수로 주입
+        def envFile = rootProject.file('.env')
+        if (envFile.exists()) {
+            envFile.readLines().each { line ->
+                def trimmed = line.trim()
+                if (trimmed && !trimmed.startsWith('#')) {
+                    def idx = trimmed.indexOf('=')
+                    if (idx > 0) {
+                        def key = trimmed.substring(0, idx).trim()
+                        def value = trimmed.substring(idx + 1).trim()
+                        environment(key, value)
+                    }
+                }
+            }
+        }
     }
 }

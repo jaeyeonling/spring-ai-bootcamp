@@ -1,5 +1,9 @@
 package com.jaeyeonling.week04;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -8,6 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -25,8 +32,12 @@ import java.util.List;
 @Profile("reranker")
 public class ReRankingRetrieval implements RetrievalStrategy {
 
+    private static final Logger log = LoggerFactory.getLogger(ReRankingRetrieval.class);
+    private static final int MAX_CONTENT_LENGTH = 500;
+
     private final VectorStore vectorStore;
     private final ChatClient chatClient;
+    private final ObjectMapper objectMapper;
 
     @Value("${retrieval.reranker.candidate-count:20}")
     private int candidateCount;
@@ -34,79 +45,95 @@ public class ReRankingRetrieval implements RetrievalStrategy {
     public ReRankingRetrieval(VectorStore vectorStore, ChatClient.Builder chatClientBuilder) {
         this.vectorStore = vectorStore;
         this.chatClient = chatClientBuilder.build();
+        this.objectMapper = new ObjectMapper();
     }
 
     @Override
     public List<Document> retrieve(String query, int topK) {
-        // TODO: 1단계 — 벡터 저장소에서 광범위한 후보 집합을 검색하세요.
-        //
-        // topK 대신 candidateCount(기본값 20)를 사용해 더 많은 후보를 가져오세요.
-        // SearchRequest.builder().query(query).topK(candidateCount).build()
+        // 1단계 — 벡터 저장소에서 광범위한 후보 집합을 검색
+        List<Document> candidates = vectorStore.similaritySearch(
+                SearchRequest.builder().query(query).topK(candidateCount).build());
+        log.debug("[ReRanker] 후보 {}개 검색 완료", candidates.size());
 
-        List<Document> candidates = List.of(); // TODO: 실제 검색으로 교체
+        if (candidates.isEmpty()) {
+            return candidates;
+        }
 
-        // TODO: 2단계 — LLM을 사용해 후보를 재순위화하세요.
-        //
-        // LLM에게 각 문서의 쿼리 관련성을 0.0에서 1.0으로 점수화하도록 요청하는 프롬프트 구성.
-        //
-        // 예시 프롬프트:
-        //   "쿼리: '{query}'가 주어졌을 때
-        //    각 문서의 관련성을 0.0에서 1.0으로 점수화하세요.
-        //    문서와 같은 순서로 점수의 JSON 배열만 반환하세요.
-        //
-        //    문서:
-        //    [1] {문서 1 내용}
-        //    [2] {문서 2 내용}
-        //    ..."
-
+        // 2단계 — LLM으로 후보를 재순위화
         List<Double> scores = rerankWithLlm(query, candidates);
 
-        // TODO: 3단계 — 문서와 점수를 결합하고 점수 내림차순으로 정렬하여
-        //       상위 K개 문서를 반환하세요.
+        // 3단계 — 문서와 점수를 결합하고 점수 내림차순으로 정렬하여 상위 K개 반환
+        List<ScoredDocument> scored = new ArrayList<>();
+        for (int i = 0; i < candidates.size(); i++) {
+            scored.add(new ScoredDocument(candidates.get(i), scores.get(i)));
+        }
 
-        throw new UnsupportedOperationException("재순위화 검색을 구현하세요");
+        return scored.stream()
+                .sorted(Comparator.comparingDouble(ScoredDocument::score).reversed())
+                .limit(topK)
+                .map(ScoredDocument::document)
+                .toList();
     }
 
-    /**
-     * LLM에게 쿼리에 대한 각 문서의 관련성 점수를 요청합니다.
-     *
-     * @param query      사용자의 질문
-     * @param candidates 점수화할 문서들
-     * @return 문서당 하나의 관련성 점수 목록 (0.0 ~ 1.0)
-     */
     private List<Double> rerankWithLlm(String query, List<Document> candidates) {
-        // TODO: 점수화 프롬프트 구성
         String prompt = buildScoringPrompt(query, candidates);
 
-        // TODO: LLM 호출
-        // String response = chatClient.prompt().user(prompt).call().content();
+        String response = chatClient.prompt()
+                .user(prompt)
+                .call()
+                .content();
 
-        // TODO: 응답에서 점수의 JSON 배열을 파싱하세요
-        // 엣지 케이스 처리: 잘못된 JSON, 잘못된 점수 수 등
-
-        throw new UnsupportedOperationException("LLM 기반 재순위화를 구현하세요");
+        return parseScores(response, candidates.size());
     }
 
     private String buildScoringPrompt(String query, List<Document> candidates) {
-        // TODO: 모든 후보 문서를 나열하고 LLM에게 각각 점수화를 요청하는 프롬프트 구성.
-        //
-        // 팁:
-        // - 토큰을 절약하기 위해 긴 문서를 잘라내세요
-        // - 출력 형식을 명시적으로 지정하세요 (JSON 배열)
-        // - 일관성을 위해 프롬프트에 예시를 포함하세요
-
         StringBuilder sb = new StringBuilder();
         sb.append("쿼리: '").append(query).append("'\n\n");
         sb.append("각 문서의 관련성을 0.0에서 1.0으로 점수화하세요.\n");
+        sb.append("- 1.0: 쿼리에 대한 직접적이고 완전한 답변\n");
+        sb.append("- 0.7-0.9: 관련성 높음, 부분적 답변 포함\n");
+        sb.append("- 0.3-0.6: 같은 주제지만 직접적 답변 아님\n");
+        sb.append("- 0.0-0.2: 관련 없음\n\n");
         sb.append("점수의 JSON 배열만 반환하세요. 예시: [0.9, 0.3, 0.7]\n\n");
         sb.append("문서:\n");
 
         for (int i = 0; i < candidates.size(); i++) {
             String content = candidates.get(i).getText();
-            // TODO: 내용이 합리적인 길이(예: 500자)를 초과하면 잘라내세요
+            // 토큰 절약을 위해 MAX_CONTENT_LENGTH 초과 시 잘라냄
+            if (content.length() > MAX_CONTENT_LENGTH) {
+                content = content.substring(0, MAX_CONTENT_LENGTH) + "...";
+            }
             sb.append("[").append(i + 1).append("] ").append(content).append("\n\n");
         }
 
         return sb.toString();
     }
+
+    private List<Double> parseScores(String response, int expectedCount) {
+        try {
+            // LLM이 JSON 배열 앞뒤에 텍스트를 붙일 수 있으므로 배열 구간만 추출
+            int start = response.indexOf('[');
+            int end = response.lastIndexOf(']');
+            if (start == -1 || end == -1) {
+                throw new IllegalArgumentException("JSON 배열을 찾을 수 없음");
+            }
+
+            List<Double> scores = objectMapper.readValue(
+                    response.substring(start, end + 1),
+                    new TypeReference<>() {});
+
+            if (scores.size() != expectedCount) {
+                log.warn("[ReRanker] 점수 수 불일치: 예상 {}, 실제 {}. 원래 순서 유지",
+                        expectedCount, scores.size());
+                return Collections.nCopies(expectedCount, 0.5);
+            }
+
+            return scores;
+        } catch (Exception e) {
+            log.warn("[ReRanker] 점수 파싱 실패: {}. 원래 순서 유지", e.getMessage());
+            return Collections.nCopies(expectedCount, 0.5);
+        }
+    }
+
+    private record ScoredDocument(Document document, double score) {}
 }

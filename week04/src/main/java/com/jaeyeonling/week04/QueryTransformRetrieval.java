@@ -41,42 +41,24 @@ public class QueryTransformRetrieval implements RetrievalStrategy {
 
     @Override
     public List<Document> retrieve(String query, int topK) {
-        // TODO: 1단계 — 명확성과 구체성을 위해 쿼리를 재작성하세요.
-        //
-        // chatClient를 사용해 쿼리를 더 명확하고 구체적인 버전으로 재작성하세요.
-        // 예시 프롬프트:
-        //   "다음 쿼리를 더 구체적이고 검색에 친화적으로 재작성하세요.
-        //    재작성된 쿼리만 반환하고, 다른 것은 포함하지 마세요.
-        //    원본 쿼리: {query}"
-        //
-        // String rewrittenQuery = rewriteQuery(query);
+        // 1단계 — 명확성과 구체성을 위해 쿼리를 재작성
+        String rewrittenQuery = rewriteQuery(query);
 
-        // TODO: 2단계 — 재작성된 쿼리를 여러 쿼리로 확장하세요.
-        //
-        // chatClient를 사용해 재작성된 쿼리의 3가지 변형을 생성하세요.
-        // 예시 프롬프트:
-        //   "이 질문의 다양한 측면을 다루는 3가지 검색 쿼리를 생성하세요.
-        //    쿼리만 반환하고, 한 줄에 하나씩, 번호나 추가 텍스트 없이.
-        //    질문: {rewrittenQuery}"
-        //
-        // List<String> expandedQueries = expandQuery(rewrittenQuery, 3);
-        // expandedQueries.add(0, rewrittenQuery); // 재작성된 쿼리도 포함
+        // 2단계 — 재작성된 쿼리를 여러 쿼리로 확장
+        List<String> expandedQueries = new ArrayList<>(expandQuery(rewrittenQuery, 3));
+        expandedQueries.add(0, rewrittenQuery); // 재작성된 쿼리도 포함
 
-        // TODO: 3단계 — 확장된 각 쿼리로 검색하세요.
-        //
-        // List<List<Document>> allResults = new ArrayList<>();
-        // for (String q : expandedQueries) {
-        //     List<Document> results = vectorStore.similaritySearch(
-        //         SearchRequest.builder().query(q).topK(topK).build()
-        //     );
-        //     allResults.add(results);
-        // }
+        // 3단계 — 확장된 각 쿼리로 검색
+        List<List<Document>> allResults = new ArrayList<>();
+        for (String q : expandedQueries) {
+            List<Document> results = vectorStore.similaritySearch(
+                SearchRequest.builder().query(q).topK(topK).build()
+            );
+            allResults.add(results);
+        }
 
-        // TODO: 4단계 — 결과를 병합하고 중복을 제거하세요.
-        //
-        // return mergeAndDeduplicate(allResults, topK);
-
-        throw new UnsupportedOperationException("쿼리 변환 검색을 구현하세요");
+        // 4단계 — 결과를 병합하고 중복을 제거
+        return mergeAndDeduplicate(allResults, topK);
     }
 
     /**
@@ -86,9 +68,15 @@ public class QueryTransformRetrieval implements RetrievalStrategy {
      * @return 재작성된, 더 구체적인 쿼리
      */
     private String rewriteQuery(String query) {
-        // TODO: LLM에게 쿼리를 재작성하도록 요청하는 프롬프트를 구성하고,
-        //   chatClient를 호출하여 트리밍된 결과를 반환하세요.
-        throw new UnsupportedOperationException("쿼리 재작성을 구현하세요");
+        return chatClient.prompt()
+                .user("""
+                        다음 쿼리를 더 구체적이고 검색에 친화적으로 재작성하세요.
+                        재작성된 쿼리만 반환하고, 다른 것은 포함하지 마세요.
+                        원본 쿼리: %s
+                        """.formatted(query))
+                .call()
+                .content()
+                .trim();
     }
 
     /**
@@ -99,10 +87,21 @@ public class QueryTransformRetrieval implements RetrievalStrategy {
      * @return 쿼리 변형 목록
      */
     private List<String> expandQuery(String query, int count) {
-        // TODO: LLM에게 {count}개의 쿼리 변형을 생성하도록 요청하는 프롬프트를 구성하고,
-        //   한 줄에 하나씩. 줄바꿈으로 응답을 분할하고, 빈 줄을 필터링하고,
-        //   최대 {count}개 결과를 반환하세요.
-        throw new UnsupportedOperationException("쿼리 확장을 구현하세요");
+        String response = chatClient.prompt()
+                .user("""
+                        이 질문의 다양한 측면을 다루는 %d가지 검색 쿼리를 생성하세요.
+                        쿼리만 반환하고, 한 줄에 하나씩, 번호나 추가 텍스트 없이.
+                        질문: %s
+                        """.formatted(count, query))
+                .call()
+                .content()
+                .trim();
+
+        return Arrays.stream(response.split("\n"))
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .limit(count)
+                .toList();
     }
 
     /**
@@ -114,21 +113,21 @@ public class QueryTransformRetrieval implements RetrievalStrategy {
      * @return 병합되고 중복 제거된 결과
      */
     private List<Document> mergeAndDeduplicate(List<List<Document>> resultSets, int topK) {
-        // TODO: 결과 병합을 구현하세요.
-        //
-        // 전략: 각 문서가 몇 개의 결과 집합에 나타나는지 계산하세요.
-        // 횟수 내림차순으로 정렬 (더 많은 쿼리에서 발견된 문서가 더 높은 순위).
-        // 가능하면 평균 유사도 점수로 동점 처리.
-        //
-        // 삽입 순서를 동점 처리로 유지하기 위해 LinkedHashMap 사용.
-
         Map<String, Document> seen = new LinkedHashMap<>();
         Map<String, Integer> frequency = new LinkedHashMap<>();
 
-        // TODO: 모든 결과 집합을 반복하여 seen과 frequency 맵 채우기
+        for (List<Document> results : resultSets) {
+            for (Document doc : results) {
+                String id = doc.getId();
+                seen.putIfAbsent(id, doc);
+                frequency.merge(id, 1, Integer::sum);
+            }
+        }
 
-        // TODO: frequency 내림차순으로 정렬하여 상위 K개 반환
-
-        throw new UnsupportedOperationException("병합 및 중복 제거를 구현하세요");
+        return frequency.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .limit(topK)
+                .map(e -> seen.get(e.getKey()))
+                .toList();
     }
 }

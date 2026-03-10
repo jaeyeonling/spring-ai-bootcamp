@@ -37,6 +37,7 @@ public class BaselineRetrieval implements RetrievalStrategy {
         //
         // 힌트: SearchRequest.builder().query(query).topK(topK).build()
 
-        throw new UnsupportedOperationException("기준선 벡터 검색을 구현하세요");
+        return vectorStore.similaritySearch(
+                SearchRequest.builder().query(query).topK(topK).build());
     }
 }
