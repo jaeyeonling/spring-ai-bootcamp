@@ -22,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Disabled("실행 중인 LLM이 필요합니다 — API 키가 설정되면 @Disabled 제거")
 class ToolCallingTest {
 
     @Autowired

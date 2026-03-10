@@ -64,6 +64,18 @@ public class FaqSearchTool {
         //        .map(Document::getText)
         //        .collect(Collectors.joining("\n\n---\n\n"));
 
-        throw new UnsupportedOperationException("구현하세요 — mission/MISSION.md 참고");
+        var results = vectorStore.similaritySearch(
+                SearchRequest.builder()
+                        .query(query)
+                        .topK(3)
+                        .build());
+
+        if (results.isEmpty()) {
+            return "검색에서 관련 FAQ 항목을 찾을 수 없습니다: " + query;
+        }
+
+        return results.stream()
+                .map(doc -> doc.getText())
+                .collect(Collectors.joining("\n\n---\n\n"));
     }
 }

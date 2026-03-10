@@ -59,47 +59,36 @@ public class ReflectionService {
      * @return 검증된 답변 (또는 최대 재시도 후 최선의 답변)
      */
     public String chatWithReflection(String userMessage, Object... tools) {
-        // TODO: 생성 -> 검증 -> 재시도 루프를 구현하세요.
-        //
-        //  각 시도에 대해 (maxRetries + 1까지):
-        //    1. 생성: 사용자 메시지와 툴로 chatClient 호출
-        //    2. 검증: chatClient에게 (툴 없이) 답변을 검증하도록 요청
-        //    3. 검증이 통과하면 ("PASS") 답변 반환
-        //    4. 검증이 실패하면 ("FAIL: ...") 이유를 로그하고 재시도
-        //
-        //  예시:
-        //    String result = null;
-        //
-        //    for (int attempt = 0; attempt <= maxRetries; attempt++) {
-        //        // 1단계: 생성
-        //        result = chatClient.prompt()
-        //            .system(SYSTEM_PROMPT)
-        //            .user(userMessage)
-        //            .tools(tools)
-        //            .call()
-        //            .content();
-        //
-        //        // 2단계: 검증
-        //        String verification = chatClient.prompt()
-        //            .system(VERIFICATION_PROMPT)
-        //            .user("질문: %s\n답변: %s".formatted(userMessage, result))
-        //            .call()
-        //            .content();
-        //
-        //        // 3단계: 확인
-        //        if (verification != null && verification.trim().startsWith("PASS")) {
-        //            log.info("{} 번째 시도에서 답변 검증됨", attempt + 1);
-        //            return result;
-        //        }
-        //
-        //        // 4단계: 로그 및 재시도
-        //        log.warn("{} 번째 시도에서 Reflection 실패: {}", attempt + 1, verification);
-        //    }
-        //
-        //    log.warn("질문에 대한 최대 재시도 소진: {}", userMessage);
-        //    return result;
+        String result = null;
 
-        throw new UnsupportedOperationException("구현하세요 — mission/MISSION.md 참고");
+        for (int attempt = 0; attempt <= maxRetries; attempt++) {
+            // 1단계: 생성
+            result = chatClient.prompt()
+                    .system(SYSTEM_PROMPT)
+                    .user(userMessage)
+                    .tools(tools)
+                    .call()
+                    .content();
+
+            // 2단계: 검증
+            String verification = chatClient.prompt()
+                    .system(VERIFICATION_PROMPT)
+                    .user("질문: %s\n답변: %s".formatted(userMessage, result))
+                    .call()
+                    .content();
+
+            // 3단계: 확인
+            if (verification != null && verification.trim().startsWith("PASS")) {
+                log.info("{}번째 시도에서 답변 검증됨", attempt + 1);
+                return result;
+            }
+
+            // 4단계: 로그 및 재시도
+            log.warn("{}번째 시도에서 Reflection 실패: {}", attempt + 1, verification);
+        }
+
+        log.warn("질문에 대한 최대 재시도 소진: {}", userMessage);
+        return result;
     }
 
     /**
@@ -111,15 +100,11 @@ public class ReflectionService {
      * @return 답변이 검증을 통과하면 true
      */
     public boolean verify(String question, String answer) {
-        // TODO: VERIFICATION_PROMPT로 chatClient를 호출하고 "PASS"이면 true를 반환하세요.
-        //  예시:
-        //    String verification = chatClient.prompt()
-        //        .system(VERIFICATION_PROMPT)
-        //        .user("질문: %s\n답변: %s".formatted(question, answer))
-        //        .call()
-        //        .content();
-        //    return verification != null && verification.trim().startsWith("PASS");
-
-        throw new UnsupportedOperationException("구현하세요 — mission/MISSION.md 참고");
+        String verification = chatClient.prompt()
+                .system(VERIFICATION_PROMPT)
+                .user("질문: %s\n답변: %s".formatted(question, answer))
+                .call()
+                .content();
+        return verification != null && verification.trim().startsWith("PASS");
     }
 }

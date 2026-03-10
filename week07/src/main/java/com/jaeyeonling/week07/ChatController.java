@@ -43,22 +43,20 @@ public class ChatController {
      */
     @PostMapping("/chat")
     public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
-        // TODO: 요청 검증 (question이 비어있으면 안 됨)
+        if (request.question() == null || request.question().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        // TODO: 모든 툴이 등록된 상태로 chatClient를 사용하세요.
-        //  LLM이 질문에 따라 자동으로 어떤 툴을 호출할지 결정합니다.
-        //  예시:
-        //    String answer = chatClient.prompt()
-        //        .system("당신은 도움이 되는 고객 지원 담당자입니다. " +
-        //                "주문, 매출, 회사 정책에 관한 질문에 답하기 위해 사용 가능한 툴을 사용하세요.")
-        //        .user(request.question())
-        //        .tools(orderTools, faqSearchTool)
-        //        .call()
-        //        .content();
+        log.info("chat 요청: {}", request.question());
+        String answer = chatClient.prompt()
+                .system("당신은 도움이 되는 고객 지원 담당자입니다. " +
+                        "주문, 매출, 회사 정책에 관한 질문에 답하기 위해 사용 가능한 툴을 사용하세요.")
+                .user(request.question())
+                .tools(orderTools, faqSearchTool)
+                .call()
+                .content();
 
-        // TODO: ChatResponse로 래핑하여 답변 반환
-
-        throw new UnsupportedOperationException("구현하세요 — mission/MISSION.md 참고");
+        return ResponseEntity.ok(new ChatResponse(answer, false));
     }
 
     /**
@@ -66,17 +64,15 @@ public class ChatController {
      */
     @PostMapping("/chat/verified")
     public ResponseEntity<ChatResponse> chatWithReflection(@RequestBody ChatRequest request) {
-        // TODO: 요청 검증
+        if (request.question() == null || request.question().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        // TODO: 직접 chatClient 호출 대신 reflectionService.chatWithReflection()을 사용하세요.
-        //  이것은 잘못된 툴 호출이나 나쁜 답변을 잡는 검증 단계를 추가합니다.
-        //  예시:
-        //    String answer = reflectionService.chatWithReflection(
-        //        request.question(), orderTools, faqSearchTool);
+        log.info("chat/verified 요청: {}", request.question());
+        String answer = reflectionService.chatWithReflection(
+                request.question(), orderTools, faqSearchTool);
 
-        // TODO: ChatResponse로 래핑하여 답변 반환
-
-        throw new UnsupportedOperationException("구현하세요 — mission/MISSION.md 참고");
+        return ResponseEntity.ok(new ChatResponse(answer, true));
     }
 
     public record ChatRequest(String question) {}
