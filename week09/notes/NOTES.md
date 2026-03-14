@@ -200,7 +200,120 @@ Qdrant가 실행 중이지 않으면 `QdrantVectorStore` 빈 생성에 실패한
 
 ## 트러블슈팅
 
-### 1. MCP Annotation Scanner가 @Tool을 자동 발견
+### 1. OpenCode MCP 클라이언트 연결 — STDIO 서버의 4가지 함정
+
+Week 09 구현 후 OpenCode에 MCP 서버를 등록할 때 Disabled 상태에서 빠져나오지 못하는 문제가 발생했다.
+원인을 하나씩 제거하며 해결했다.
+
+#### 함정 1: `bootRun`은 stdin을 MCP 프로세스에 전달하지 않는다
+
+`opencode.json`에 `gradlew :week09:bootRun`을 command로 등록했는데 Disabled가 반복됐다.
+
+```
+MCP 클라이언트 → stdin → [Gradle bootRun] → [JVM 자식 프로세스]
+                                   ↑
+                       Gradle이 stdin을 가로채서 JVM에 전달하지 않음
+```
+
+Gradle `bootRun`은 JVM을 자식 프로세스로 실행하며 stdin을 포워딩하지 않는다.
+MCP 클라이언트가 보내는 `initialize` 요청이 Spring 서버에 도달하지 않아서 응답이 없고 타임아웃으로 Disabled 처리된다.
+
+**해결**: `bootJar`로 fat jar를 빌드한 뒤 `java -jar`로 직접 실행한다.
+
+```bash
+./gradlew :week09:bootJar
+java -jar week09/build/libs/week09-0.0.1-SNAPSHOT.jar
+```
+
+`java -jar`는 현재 프로세스가 곧 JVM이므로 stdin이 그대로 전달된다.
+
+#### 함정 2: `spring.ai.mcp.server.stdio=true` 명시 필요
+
+`spring.main.web-application-type: none`만 설정해서는 STDIO transport가 활성화되지 않는다.
+서버는 정상 시작되지만(`Registered tools: 5`) JSON-RPC 응답을 쓰지 않는다.
+
+공식 문서:
+> To enable the STDIO set `spring.ai.mcp.server.stdio=true`
+
+`spring-ai-starter-mcp-server`는 STDIO가 기본 비활성이다. 반드시 명시해야 한다.
+
+```yaml
+spring:
+  ai:
+    mcp:
+      server:
+        stdio: true
+```
+
+#### 함정 3: 로그가 stdout을 오염시킨다
+
+Spring Boot 로그가 `System.out`으로 출력되고, `StdioServerTransportProvider`도 `System.out`으로 JSON-RPC를 쓴다.
+둘이 같은 스트림을 쓰므로 MCP 클라이언트가 로그 줄을 JSON으로 파싱하려다 실패한다.
+
+공식 예제(spring-ai-examples/weather/starter-stdio-server)의 해결법:
+```properties
+# NOTE: You must disable the banner and the console logging
+# to allow the STDIO transport to work !!!
+spring.main.banner-mode=off
+logging.pattern.console=
+```
+
+그러나 `logging.pattern.console=` 빈 값은 콘솔 appender를 끄는 게 아니라 패턴을 빈 문자열로 만들 뿐이다.
+빈 줄이 계속 stdout으로 나간다.
+
+**확실한 해결책**: `logback.xml`로 콘솔 appender 자체를 제거하고 파일로만 출력한다.
+
+```xml
+<configuration>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/tmp/week09-mcp-server.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
+```
+
+#### 함정 4: `opencode.json`의 `environment`가 Gradle → JVM 자식 프로세스로 전달되지 않는다
+
+`environment: { OPENAI_API_KEY: "sk-..." }`를 설정해도 `bootRun`을 쓰면 Gradle이 JVM을 자식 프로세스로 띄우면서
+환경변수가 전달되지 않는 경우가 있다. `java -jar` 방식으로 전환하면 같은 프로세스이므로 문제없다.
+
+#### 최종 동작 확인
+
+```bash
+# 정상 동작 확인 (stdout에 순수 JSON-RPC만 출력)
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize",...}' | \
+  OPENAI_API_KEY=sk-... java -jar week09/build/libs/week09-0.0.1-SNAPSHOT.jar
+
+# 응답:
+# {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","serverInfo":{"name":"week09-ai-tools",...}}}
+```
+
+#### opencode.json 최종 설정
+
+```json
+"faq-bot": {
+  "type": "local",
+  "command": ["/path/to/week09/mcp-server.sh"],
+  "environment": {
+    "OPENAI_API_KEY": "sk-..."
+  }
+}
+```
+
+`mcp-server.sh`:
+```bash
+#!/bin/bash
+JAR="$(dirname "$0")/build/libs/week09-0.0.1-SNAPSHOT.jar"
+[ ! -f "$JAR" ] && ../gradlew -q :week09:bootJar
+exec java -jar "$JAR"
+```
+
+### 2. MCP Annotation Scanner가 @Tool을 자동 발견
 
 로그에서 `McpServerAnnotationScannerAutoConfiguration`이 동작하는 것을 확인했다.
 Spring AI MCP Starter가 `@Tool` 어노테이션이 붙은 빈을 자동으로 스캔하여 MCP 서버에 등록한다.
@@ -259,6 +372,12 @@ MCP 서버 등록 상태:
 3. **3가지 프리미티브의 구분이 모호하다.** Spring AI 1.1.2에서는 Resources, Prompts 모두 `@Tool`로 구현한다. 프로토콜 수준에서는 구분이 있지만(tools/list, resources/list, prompts/list), Java 구현에서는 모두 같은 어노테이션이다. 구분은 의미론적(description으로 역할 전달)이다.
 
 4. **STDIO vs HTTP/SSE의 트레이드오프.** STDIO는 Claude Desktop처럼 로컬에서 프로세스를 직접 실행하는 클라이언트에 적합하다. 원격 서버 배포에는 HTTP/SSE가 필요하며 `spring-ai-starter-mcp-server-webmvc`로 전환해야 한다.
+
+5. **STDIO MCP 서버는 `java -jar`로 실행해야 한다.** `gradlew bootRun`은 Gradle이 JVM을 자식 프로세스로 띄우므로 stdin이 MCP 서버에 전달되지 않는다. Claude Desktop 공식 설정도 항상 `java -jar`를 권장한다.
+
+6. **`spring.ai.mcp.server.stdio=true`는 필수다.** `web-application-type: none`은 웹 서버를 끄는 것이지 STDIO transport를 켜는 것이 아니다. 별도로 명시해야 한다. 이 설정이 없으면 서버가 정상 시작되어도 JSON-RPC 요청을 처리하지 않는다.
+
+7. **`logging.pattern.console=` 빈 값으로는 부족하다.** 공식 예제가 이 방법을 쓰지만, 빈 줄이 stdout으로 계속 나간다. 완전한 해결책은 `logback.xml`로 콘솔 appender 자체를 제거하는 것이다.
 
 ---
 
