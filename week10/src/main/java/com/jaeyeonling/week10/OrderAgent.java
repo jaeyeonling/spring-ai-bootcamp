@@ -1,7 +1,6 @@
 package com.jaeyeonling.week10;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,7 @@ public class OrderAgent implements FaqAgent {
 
     private final ChatClient chatClient;
 
-    public OrderAgent(@Lazy ChatClient.Builder builder) {
+    public OrderAgent(ChatClient.Builder builder) {
         this.chatClient = builder.build();
     }
 

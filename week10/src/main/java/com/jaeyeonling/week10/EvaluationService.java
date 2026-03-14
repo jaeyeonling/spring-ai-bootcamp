@@ -19,15 +19,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 환각 탐지 및 답변 품질 점수화를 위한 배치 평가 서비스.
- * Week 05의 EvaluationService를 Week 10 패키지로 이식합니다.
+ * 운영 챗봇 파이프라인의 품질을 평가하는 서비스.
+ *
+ * Week 05의 EvaluationService를 개선:
+ * - 실제 ChatService(툴 호출 포함)를 사용해 평가 — 운영 파이프라인과 동일한 경로
+ * - RelevancyEvaluator + FactCheckingEvaluator로 관련성/환각 이중 검증
+ * - MetricsService에 평가 결과 기록
+ *
+ * 핵심 철학: 평가는 실제 운영 파이프라인을 그대로 평가해야 한다.
+ * 별도 ChatClient를 만들면 툴 호출 로직이 빠진 "다른 시스템"을 평가하게 된다.
  */
 @Service
 public class EvaluationService {
 
     private static final Logger log = LoggerFactory.getLogger(EvaluationService.class);
 
-    private final ChatClient chatClient;
+    private final ChatService chatService;              // 실제 운영 파이프라인 (툴 포함)
     private final RelevancyEvaluator relevancyEvaluator;
     private final FactCheckingEvaluator factCheckingEvaluator;
     private final MetricsService metricsService;
@@ -35,11 +42,12 @@ public class EvaluationService {
     private final VectorStore vectorStore;
 
     public EvaluationService(
+            ChatService chatService,
             ChatClient.Builder chatClientBuilder,
             MetricsService metricsService,
             ObservationRegistry observationRegistry,
             VectorStore vectorStore) {
-        this.chatClient = chatClientBuilder.build();
+        this.chatService = chatService;
         this.relevancyEvaluator = new RelevancyEvaluator(chatClientBuilder);
         this.factCheckingEvaluator = FactCheckingEvaluator.builder(chatClientBuilder).build();
         this.metricsService = metricsService;
@@ -82,25 +90,27 @@ public class EvaluationService {
             });
     }
 
+    /**
+     * 실제 운영 파이프라인(ChatService)을 통해 단일 테스트 케이스를 평가합니다.
+     *
+     * ChatService를 직접 호출하므로 툴 호출(getOrderStatus, searchFaq)이 포함된
+     * 실제 사용자 경험을 평가합니다.
+     */
     private EvaluationResult evaluateSingle(TestCase testCase) {
-        // 1단계 — 검색
+        // 1단계 — 실제 운영 파이프라인으로 답변 생성 (툴 호출 포함)
         long start = System.currentTimeMillis();
+        ChatService.ChatResult chatResult = chatService.chat(testCase.question());
+        long elapsed = System.currentTimeMillis() - start;
+        log.debug("[평가] '{}' → {}ms, {} 토큰", testCase.question(), elapsed,
+                chatResult.tokenUsage().totalTokens());
+
+        String answer = chatResult.answer();
+
+        // 2단계 — 평가를 위해 관련 문서 검색 (EvaluationRequest 구성용)
         List<Document> documents = vectorStore.similaritySearch(
             SearchRequest.builder().query(testCase.question()).topK(5).build()
         );
-        metricsService.recordSearchLatency(System.currentTimeMillis() - start);
         metricsService.recordSearchResultCount(documents.size());
-
-        // 2단계 — 답변 생성
-        String context = documents.stream()
-            .map(Document::getText)
-            .collect(Collectors.joining("\n\n"));
-
-        String answer = chatClient.prompt()
-            .system("다음 컨텍스트에 기반해서만 답변하세요:\n" + context)
-            .user(testCase.question())
-            .call()
-            .content();
 
         // 3단계 — 관련성 평가
         EvaluationRequest evalRequest = new EvaluationRequest(testCase.question(), documents, answer);

@@ -47,7 +47,11 @@ public class FaqIngestionService implements ApplicationRunner {
         List<Document> rawDocuments = new TikaDocumentReader(
                 new FileSystemResource(faqFilePath)).get();
 
-        List<Document> chunks = new TokenTextSplitter().apply(rawDocuments);
+        // Week 02 교훈: FAQ는 Q&A 단위 청킹이 효과적.
+        // defaultChunkSize=400(기본 800보다 작게), minChunkSizeChars=100, overlap 허용
+        // → ReRanker 사용 시 청크가 작을수록 관련성 판정 정밀도 향상
+        TokenTextSplitter splitter = new TokenTextSplitter(400, 100, 5, 10000, true);
+        List<Document> chunks = splitter.apply(rawDocuments);
         log.info("[ETL] {} 개 청크 생성", chunks.size());
 
         vectorStore.add(chunks);

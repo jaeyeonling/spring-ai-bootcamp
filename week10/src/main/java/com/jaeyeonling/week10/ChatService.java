@@ -36,19 +36,19 @@ public class ChatService {
 
     private final ChatClient chatClient;
     private final ToolCallbackProvider toolCallbackProvider;
-    private final FaqSearchTool faqSearchTool;
+    private final FaqReranker faqReranker;
     private final MetricsService metricsService;
     private final FaqOrchestratorService orchestratorService;
 
     public ChatService(
             ChatClient.Builder builder,
             ToolCallbackProvider toolCallbackProvider,
-            FaqSearchTool faqSearchTool,
+            FaqReranker faqReranker,
             MetricsService metricsService,
             FaqOrchestratorService orchestratorService) {
         this.chatClient = builder.build();
         this.toolCallbackProvider = toolCallbackProvider;
-        this.faqSearchTool = faqSearchTool;
+        this.faqReranker = faqReranker;
         this.metricsService = metricsService;
         this.orchestratorService = orchestratorService;
     }
@@ -67,7 +67,7 @@ public class ChatService {
 
         // 소스 추적을 위해 FAQ 검색 수행 (Week 04: QueryTransform + ReRanker)
         long searchStart = System.currentTimeMillis();
-        List<Document> sourceDocs = faqSearchTool.searchWithSources(userMessage, 3);
+        List<Document> sourceDocs = faqReranker.retrieve(userMessage, 3);
         metricsService.recordSearchLatency(System.currentTimeMillis() - searchStart);
         metricsService.recordSearchResultCount(sourceDocs.size());
 
