@@ -10,53 +10,73 @@ import java.util.Map;
 /**
  * MCP 호환 클라이언트에 주문 관련 툴을 노출하는 MCP 서비스.
  *
- * 실제 애플리케이션에서는 주문 데이터베이스 또는 서비스에 연결합니다.
+ * 실제 애플리케이션에서는 주문 데이터베이스에 연결합니다.
  * 이 실습에서는 MCP 툴 패턴을 시연하기 위해 스텁 데이터를 사용합니다.
- *
- * Spring AI 1.1.2는 org.springframework.ai.tool.annotation의
- * @Tool과 @ToolParam 어노테이션을 사용합니다.
  */
 @Service
 public class OrderMcpService {
 
-    // TODO: lookupOrder 툴을 구현하세요.
-    //  @Tool로 어노테이션을 달고 명확한 설명을 제공하세요.
-    //
-    //  툴이 해야 할 일:
-    //    - @ToolParam으로 어노테이션된 orderId (String) 파라미터를 받음
-    //    - 주문 상세 정보를 Map으로 반환 (orderId, status, items, total, createdAt)
-    //    - 이 실습에서는 orderId에 기반한 스텁 데이터를 반환
-    //
-    //  예시:
-    //    @Tool(description = "ID로 주문을 조회합니다. 상태, 상품, 총액, 생성 날짜를 포함한 주문 상세 정보를 반환합니다.")
-    //    public Map<String, Object> lookupOrder(
-    //            @ToolParam(description = "주문 ID (예: ORD-12345)") String orderId) {
-    //        // 스텁 구현 — 실제 데이터베이스 조회로 교체
-    //        return Map.of(
-    //            "orderId",   orderId,
-    //            "status",    "배송 중",
-    //            "items",     List.of("위젯 A", "위젯 B"),
-    //            "total",     59.99,
-    //            "createdAt", "2025-01-15T10:30:00Z"
-    //        );
-    //    }
+    private static final Map<String, Map<String, Object>> ORDERS = Map.of(
+        "ORD-2024-001", Map.of(
+            "orderId",   "ORD-2024-001",
+            "status",    "배송 완료",
+            "items",     List.of("무선 키보드", "USB-C 허브"),
+            "total",     89500,
+            "createdAt", "2024-01-15T10:30:00Z"
+        ),
+        "ORD-2024-002", Map.of(
+            "orderId",   "ORD-2024-002",
+            "status",    "처리 중",
+            "items",     List.of("노트북 거치대"),
+            "total",     45000,
+            "createdAt", "2024-01-18T14:20:00Z"
+        ),
+        "ORD-2024-003", Map.of(
+            "orderId",   "ORD-2024-003",
+            "status",    "배송 중",
+            "items",     List.of("모니터 암", "마우스 패드"),
+            "total",     127000,
+            "createdAt", "2024-01-20T09:15:00Z"
+        )
+    );
 
-    // TODO: checkOrderStatus 툴을 구현하세요.
-    //  @Tool로 어노테이션을 달고 명확한 설명을 제공하세요.
-    //
-    //  툴이 해야 할 일:
-    //    - @ToolParam으로 어노테이션된 orderId (String) 파라미터를 받음
-    //    - 간소화된 상태 응답 반환 (orderId, status, estimatedDelivery)
-    //    - 이것은 lookupOrder보다 가벼운 툴 — 상태만 필요할 때 사용
-    //
-    //  예시:
-    //    @Tool(description = "주문의 현재 상태를 확인합니다. 상태와 예상 배송일을 반환합니다. 빠른 상태 확인에 사용하세요.")
-    //    public Map<String, String> checkOrderStatus(
-    //            @ToolParam(description = "확인할 주문 ID (예: ORD-12345)") String orderId) {
-    //        return Map.of(
-    //            "orderId",           orderId,
-    //            "status",            "배송 중",
-    //            "estimatedDelivery", "2025-01-20"
-    //        );
-    //    }
+    @Tool(description = "ID로 주문을 조회합니다. " +
+                        "상태, 상품, 총액, 생성 날짜를 포함한 주문 상세 정보를 반환합니다. " +
+                        "고객이 주문 상세 정보를 요청할 때 사용하세요.")
+    public Map<String, Object> lookupOrder(
+            @ToolParam(description = "주문 ID, 예: ORD-2024-001") String orderId) {
+        if (ORDERS.containsKey(orderId)) {
+            return ORDERS.get(orderId);
+        }
+        return Map.of(
+            "orderId", orderId,
+            "error",   "주문을 찾을 수 없습니다"
+        );
+    }
+
+    @Tool(description = "주문의 현재 상태를 확인합니다. " +
+                        "상태와 예상 배송일을 반환합니다. " +
+                        "고객이 배송 상태만 간단히 확인하고 싶을 때 사용하세요. lookupOrder보다 가벼운 조회입니다.")
+    public Map<String, String> checkOrderStatus(
+            @ToolParam(description = "확인할 주문 ID, 예: ORD-2024-001") String orderId) {
+        if (ORDERS.containsKey(orderId)) {
+            String status = (String) ORDERS.get(orderId).get("status");
+            String delivery = switch (status) {
+                case "배송 완료" -> "배송 완료";
+                case "배송 중" -> "2024-01-25 예정";
+                case "처리 중" -> "2024-01-28 예정";
+                default -> "미정";
+            };
+            return Map.of(
+                "orderId",           orderId,
+                "status",            status,
+                "estimatedDelivery", delivery
+            );
+        }
+        return Map.of(
+            "orderId", orderId,
+            "status",  "주문을 찾을 수 없습니다",
+            "estimatedDelivery", "N/A"
+        );
+    }
 }

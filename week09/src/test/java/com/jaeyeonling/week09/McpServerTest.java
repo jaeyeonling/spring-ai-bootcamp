@@ -1,18 +1,20 @@
 package com.jaeyeonling.week09;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Week 09 테스트 — MCP 서버 툴/리소스/프롬프트 등록.
  *
- * 이 테스트들은 MCP 서버가 올바르게 시작되고
- * 어노테이션된 서비스들이 올바르게 등록되었는지 검증합니다.
+ * @Tool 메서드는 Spring 빈의 일반 Java 메서드이므로
+ * MCP 프로토콜 레이어 없이 직접 호출하여 검증합니다.
  *
  * 실행: ./gradlew :week09:test
  *
@@ -42,29 +44,55 @@ class McpServerTest {
     @Test
     @DisplayName("MCP 서버 설정으로 애플리케이션 컨텍스트가 로드된다")
     void applicationContextLoads() {
-        // 이 테스트가 통과하면 MCP 서버 자동 설정이
-        // 모든 어노테이션된 서비스를 감지하고 등록한 것
         assertThat(faqMcpService).isNotNull();
         assertThat(orderMcpService).isNotNull();
     }
 
     @Test
-    @Disabled("@Tool 메서드를 구현한 후 활성화하세요. Qdrant가 실행 중이고 FAQ 데이터가 인제스트된 상태에서 실행하세요.")
     @DisplayName("searchFaq가 유효한 쿼리에 대해 결과를 반환한다")
     void searchFaqReturnsResults() {
-        // TODO: @Tool 메서드 구현 후 아래 주석 해제
-        // List<Map<String, Object>> results = faqMcpService.searchFaq("환불 정책", 3);
-        // assertThat(results).isNotEmpty();
-        // assertThat(results).hasSizeLessThanOrEqualTo(3);
+        List<Map<String, Object>> results = faqMcpService.searchFaq("환불 정책", 3);
+        assertThat(results).isNotEmpty();
+        assertThat(results).hasSizeLessThanOrEqualTo(3);
     }
 
     @Test
-    @Disabled("@Tool 메서드를 구현한 후 활성화하세요.")
-    @DisplayName("lookupOrder가 알려진 주문 ID에 대해 스텁 데이터를 반환한다")
+    @DisplayName("faqCategories가 카테고리 목록을 반환한다")
+    void faqCategoriesReturnsCategories() {
+        List<Map<String, String>> categories = faqMcpService.faqCategories();
+        assertThat(categories).isNotEmpty();
+        assertThat(categories).anyMatch(c -> c.containsKey("id") && c.containsKey("title"));
+    }
+
+    @Test
+    @DisplayName("customerSupportPrompt가 프롬프트 템플릿을 반환한다")
+    void customerSupportPromptReturnsTemplate() {
+        Map<String, String> prompt = faqMcpService.customerSupportPrompt("환불 요청");
+        assertThat(prompt).containsKey("template");
+        assertThat(prompt.get("template")).contains("환불 요청");
+    }
+
+    @Test
+    @DisplayName("lookupOrder가 알려진 주문 ID에 대해 상세 데이터를 반환한다")
     void lookupOrderReturnsStubData() {
-        // TODO: @Tool 메서드 구현 후 아래 주석 해제
-        // Map<String, Object> order = orderMcpService.lookupOrder("ORD-12345");
-        // assertThat(order).containsKey("orderId");
-        // assertThat(order.get("status")).isNotNull();
+        Map<String, Object> order = orderMcpService.lookupOrder("ORD-2024-001");
+        assertThat(order).containsKey("orderId");
+        assertThat(order.get("status")).isNotNull();
+        assertThat(order.get("status")).isEqualTo("배송 완료");
+    }
+
+    @Test
+    @DisplayName("lookupOrder가 알 수 없는 주문 ID에 대해 에러를 반환한다")
+    void lookupOrderReturnsErrorForUnknownOrder() {
+        Map<String, Object> order = orderMcpService.lookupOrder("ORD-9999-999");
+        assertThat(order).containsKey("error");
+    }
+
+    @Test
+    @DisplayName("checkOrderStatus가 상태와 예상 배송일을 반환한다")
+    void checkOrderStatusReturnsStatus() {
+        Map<String, String> status = orderMcpService.checkOrderStatus("ORD-2024-003");
+        assertThat(status.get("status")).isEqualTo("배송 중");
+        assertThat(status.get("estimatedDelivery")).isNotBlank();
     }
 }
