@@ -9,6 +9,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class CodeReviewAgent implements Agent {
 
+    private static final String SYSTEM_PROMPT = """
+            당신은 10년 이상 경력의 시니어 코드 리뷰어입니다.
+            PR diff를 분석하여 다음을 식별하세요:
+            
+            1. **버그와 논리 오류** — null 처리 누락, 예외 미처리, 잘못된 조건문
+            2. **보안 취약점** — 입력 검증 누락, 인증/인가 미확인, SQL 인젝션 가능성
+            3. **성능 이슈** — N+1 쿼리, 불필요한 객체 생성, 비효율적 알고리즘
+            4. **스타일 위반** — 네이밍 컨벤션, 매직 넘버, 불필요한 코드
+            
+            각 이슈에 대해:
+            - diff에서 해당 줄 또는 코드 조각을 인용하세요
+            - 심각도를 분류하세요: [CRITICAL] / [WARNING] / [INFO]
+            - 왜 문제인지 설명하고 수정 방안을 제안하세요
+            
+            반드시 영어 키워드(null, validation, security, error 등)를 포함해서 작성하세요.""";
+
     private final ChatClient chatClient;
 
     public CodeReviewAgent(ChatClient.Builder builder) {
@@ -17,22 +33,15 @@ public class CodeReviewAgent implements Agent {
 
     @Override
     public String execute(String input, String context) {
-        // TODO: LLM에게 시니어 코드 리뷰어 역할을 하도록 지시하는 시스템 프롬프트를 작성하세요.
-        //  프롬프트는 LLM에게 다음을 요청해야 합니다:
-        //  - 버그와 논리 오류 식별
-        //  - 보안 취약점 표시
-        //  - 성능 이슈 지적
-        //  - 스타일 위반 언급
-        //  - diff에서 특정 줄 번호 참조
-        //  - 각 이슈를 심각도로 분류 (critical / warning / info)
-        String systemPrompt = "";
+        String userMessage = context.isBlank()
+                ? "다음 PR diff를 리뷰해주세요:\n\n" + input
+                : "다음 PR diff를 리뷰해주세요:\n\n" + input +
+                  "\n\n추가 컨텍스트:\n" + context;
 
-        // TODO: 사용자 메시지를 구성합니다. 컨텍스트가 제공된 경우 (예: 오케스트레이터 계획),
-        //  에이전트가 올바른 영역에 집중할 수 있도록 PR diff와 함께 포함합니다.
-        String userMessage = "";
-
-        // TODO: ChatClient를 호출하고 응답 내용을 반환합니다.
-        //  chatClient.prompt().system(...).user(...).call().content() 사용
-        throw new UnsupportedOperationException("CodeReviewAgent.execute()를 구현하세요");
+        return chatClient.prompt()
+                .system(SYSTEM_PROMPT)
+                .user(userMessage)
+                .call()
+                .content();
     }
 }

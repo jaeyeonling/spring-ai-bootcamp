@@ -12,6 +12,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class DocWriterAgent implements Agent {
 
+    private static final String SYSTEM_PROMPT = """
+            당신은 시니어 기술 문서 작성자입니다. PR diff를 분석하여
+            어떤 문서를 업데이트해야 하는지 구체적으로 제안합니다.
+            
+            다음 문서 유형을 고려하세요:
+            1. **README.md** — 새 기능, 설정 변경, 사용법 변경
+            2. **API 문서** — 새 엔드포인트, 파라미터 변경, 응답 형식 변경
+            3. **Javadoc** — 새 공개 클래스/메서드에 대한 문서화
+            4. **아키텍처 문서** — 구조적 변경, 새 컴포넌트 추가
+            
+            각 제안에 대해:
+            - 업데이트할 **파일/섹션**을 명시하세요
+            - **추가/수정할 내용**을 구체적으로 작성하세요
+            - **이유**를 설명하세요 (어떤 변경이 이 문서 업데이트를 필요로 하는지)
+            
+            컨텍스트에 코드 리뷰나 테스트 제안이 포함된 경우, 해당 인사이트를 반영하세요.
+            
+            반드시 document, README, API, Javadoc 등 문서 관련 키워드를 포함해서 작성하세요.""";
+
     private final ChatClient chatClient;
 
     public DocWriterAgent(ChatClient.Builder builder) {
@@ -20,22 +39,15 @@ public class DocWriterAgent implements Agent {
 
     @Override
     public String execute(String input, String context) {
-        // TODO: LLM에게 기술 문서 작성자 역할을 하도록 지시하는 시스템 프롬프트를 작성하세요.
-        //  프롬프트는 LLM에게 다음을 요청해야 합니다:
-        //  - 업데이트가 필요한 문서 파일 식별
-        //  - 각 문서에 대한 구체적인 변경 사항 제안 (섹션, 추가/수정 내용)
-        //  - README, API 문서, Javadoc, 아키텍처 문서 고려
-        //  - 컨텍스트에 코드 리뷰와 테스트 제안이 포함된 경우 해당 인사이트 반영
-        //  - 문서가 필요한 새로운 공개 API 표시
-        String systemPrompt = "";
+        String userMessage = context.isBlank()
+                ? "다음 PR diff에 대한 문서 업데이트를 제안해주세요:\n\n" + input
+                : "다음 PR diff에 대한 문서 업데이트를 제안해주세요:\n\n" + input +
+                  "\n\n이전 리뷰/테스트 결과 (이 인사이트를 문서에 반영):\n" + context;
 
-        // TODO: 사용자 메시지를 구성합니다. PR diff를 주요 입력으로 포함합니다.
-        //  컨텍스트가 제공된 경우 (예: 체인에서 리뷰 + 테스트),
-        //  문서 작성자가 전체적인 그림을 파악할 수 있도록 추가합니다.
-        String userMessage = "";
-
-        // TODO: ChatClient를 호출하고 응답 내용을 반환합니다.
-        //  chatClient.prompt().system(...).user(...).call().content() 사용
-        throw new UnsupportedOperationException("DocWriterAgent.execute()를 구현하세요");
+        return chatClient.prompt()
+                .system(SYSTEM_PROMPT)
+                .user(userMessage)
+                .call()
+                .content();
     }
 }
