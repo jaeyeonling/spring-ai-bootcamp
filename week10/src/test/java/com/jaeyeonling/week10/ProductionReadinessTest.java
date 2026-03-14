@@ -73,7 +73,10 @@ class ProductionReadinessTest {
                     """))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.answer").isNotEmpty())
-            .andExpect(jsonPath("$.sources").isArray());
+            .andExpect(jsonPath("$.sources").isArray())
+            .andExpect(jsonPath("$.tokenUsage.totalTokens").isNumber())
+            .andExpect(jsonPath("$.tokenUsage.promptTokens").isNumber())
+            .andExpect(jsonPath("$.tokenUsage.completionTokens").isNumber());
     }
 
     @Test

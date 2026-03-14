@@ -22,8 +22,8 @@ services:
   # ── Application ─────────────────────────────────────────────────────
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: week10/Dockerfile
     ports:
       - "8080:8080"
     environment:
