@@ -1,8 +1,8 @@
 spring:
   application:
     name: week09-mcp-server
-  # MCP STDIO 모드: 배너를 반드시 꺼야 합니다.
-  # 로그는 logback.xml에서 파일로만 출력하여 stdout을 JSON-RPC 전용으로 유지합니다.
+  # MCP STDIO 모드: 배너와 콘솔 로그를 반드시 꺼야 합니다.
+  # stdout은 JSON-RPC 전용이어야 하므로 콘솔 패턴을 비우고 로그는 파일로 출력합니다.
   main:
     web-application-type: none
     banner-mode: off
@@ -27,6 +27,13 @@ spring:
         name: week09-ai-tools
         version: 1.0.0
         stdio: true
+
+# 콘솔 로그 비활성화 (STDIO MCP 필수) + 파일 로그
+logging:
+  pattern:
+    console:
+  file:
+    name: /tmp/week09-mcp-server.log
 
 # FAQ 문서 경로
 faq:

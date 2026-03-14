@@ -248,7 +248,7 @@ spring:
 #### 함정 3: 로그가 stdout을 오염시킨다
 
 Spring Boot 로그가 `System.out`으로 출력되고, `StdioServerTransportProvider`도 `System.out`으로 JSON-RPC를 쓴다.
-둘이 같은 스트림을 쓰므로 MCP 클라이언트가 로그 줄을 JSON으로 파싱하려다 실패한다.
+둘이 같은 스트림을 쓰므로 MCP 클라이언트가 로그 줄을 JSON으로 파싱하려다 실패할 수 있다.
 
 공식 예제(spring-ai-examples/weather/starter-stdio-server)의 해결법:
 ```properties
@@ -257,6 +257,18 @@ Spring Boot 로그가 `System.out`으로 출력되고, `StdioServerTransportProv
 spring.main.banner-mode=off
 logging.pattern.console=
 ```
+
+`logging.pattern.console=` 빈 값은 콘솔 appender의 출력 패턴을 빈 문자열로 만든다.
+실측 결과 빈 줄조차 stdout으로 나가지 않아서 JSON-RPC에 영향을 주지 않는다.
+따라서 공식 예제의 방식이 정상 동작한다.
+
+다만 디버깅용으로 로그를 파일에 남기고 싶다면 `logging.file.name`을 함께 설정한다:
+```properties
+logging.file.name=/tmp/week09-mcp-server.log
+```
+
+대안으로 `logback.xml`에서 콘솔 appender를 제거하고 파일 appender만 두는 방법도 있다.
+이 경우 `logging.pattern.console=` 설정이 불필요하다.
 
 그러나 `logging.pattern.console=` 빈 값은 콘솔 appender를 끄는 게 아니라 패턴을 빈 문자열로 만들 뿐이다.
 빈 줄이 계속 stdout으로 나간다.
@@ -377,7 +389,7 @@ MCP 서버 등록 상태:
 
 6. **`spring.ai.mcp.server.stdio=true`는 필수다.** `web-application-type: none`은 웹 서버를 끄는 것이지 STDIO transport를 켜는 것이 아니다. 별도로 명시해야 한다. 이 설정이 없으면 서버가 정상 시작되어도 JSON-RPC 요청을 처리하지 않는다.
 
-7. **`logging.pattern.console=` 빈 값으로는 부족하다.** 공식 예제가 이 방법을 쓰지만, 빈 줄이 stdout으로 계속 나간다. 완전한 해결책은 `logback.xml`로 콘솔 appender 자체를 제거하는 것이다.
+7. **`logging.pattern.console=` 빈 값은 정상 동작한다.** 처음에는 빈 줄이 stdout으로 나갈 것이라 예상했지만, 실측 결과 빈 줄조차 출력되지 않았다. 공식 예제의 방식이 맞다. `logback.xml`로 콘솔 appender를 제거하는 것은 대안이지 필수가 아니다.
 
 ---
 
