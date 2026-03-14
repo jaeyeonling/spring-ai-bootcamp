@@ -1,45 +1,29 @@
 # Week 10 — Production Dockerfile
 #
-# Build:
+# 사전 요구사항: 로컬에서 먼저 JAR 빌드
 #   ./gradlew :week10:bootJar
-#   docker build -t week10-production .
 #
-# Or use docker compose (builds automatically):
+# 사용법:
+#   # 인프라 + 앱 전체 실행 (로컬 JAR 필요)
 #   docker compose up --build
+#
+#   # 또는 인프라만 먼저 실행하고 앱은 로컬에서 실행
+#   docker compose up -d qdrant jaeger
+#   ./gradlew :week10:bootRun
+#
+# 참고: Gradle 8.5의 instrumentation agent가 Linux/aarch64(Apple Silicon) Docker 환경에서
+#       libnative-platform-file-events.so SIGSEGV를 유발합니다.
+#       이 Dockerfile은 사전 빌드된 JAR을 복사하는 방식을 사용합니다.
 
-# ── Stage 1: Build ──────────────────────────────────────────────────────────
-FROM eclipse-temurin:21-jdk-alpine AS build
-
-WORKDIR /workspace
-
-# Copy Gradle wrapper and build files first (layer caching)
-COPY gradlew .
-COPY gradle/ gradle/
-COPY build.gradle settings.gradle ./
-COPY shared/build.gradle shared/
-COPY week10/build.gradle week10/
-
-# Download dependencies (cached unless build files change)
-RUN ./gradlew :week10:dependencies --no-daemon 2>/dev/null || true
-
-# Copy source code
-COPY shared/src shared/src
-COPY data/ data/
-COPY week10/src week10/src
-
-# Build the fat JAR
-RUN ./gradlew :week10:bootJar --no-daemon -x test
-
-# ── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-# Copy FAQ data
-COPY --from=build /workspace/data /app/data
+# FAQ 데이터
+COPY data/ /app/data
 
-# Copy the executable JAR
-COPY --from=build /workspace/week10/build/libs/week10-0.0.1-SNAPSHOT.jar app.jar
+# 사전 빌드된 JAR (./gradlew :week10:bootJar 실행 후 생성됨)
+COPY week10/build/libs/week10-0.0.1-SNAPSHOT.jar app.jar
 
 # Actuator health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
