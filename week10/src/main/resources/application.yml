@@ -2,7 +2,11 @@ spring:
   application:
     name: week10-production
 
+  # ChatModel 충돌 방지: Ollama 의존성이 있어도 chat/embedding은 OpenAI만 활성화
   ai:
+    model:
+      chat: openai
+      embedding: openai
     openai:
       api-key: ${OPENAI_API_KEY}
       chat:
@@ -22,14 +26,8 @@ spring:
       server:
         name: week10-production-tools
         version: 1.0.0
-
-  # TODO: 필요시 추가 모델 공급자 설정 (예: 로컬 추론을 위한 Ollama)
-  # ai:
-  #   ollama:
-  #     base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
-  #     chat:
-  #       options:
-  #         model: llama3.2
+        # HTTP 모드 (STDIO 아님) — 웹 서버와 함께 실행
+        # MCP 엔드포인트: POST /mcp/message
 
 # FAQ 설정
 faq:
