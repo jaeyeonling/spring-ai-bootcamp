@@ -118,7 +118,36 @@ week10/src/main/java/com/jaeyeonling/week10/
 | `metricsEndpointListsMetrics()` | PASS |
 | `chatEndpointWorks()` (반품 정책) | PASS |
 | `toolCallingWorks()` (주문 ORD-2024-001) | PASS |
-| `evaluationPipelineRuns()` | PASS (빈 메서드) |
+| `evaluationPipelineRuns()` | PASS |
+
+### Week 08 멀티 에이전트 통합 (2차 구현)
+
+#### 추가된 컴포넌트
+
+| 파일 | 역할 | Week 08 원본 |
+|------|------|-------------|
+| `FaqAgent.java` | 에이전트 공통 인터페이스 | `Agent.java` |
+| `OrderAgent.java` | 주문/배송/환불 전담 에이전트 | `CodeReviewAgent.java` |
+| `PolicyAgent.java` | 정책/이용약관 전담 에이전트 | `TestWriterAgent.java` |
+| `RecommendAgent.java` | 추천/다음단계 전담 에이전트 | `DocWriterAgent.java` |
+| `FaqOrchestratorService.java` | Chain + Orchestrator-Worker 오케스트레이터 | `OrchestratorService.java` |
+
+#### ChatService 라우팅 전략 (Week 08 Routing 패턴)
+
+복합 질문 감지 키워드(`그리고`, `또한`, `둘 다`, `모두`, `반품.*배송` 등)가 있으면
+`FaqOrchestratorService`로 라우팅:
+
+```
+단순 질문: ChatClient + ToolCallbackProvider (Week 07)
+복합 질문: FaqOrchestratorService (Week 08) → OrderAgent + PolicyAgent + RecommendAgent 병렬 실행
+```
+
+#### 트러블슈팅: 순환 의존성
+
+**문제**: `toolCallbackProvider` → `FaqSearchTool` → `ChatClient.Builder`
+→ `toolCallbackResolver` → `toolCallbackProvider` 순환
+
+**해결**: `ToolConfig`의 `toolCallbackProvider` 메서드에서 `FaqSearchTool` 파라미터에 `@Lazy` 적용.
 
 ### 실측 수치 (테스트 실행 시 로그 기준)
 
