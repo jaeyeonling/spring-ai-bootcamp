@@ -75,11 +75,14 @@ LLM이 질문을 분석해 FAQ 검색 또는 주문 조회 툴을 자동 선택�
 | 청크 오버랩 | 0 | FAQ는 독립적인 Q&A 단위 |
 | 임베딩 모델 | text-embedding-3-small | 비용 효율적, cross-language 지원 |
 | 검색 전략 | 벡터 유사도 (cosine) | FaqSearchTool → VectorStore.similaritySearch |
-| Top-K 후보 수 | 3 | 컨텍스트 길이 대비 정확도 균형 |
-| 재순위화 모델 | 없음 (Week 04 ReRanker 미통합) | 지연시간 우선 |
+| Top-K 후보 수 | 10 (후보) → 3 (최종) | FaqReranker가 QueryTransform + LLM ReRanker로 재순위 |
+| 재순위화 모델 | LLM ReRanker (gpt-4o-mini) | FaqReranker — 관련성 점수 JSON 배열 방식 |
 
-> Week 04의 `ReRankingRetrieval`은 독립 컴포넌트로 존재하지만, Week 10에서는
-> 지연시간 최소화를 위해 단순 벡터 검색을 유지했습니다.
+> **검색 파이프라인 (FaqReranker)**:
+> 쿼리 재작성(QueryTransform) → 다중 쿼리 확장(2개) → 후보 병합(최대 10개) → LLM 재순위 → Top-3 반환
+>
+> `@Tool`로 등록된 `FaqSearchTool`(단순 벡터 검색)과 달리, `FaqReranker`는 소스 추적 및
+> 오케스트레이터 컨텍스트 구성에 사용됩니다. 두 역할의 분리로 툴 등록 시 순환 의존성을 방지합니다.
 
 ### 툴 통합
 
@@ -290,9 +293,9 @@ text-embedding-3-small: $0.02/1M 토큰
    **트레이드오프:** 빌드 크기 증가
    **이유:** Week 06 코드 재활용 가능성 유지, 로컬 모델 전환 시 설정만 변경
 
-4. **결정:** ReRanker 미통합
-   **트레이드오프:** 검색 정밀도 일부 손실
-   **이유:** 지연시간 최소화 우선, FAQ 도메인에서 벡터 검색만으로도 충분한 정확도
+4. **결정:** FaqReranker 분리로 QueryTransform + ReRanker 통합
+   **트레이드오프:** FaqSearchTool(툴 호출 경로)과 FaqReranker(소스 추적 경로)가 다른 검색 전략 사용
+   **이유:** 순환 의존성 제거를 위해 역할 분리. LLM 툴 호출 시엔 LLM이 이미 쿼리를 구성하므로 QueryTransform 불필요
 
 ## 다시 한다면 달리 할 것
 
@@ -303,8 +306,8 @@ text-embedding-3-small: $0.02/1M 토큰
 2. **평가 파이프라인 자동화**: 현재 수동 호출. GitHub Actions나 
    Spring Boot CommandLineRunner로 배포 시마다 자동 실행되도록 구성.
 
-3. **ReRanker 통합**: Week 04의 `ReRankingRetrieval`을 `FaqSearchTool`에 통합해
-   정밀도 향상 — 지연시간 트레이드오프가 수용 가능한 경우.
+3. **ReRanker 통합 완료**: `FaqReranker`로 분리 구현. `FaqSearchTool`(툴 경로)과 역할을 분리해
+   순환 의존성 없이 QueryTransform + ReRanker 전체 파이프라인을 적용.
 
 ## 운영 준비 미비 사항
 

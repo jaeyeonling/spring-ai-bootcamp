@@ -138,6 +138,9 @@ public class FaqOrchestratorService {
                     .call()
                     .content();
 
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();  // 인터럽트 상태 복원
+            throw new RuntimeException("FAQ 오케스트레이터 인터럽트됨", e);
         } catch (Exception e) {
             log.error("[Orchestrator] 에이전트 실행 실패", e);
             throw new RuntimeException("FAQ 오케스트레이터 워크플로우 실패: " + e.getMessage(), e);

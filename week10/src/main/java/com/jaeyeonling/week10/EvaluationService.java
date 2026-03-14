@@ -119,7 +119,15 @@ public class EvaluationService {
         boolean isRelevant = relevancy.isPass();
 
         // 4단계 — 환각(팩트 체킹) 평가
-        EvaluationResponse factCheck = factCheckingEvaluator.evaluate(evalRequest);
+        // expectedAnswer가 있으면 검색 문서와 함께 레퍼런스로 포함하여 평가 정확도를 높인다.
+        // "LLM이 생성한 답변이 레퍼런스(문서 + 기대 답변) 범위를 벗어나는지" 판단하는 것이 핵심.
+        List<Document> factCheckDocs = new ArrayList<>(documents);
+        if (testCase.expectedAnswer() != null && !testCase.expectedAnswer().isBlank()) {
+            factCheckDocs.add(new Document("expected: " + testCase.expectedAnswer()));
+        }
+        EvaluationRequest factCheckRequest = new EvaluationRequest(
+                testCase.question(), factCheckDocs, answer);
+        EvaluationResponse factCheck = factCheckingEvaluator.evaluate(factCheckRequest);
         boolean isHallucination = !factCheck.isPass();
 
         if (isHallucination) {

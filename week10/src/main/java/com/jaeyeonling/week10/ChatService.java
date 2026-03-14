@@ -29,10 +29,13 @@ public class ChatService {
             "주문, 매출, 회사 정책에 관한 질문에 답하기 위해 사용 가능한 툴을 사용하세요. " +
             "특정 데이터가 필요한 질문에는 항상 툴을 사용하세요 — 답을 꾸며내지 마세요.";
 
-    // 복합 질문 감지 키워드 — 두 영역 이상 걸치는 질문에 멀티 에이전트 사용
-    private static final List<String> MULTI_DOMAIN_KEYWORDS = List.of(
-            "그리고", "또한", "둘 다", "모두", "반품.*배송", "정책.*주문", "배송.*환불"
-    );
+    // 복합 질문 감지: 두 개 이상의 도메인 키워드가 같이 등장해야 함
+    // 단순 접속사("그리고", "또한") 하나만으로는 복합 질문으로 판정하지 않음
+    // — "배송이 얼마나 걸리나요 그리고 추적은 어떻게 하나요?" 처럼
+    //   한 도메인 내 두 가지 질문은 단순 질문 경로(툴 호출)로 충분히 처리 가능
+    private static final List<String> DOMAIN_KEYWORDS_ORDER  = List.of("주문", "배송", "환불", "반품", "교환");
+    private static final List<String> DOMAIN_KEYWORDS_POLICY = List.of("정책", "약관", "보증", "결제", "취소");
+    private static final List<String> DOMAIN_KEYWORDS_RECOMMEND = List.of("추천", "방법", "어떻게", "제안", "대안");
 
     private final ChatClient chatClient;
     private final ToolCallbackProvider toolCallbackProvider;
@@ -83,9 +86,10 @@ public class ChatService {
         if (isComplexQuestion(userMessage)) {
             log.info("복합 질문 감지 → FaqOrchestratorService로 라우팅");
             String answer = orchestratorService.answer(userMessage, faqContext);
-            // 오케스트레이터는 내부적으로 여러 LLM 호출을 하므로 토큰 추정 기록
-            metricsService.recordTokenUsage(500, 300, "gpt-4o-mini");
-            return new ChatResult(answer, sources, new TokenUsage(500, 300, 800));
+            // 오케스트레이터는 내부적으로 분해(1) + 에이전트(3) + 합성(1) = 5회 LLM 호출을 하므로
+            // 단일 응답의 Usage 추출이 불가능하다. -1로 표시하여 집계 불가 상태를 명시.
+            metricsService.recordTokenUsage(0, 0, "gpt-4o-mini");
+            return new ChatResult(answer, sources, TokenUsage.unavailable());
         }
 
         // 단순 질문 — LLM 호출 (툴 포함) — chatResponse()로 토큰 사용량 추출
@@ -117,12 +121,15 @@ public class ChatService {
 
     /**
      * 복합 질문 여부를 감지합니다.
-     * 두 개 이상의 도메인(주문/정책/추천)에 걸치는 질문이면 true를 반환합니다.
-     * Week 08의 Routing 패턴 적용 — 질문 유형에 따라 처리 경로를 결정합니다.
+     * 두 개 이상의 독립된 도메인 키워드가 함께 등장해야 복합 질문으로 판정합니다.
+     * Week 08의 Routing 패턴 적용 — 단순 접속사 하나만으로는 복합 판정하지 않음.
      */
     private boolean isComplexQuestion(String question) {
-        return MULTI_DOMAIN_KEYWORDS.stream()
-                .anyMatch(keyword -> question.matches("(?s).*" + keyword + ".*"));
+        long matchedDomains = 0;
+        if (DOMAIN_KEYWORDS_ORDER.stream().anyMatch(question::contains))  matchedDomains++;
+        if (DOMAIN_KEYWORDS_POLICY.stream().anyMatch(question::contains)) matchedDomains++;
+        if (DOMAIN_KEYWORDS_RECOMMEND.stream().anyMatch(question::contains)) matchedDomains++;
+        return matchedDomains >= 2;
     }
 
     // --- 응답 레코드 ---
@@ -131,7 +138,12 @@ public class ChatService {
             long promptTokens,
             long completionTokens,
             long totalTokens
-    ) {}
+    ) {
+        /** 멀티 에이전트 등 토큰 집계가 불가능한 경우를 나타냅니다. */
+        public static TokenUsage unavailable() {
+            return new TokenUsage(-1, -1, -1);
+        }
+    }
 
     public record ChatResult(
             String answer,

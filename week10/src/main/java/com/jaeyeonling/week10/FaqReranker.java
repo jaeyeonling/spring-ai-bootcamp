@@ -129,6 +129,10 @@ public class FaqReranker {
         for (List<Document> results : resultSets) {
             for (Document doc : results) {
                 String id = doc.getId();
+                if (id == null) {
+                    // ID 없는 문서는 텍스트 해시로 중복 제거 (Qdrant는 항상 ID를 부여하지만 방어)
+                    id = "hash:" + doc.getText().hashCode();
+                }
                 seen.putIfAbsent(id, doc);
                 frequency.merge(id, 1, Integer::sum);
             }
