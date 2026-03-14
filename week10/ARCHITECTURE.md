@@ -105,6 +105,68 @@ Week 09(STDIO 모드)와 달리 HTTP 서버와 공존합니다.
 | 리소스 | (없음) | |
 | 프롬프트 | (없음) | |
 
+## API 문서
+
+### POST /api/chat
+
+FAQ 질문 및 주문 조회 질문을 처리하는 통합 엔드포인트.
+LLM이 질문 유형에 따라 FAQ 검색 또는 주문 조회 툴을 자동 선택합니다.
+
+**요청**
+
+```
+POST /api/chat
+Content-Type: application/json
+```
+
+```json
+{
+  "question": "반품 정책이 어떻게 되나요?"
+}
+```
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `question` | string | ✅ | 사용자 질문 (한국어/영어 모두 가능) |
+
+**응답** (`200 OK`)
+
+```json
+{
+  "answer": "30일 이내에 반품이 가능합니다. 미사용 상태의 제품에 한해...",
+  "sources": ["a1b2c3d4-...", "e5f6g7h8-..."],
+  "tokenUsage": {
+    "promptTokens": 2800,
+    "completionTokens": 652,
+    "totalTokens": 3452
+  }
+}
+```
+
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `answer` | string | LLM이 생성한 답변 |
+| `sources` | string[] | 검색된 FAQ 청크 ID 목록 |
+| `tokenUsage.promptTokens` | number | 입력 토큰 수 |
+| `tokenUsage.completionTokens` | number | 출력 토큰 수 |
+| `tokenUsage.totalTokens` | number | 전체 토큰 수 |
+
+**오류**: `question`이 비어 있으면 `400 Bad Request`
+
+### GET /actuator/health
+
+Qdrant + OpenAI API 키 헬스 체크 포함.
+
+### GET /actuator/metrics
+
+커스텀 메트릭: `rag.search.latency`, `rag.llm.token.usage`, `rag.llm.token.cost`, `rag.hallucination.detected`, `rag.answer.quality.score`
+
+### POST /mcp/message (SSE)
+
+MCP 클라이언트용 엔드포인트. 노출 툴: `searchFaq`, `getOrderStatus`, `getMonthlyRevenue`
+
+---
+
 ## 검색 전략
 
 1. 사용자 질문 수신 (`POST /api/chat`)

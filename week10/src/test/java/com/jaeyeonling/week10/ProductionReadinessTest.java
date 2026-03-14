@@ -1,5 +1,6 @@
 package com.jaeyeonling.week10;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,6 +35,9 @@ class ProductionReadinessTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private EvaluationService evaluationService;
 
     @Test
     @DisplayName("애플리케이션 컨텍스트가 성공적으로 로드된다")
@@ -85,8 +91,34 @@ class ProductionReadinessTest {
     @Test
     @DisplayName("평가 파이프라인이 성공적으로 실행된다")
     void evaluationPipelineRuns() {
-        // 테스트 질문에 대해 평가를 실행하고
-        // 정확도가 최소 임계값을 충족하는지 검증합니다.
-        // Week 10 구현에서 EvaluationRunner 또는 EvaluationService를 주입하여 테스트하세요.
+        // 샘플 테스트 케이스 3개로 평가 파이프라인 실행
+        List<EvaluationService.TestCase> testCases = List.of(
+            new EvaluationService.TestCase(
+                "반품 정책이 어떻게 되나요?",
+                "30일 이내에 반품이 가능합니다"),
+            new EvaluationService.TestCase(
+                "배송은 얼마나 걸리나요?",
+                "표준 배송은 3-5 영업일이 소요됩니다"),
+            new EvaluationService.TestCase(
+                "환불은 어떻게 처리되나요?",
+                "환불은 원래 결제 수단으로 처리됩니다")
+        );
+
+        List<EvaluationService.EvaluationResult> results =
+            evaluationService.runBatchEvaluation(testCases);
+
+        // 평가 파이프라인이 실행되고 모든 케이스에 대한 결과를 반환해야 한다
+        Assertions.assertThat(results).hasSize(3);
+        Assertions.assertThat(results).allSatisfy(result -> {
+            Assertions.assertThat(result.answer()).isNotBlank();
+            Assertions.assertThat(result.documents()).isNotEmpty();
+        });
+
+        // 평균 관련성 점수가 0.5 이상이어야 한다 (기본 품질 임계값)
+        double avgRelevancy = results.stream()
+            .mapToDouble(EvaluationService.EvaluationResult::relevancyScore)
+            .average()
+            .orElse(0.0);
+        Assertions.assertThat(avgRelevancy).isGreaterThanOrEqualTo(0.5);
     }
 }
