@@ -28,3 +28,16 @@ Thumbs.db
 
 # Logs
 *.log
+
+# OMC (oh-my-claudecode) state files
+.omc/
+**/.omc/
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+data/.venv/
+
+# io (Claude Code tool output)
+io/
