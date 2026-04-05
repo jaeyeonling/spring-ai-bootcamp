@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: week10-production
+
+  # ChatModel 충돌 방지: Ollama 의존성이 있어도 chat/embedding은 OpenAI만 활성화
+  ai:
+    model:
+      chat: openai
+      embedding: openai
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.1
+      embedding:
+        options:
+          model: text-embedding-3-small
+    vectorstore:
+      qdrant:
+        host: ${QDRANT_HOST:localhost}
+        port: ${QDRANT_GRPC_PORT:6334}
+        collection-name: week10-faq
+        initialize-schema: true
+    mcp:
+      server:
+        name: week10-production-tools
+        version: 1.0.0
+        # HTTP 모드 (STDIO 아님) — 웹 서버와 함께 실행
+        # MCP 엔드포인트: POST /mcp/message
+
+# FAQ 설정
+faq:
+  file-path: ${FAQ_FILE_PATH:../data/faq.md}
+
+# 평가 설정
+evaluation:
+  test-questions-path: ${TEST_QUESTIONS_PATH:../data/test_questions.json}
+
+# 관찰 가능성 — OpenTelemetry
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: week10-production
+
+# 서버 설정
+server:
+  port: ${SERVER_PORT:8080}
+
+# 로깅
+logging:
+  level:
+    com.jaeyeonling: DEBUG
+    org.springframework.ai: INFO

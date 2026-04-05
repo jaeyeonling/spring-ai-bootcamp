@@ -1,0 +1,9 @@
+// M11: 데이터 피드백 루프 (상담 로그 → FAQ 자동 생성)
+// 벽: "상담 로그에 좋은 답변이 있는데 FAQ에 반영이 안 된다"
+// 신규 모듈
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+    implementation 'org.springframework.ai:spring-ai-tika-document-reader'
+}

@@ -1,52 +1,1867 @@
 [
-  {"question": "When is the cutoff time for same-day dispatch?", "expected_answer": "Orders confirmed before 1 PM KST on business days are handed to the courier the same afternoon."},
-  {"question": "How much does Priority shipping cost?", "expected_answer": "Priority shipping is 5,000 won with guaranteed next-business-day delivery by noon. Gold-tier members receive it for free."},
-  {"question": "Which courier handles deliveries?", "expected_answer": "All domestic orders are fulfilled through Hanjin Express."},
-  {"question": "Can I pick up my order at a convenience store?", "expected_answer": "Yes, select CU Convenience Store Pickup at checkout. Your package is held for 5 calendar days before being returned."},
-  {"question": "Is there an extra fee for delivery to Jeju Island?", "expected_answer": "No surcharge. Delivery to Jeju and offshore islands takes an additional 1-2 business days."},
-  {"question": "What is the return period?", "expected_answer": "Products may be returned within 14 calendar days of delivery, provided they are unopened or unused with original packaging."},
-  {"question": "Are clearance items eligible for returns?", "expected_answer": "No. Products in the Clearance category and downloadable digital goods are final sale and cannot be returned."},
-  {"question": "How do I start a return?", "expected_answer": "In the Cholog app or website, go to My Orders, tap the order, select Request Return, choose a reason, and upload at least one photo."},
-  {"question": "How quickly are Kakao Pay refunds processed?", "expected_answer": "Kakao Pay and Naver Pay refunds are typically instant after the returned item is inspected."},
-  {"question": "Is there a fee for returning an item I changed my mind about?", "expected_answer": "Yes, a handling fee of 3,000 won is deducted from your refund for non-defect returns."},
-  {"question": "Do you accept Apple Pay?", "expected_answer": "Yes, we support Apple Pay along with Kakao Pay, Naver Pay, and Toss Pay."},
-  {"question": "Can I pay with two different methods on one order?", "expected_answer": "Yes, select Split Payment at checkout to combine up to two methods. Gift card balances can also be combined with any other method."},
-  {"question": "What is the minimum order for interest-free installments?", "expected_answer": "Orders totaling 30,000 won or more are eligible for 2- or 3-month interest-free installments on BC Card and NH Card."},
-  {"question": "What happens if my payment is declined?", "expected_answer": "The order is not placed and no charge is made. Common reasons include insufficient funds, daily limits, or an expired card."},
-  {"question": "What do I need to create an account?", "expected_answer": "A valid email address or Korean mobile number. You can also register using Kakao, Naver, or Google SSO. New accounts get a 3,000 won welcome coupon."},
-  {"question": "How much is 1 loyalty point worth?", "expected_answer": "1 point equals 1 won. Points can be used on any future order with a minimum redemption of 1,000 points."},
-  {"question": "When do loyalty points expire?", "expected_answer": "Points expire 12 months from the date they are earned."},
-  {"question": "What spending is needed for VIP tier?", "expected_answer": "Spend over 800,000 won in a calendar year. VIP benefits include free Priority shipping, 5% point reward, early access to launches, and a dedicated support line."},
-  {"question": "How long does account deletion take?", "expected_answer": "After confirming, deletion is scheduled within 7 business days. All personal data, order history, and payment tokens are purged per PIPA."},
-  {"question": "How do I know if a product is almost sold out?", "expected_answer": "Each product page shows real-time status. Low Stock means fewer than 5 units remain."},
-  {"question": "What is the Cholog Essentials brand?", "expected_answer": "Cholog Essentials is our in-house brand covering stationery, desk organizers, and tech accessories. All carry a 2-year warranty."},
-  {"question": "Can I request a product you do not carry?", "expected_answer": "Yes, use the Product Request form. If 50 or more requests are received within 30 days, the merchandising team evaluates sourcing it."},
-  {"question": "What warranty do electronics have?", "expected_answer": "All electronics come with a minimum 1-year manufacturer warranty. Cholog Essentials electronics carry an extended 2-year warranty."},
-  {"question": "What are the Live Chat hours on weekends?", "expected_answer": "Live Chat is available 8 AM to 10 PM KST daily, including weekends."},
-  {"question": "How long does email support take to respond?", "expected_answer": "We respond within 12 hours on business days. Email address is support@cholog.kr."},
-  {"question": "Is there a VIP-only support phone number?", "expected_answer": "Yes, VIP members can call the priority line at 1588-0002 for immediate assistance."},
-  {"question": "Can I talk to a human on KakaoTalk?", "expected_answer": "Yes, search @초록 to chat with our AI assistant 24/7. Human agent handoff is available during Live Chat hours."},
-  {"question": "How do I file a complaint?", "expected_answer": "Go to Help Center > Submit Feedback. Complaints receive acknowledgment within 2 hours and a full response within 48 hours."},
-  {"question": "Can I schedule a phone callback?", "expected_answer": "Yes, select Request Callback in the Help Center. Enter your number and preferred time slot. Available Monday to Friday, 9 AM to 6 PM KST."},
-  {"question": "Is customer support available in English?", "expected_answer": "Yes, Live Chat and email support are available in Korean and English. English phone support agents can be connected upon request."},
-  {"question": "What subscription plans do you offer?", "expected_answer": "Three types: Essentials Box (29,900 won/month), Coffee Club (19,900 won bi-weekly), and Beauty Box (39,900 won/month). All include free shipping."},
-  {"question": "Can I pause my subscription without canceling?", "expected_answer": "Yes, tap Pause in Settings > Subscriptions to skip the next delivery or halt all deliveries for up to 3 months. No charge during pause."},
-  {"question": "What is the minimum bulk order quantity?", "expected_answer": "Minimum bulk order is 50 units or 500,000 won, whichever is met first. Contact b2b@cholog.kr."},
-  {"question": "How is my personal data protected?", "expected_answer": "Data is encrypted with TLS 1.3 in transit and AES-256 at rest. We comply with PIPA and GDPR. Annual third-party audits by a KISA-certified firm."},
-  {"question": "Can I download a copy of all my personal data?", "expected_answer": "Yes, go to Settings > Privacy > Download My Data. A ZIP file is prepared within 48 hours and available for 7 days."},
-  {"question": "What devices does the Cholog app support?", "expected_answer": "iOS 15+ and Android 10+. The website supports Chrome 90+, Safari 15+, Firefox 100+, and Edge 90+."},
-  {"question": "Do gift cards expire?", "expected_answer": "Yes, gift cards are valid for 5 years from the date of purchase."},
-  {"question": "Is the website accessible for users with disabilities?", "expected_answer": "Yes, designed to meet WCAG 2.1 AA standards with screen reader support, keyboard navigation, adjustable fonts, and high-contrast mode."},
-  {"question": "What is the product take-back recycling program?", "expected_answer": "Bring used electronics to a CU convenience store collection point. You receive 2,000 points per item. Large items can be picked up from your address for free."},
-  {"question": "Can I cancel an order before it ships?", "expected_answer": "Yes, tap Cancel Order in My Orders while the status is Preparing. Cancellation is instant with a full refund."},
-  {"question": "What is the difference between a coupon and store credit?", "expected_answer": "Coupons have conditions (minimum order, expiry, category) and one per order. Store credit is applied automatically, has no minimum order, and can be combined with coupons and points."},
-  {"question": "How does the birthday coupon work?", "expected_answer": "A 20% off coupon (max 15,000 won) is auto-issued on the 1st of your birthday month. Plus and VIP members receive an additional gift."},
-  {"question": "What is Cholog Care+ extended protection?", "expected_answer": "Extended protection for electronics covering accidental damage, battery degradation, and component failure for 2 years beyond manufacturer warranty. Costs 10-15% of product price."},
-  {"question": "Can I exchange an item instead of returning it?", "expected_answer": "Yes, select Exchange instead of Refund when initiating a return. Choose replacement size or color. Price differences are charged or refunded."},
-  {"question": "How do I become a seller on Cholog Marketplace?", "expected_answer": "Apply at seller.cholog.kr with business registration, product catalog, and bank details. Review takes 5 business days."},
-  {"question": "Can international customers place orders?", "expected_answer": "Currently only Korean delivery addresses are accepted. International physical shipping is planned for Q3 2026. Digital gift cards and downloads are available."},
-  {"question": "What is the referral program reward?", "expected_answer": "Both referrer and referred friend receive 5,000 won store credit when the friend makes their first purchase. No limit on referrals. Credits expire in 90 days."},
-  {"question": "How do I enable two-factor authentication?", "expected_answer": "Go to Settings > Security > Two-Factor Authentication. Choose SMS or authenticator app. A 6-digit code is required at every login."},
-  {"question": "Does the warranty cover accidental damage?", "expected_answer": "No, standard warranties cover manufacturing defects only. Purchase Cholog Care+ for accidental damage protection."},
-  {"question": "What is the Daily Check-In reward?", "expected_answer": "Open the app daily and tap Check In. Day 1-6: 50 points each. Day 7: 500 points or a random coupon. 30 consecutive days earns a 10,000 won coupon."}
+  {
+    "id": "Q001",
+    "question_ko": "주문 취소는 어떻게 하나요?",
+    "question_en": "How do I cancel my order?",
+    "expected_answer": "Go to My Orders and tap Cancel Order while the status is Preparing. Cancellation is instant with a full refund. Once the order is Shipped, cancellation is not possible and you must initiate a return after delivery.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "cancel_order",
+    "wall_type": null
+  },
+  {
+    "id": "Q002",
+    "question_ko": "무료 배송 기준이 얼마인가요?",
+    "question_en": "What is the free shipping threshold?",
+    "expected_answer": "Standard members get free Economy shipping on orders 20,000 won or more. Plus members get free Economy shipping on all orders. VIP members get free Priority shipping on all orders. Active subscribers also get free shipping on all orders regardless of amount.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": null
+  },
+  {
+    "id": "Q003",
+    "question_ko": "반품은 배송 완료 후 며칠 안에 신청해야 하나요?",
+    "question_en": "How many days after delivery can I return a product?",
+    "expected_answer": "Products can be returned within 14 calendar days of delivery, provided the item is unopened or unused with all original accessories and packaging intact.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": null
+  },
+  {
+    "id": "Q004",
+    "question_ko": "단순 변심 반품 시 수수료가 있나요?",
+    "question_en": "Is there a fee for returning an item due to change of mind?",
+    "expected_answer": "Yes. Non-defect returns (change of mind, wrong size, etc.) incur a 3,000 won handling fee deducted from the refund. Defect-related returns are free.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": null
+  },
+  {
+    "id": "Q005",
+    "question_ko": "적립 포인트 1점은 얼마의 가치인가요?",
+    "question_en": "What is 1 loyalty point worth?",
+    "expected_answer": "1 point equals 1 won. Points can be used on any future order with a minimum redemption of 1,000 points.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": null
+  },
+  {
+    "id": "Q006",
+    "question_ko": "포인트 유효기간이 어떻게 되나요?",
+    "question_en": "When do loyalty points expire?",
+    "expected_answer": "Points expire 12 months from the date they are earned. Expired points cannot be restored or extended.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": null
+  },
+  {
+    "id": "Q007",
+    "question_ko": "냉장 배송 요일이 따로 있나요?",
+    "question_en": "Are there restricted days for cold-chain delivery?",
+    "expected_answer": "Yes. Cold-chain (fresh and frozen) delivery is available Monday through Thursday only, to prevent packages from sitting in transit over a weekend. A flat cold-chain fee of 4,000 won applies regardless of order amount or membership tier.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": null
+  },
+  {
+    "id": "Q008",
+    "question_ko": "제주도 배송 시 추가 요금이 있나요?",
+    "question_en": "Is there an extra charge for delivery to Jeju Island?",
+    "expected_answer": "No surcharge. Delivery to Jeju and offshore islands takes an additional 1-2 business days beyond the standard timeframe.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": null
+  },
+  {
+    "id": "Q009",
+    "question_ko": "VIP 등급이 되려면 얼마를 써야 하나요?",
+    "question_en": "How much do I need to spend to reach VIP tier?",
+    "expected_answer": "Spend over 800,000 won in a calendar year. VIP benefits include free Priority shipping on all orders, 5% point reward, early access to new product launches, and a dedicated support line at 1588-0002.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": null
+  },
+  {
+    "id": "Q010",
+    "question_ko": "당일 발송 마감 시간이 언제인가요?",
+    "question_en": "What is the cutoff time for same-day dispatch?",
+    "expected_answer": "Orders confirmed before 1 PM KST on business days are dispatched the same afternoon. Orders after 1 PM or on weekends and public holidays are queued for the next business day.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": null
+  },
+  {
+    "id": "Q011",
+    "question_ko": "카카오페이 환불은 얼마나 걸리나요?",
+    "question_en": "How long does a Kakao Pay refund take?",
+    "expected_answer": "Kakao Pay and Naver Pay refunds are typically instant after the returned item is inspected (usually 1-2 business days after pickup).",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "get_refund",
+    "wall_type": null
+  },
+  {
+    "id": "Q012",
+    "question_ko": "세금계산서는 어떻게 받을 수 있나요?",
+    "question_en": "How do I request a tax invoice?",
+    "expected_answer": "Go to My Orders, select the order, and tap Request Tax Invoice. Enter your business registration number. Tax invoices are issued within 1 business day. Requests must be made within the same calendar month as the purchase.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "check_invoice",
+    "wall_type": null
+  },
+  {
+    "id": "Q013",
+    "question_ko": "구독을 해지하지 않고 잠깐 멈출 수 있나요?",
+    "question_en": "Can I pause my subscription without canceling?",
+    "expected_answer": "Yes. In Settings > Subscriptions, tap Pause to skip the next delivery or halt all deliveries for up to 3 months. No charge during the pause period. Resume anytime with no penalty.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "subscription",
+    "wall_type": null
+  },
+  {
+    "id": "Q014",
+    "question_ko": "친환경 포장을 선택하면 포인트가 추가로 쌓이나요?",
+    "question_en": "Do I earn bonus points for choosing Green Packaging?",
+    "expected_answer": "Yes. Each order using Green Packaging earns 200 bonus eco points credited 7 days after delivery confirmation. Green Packaging is free of charge.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "eco_green",
+    "wall_type": null
+  },
+  {
+    "id": "Q015",
+    "question_ko": "마켓플레이스 판매자에게 직접 연락하는 방법이 있나요?",
+    "question_en": "How can I contact a Marketplace seller directly?",
+    "expected_answer": "You can contact the seller through the in-app messaging feature in My Orders > Contact Seller. If the seller does not respond within 3 business days, you can escalate to Cholog Buyer Protection by selecting Open Dispute in My Orders.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "marketplace",
+    "wall_type": null
+  },
+  {
+    "id": "Q016",
+    "question_ko": "마켓플레이스 상품도 14일 안에 반품할 수 있나요?",
+    "question_en": "Can I return a Marketplace item within 14 days?",
+    "expected_answer": "Marketplace items follow the individual seller's return policy, not Cholog's standard 14-day window. Return windows vary from 3 to 30 days depending on the seller. Always check the seller's policy on the product page before purchasing.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "contradiction"
+  },
+  {
+    "id": "Q017",
+    "question_ko": "VIP인데 냉장 상품 배송비도 무료인가요?",
+    "question_en": "As a VIP member, is cold-chain shipping also free?",
+    "expected_answer": "No. VIP members receive free Priority shipping on standard orders, but cold-chain delivery carries a flat 4,000 won fee for all members regardless of tier. The cold-chain fee applies because it uses a separate courier (CJ Logistics Fresh) with specialized packaging.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q018",
+    "question_ko": "포인트 적립률이 몇 퍼센트인가요?",
+    "question_en": "What is the loyalty point earning rate?",
+    "expected_answer": "The current earning rates are: Standard tier 1%, Plus tier 3%, VIP tier 5%. These rates were updated in June 2023; the previous rates were higher (3%/5%/7%) but are no longer in effect.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q019",
+    "question_ko": "설 연휴에도 배송이 되나요?",
+    "question_en": "Do you deliver during the Lunar New Year holiday?",
+    "expected_answer": "Delivery is suspended during the Lunar New Year holiday period (February 9-12, 2024). Orders placed after February 7 at 1 PM KST will be dispatched on February 13. Priority shipping SLA does not apply during this period. Cold-chain orders are suspended from February 5.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q020",
+    "question_ko": "구독 회원이면 비구독 주문에도 배송비가 무료인가요?",
+    "question_en": "As a subscriber, do I get free shipping on non-subscription orders too?",
+    "expected_answer": "Yes. Active subscribers receive free shipping on all orders including non-subscription purchases, regardless of order amount. This supersedes the Standard member 20,000 won minimum threshold.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "subscription",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q021",
+    "question_ko": "반품하면 포인트도 차감되나요?",
+    "question_en": "Do I lose my loyalty points if I return an order?",
+    "expected_answer": "Yes. Points earned from the returned order are deducted within 24 hours of the refund being processed. If your point balance is insufficient, the deficit is carried forward and deducted from future point earnings.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q022",
+    "question_ko": "반품 금액이 크면 등급이 떨어질 수 있나요?",
+    "question_en": "Can returning items cause a tier downgrade?",
+    "expected_answer": "Yes. Returned order amounts are deducted from your annual spending total. If the deduction drops your total below the tier threshold (Plus: 200,000 won, VIP: 800,000 won), your tier is downgraded at the next monthly recalculation on the 1st of the following month.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q023",
+    "question_ko": "전 달 주문 건에 대해 세금계산서를 발급받을 수 있나요?",
+    "question_en": "Can I request a tax invoice for a purchase from last month?",
+    "expected_answer": "No. Tax invoice requests must be made within the same calendar month as the purchase. Retroactive requests for prior months cannot be processed under Korean tax law.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_invoice",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q024",
+    "question_ko": "플러스 등급 기준이 연 15만원인가요, 20만원인가요?",
+    "question_en": "Is the Plus tier threshold 150,000 won or 200,000 won per year?",
+    "expected_answer": "The current Plus tier threshold is 200,000 won per year (as of January 2024). The threshold was previously 150,000 won in 2023. The current VIP threshold is 800,000 won (previously 600,000 won).",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q025",
+    "question_ko": "구독 12개월 연속이면 어떤 혜택이 있나요?",
+    "question_en": "What bonus do I get for 12 consecutive months of subscription?",
+    "expected_answer": "12 consecutive months of active subscription earns a 30,000 won coupon. The 6-month milestone earns 10,000 loyalty points. Consecutive count resets to zero if the subscription is canceled (but not if paused).",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "subscription",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q026",
+    "question_ko": "마켓플레이스 판매자가 연락을 안 받을 때 어떻게 하나요?",
+    "question_en": "What should I do if a Marketplace seller is unresponsive?",
+    "expected_answer": "If the seller does not respond within 3 business days, escalate to Cholog Buyer Protection by selecting Open Dispute in My Orders. Cholog mediates and may issue a full refund under the buyer protection guarantee within 5 business days.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "marketplace",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q027",
+    "question_ko": "냉장 식품은 제주도까지 배송되나요?",
+    "question_en": "Can cold-chain products be delivered to Jeju Island?",
+    "expected_answer": "Yes, cold-chain delivery is available to Jeju Island with an additional 2 business days. However, cold-chain delivery is not available to more remote offshore islands like Ulleungdo due to transit time constraints.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q028",
+    "question_ko": "환불 기간이 7일이라고 들었는데 맞나요?",
+    "question_en": "I heard the return window is 7 days — is that correct?",
+    "expected_answer": "No. The current return window is 14 calendar days (as of April 2024, policy v3). Earlier versions of the policy had a 7-day window (v1) and a 10-day window (v2), but those are no longer in effect.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q029",
+    "question_ko": "판매자 배송 정책이 3일인데 초록 14일 정책이 적용되지 않나요?",
+    "question_en": "The seller's return window is 3 days — doesn't Cholog's 14-day policy override this?",
+    "expected_answer": "No. For Marketplace items, the seller's return policy applies, not Cholog's standard 14-day policy. Cholog's buyer protection only covers items not received or items significantly not as described, regardless of the seller's policy.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "contradiction"
+  },
+  {
+    "id": "Q030",
+    "question_ko": "무료배송 기준이 3만원 아닌가요?",
+    "question_en": "Isn't the free shipping threshold 30,000 won?",
+    "expected_answer": "No. The current free shipping threshold for Standard members is 20,000 won (as of January 2024). It was previously 30,000 won in 2023. Plus members get free Economy shipping on all orders with no minimum.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q031",
+    "question_ko": "VIP 고객도 판매자 반품 정책 3일 지나면 반품 못하나요?",
+    "question_en": "Even as a VIP, can I not return a Marketplace item after the seller's 3-day window?",
+    "expected_answer": "Generally yes — Marketplace items follow the seller's policy regardless of VIP status. The only exception is Cholog Buyer Protection for items not received or significantly not as described. For standard returns, VIP extended return windows do not apply to Marketplace items.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q032",
+    "question_ko": "구독 중이면 스탠다드인데도 2만원 미만 주문에 배송비 무료인가요?",
+    "question_en": "If I have a subscription but I'm Standard tier, is shipping still free on orders under 20,000 won?",
+    "expected_answer": "Yes. Active subscribers get free shipping on all orders regardless of order amount or membership tier. The 20,000 won free shipping threshold applies only to non-subscriber Standard members.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "subscription",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q033",
+    "question_ko": "구독 일시정지하면 연속 개월 수가 초기화되나요?",
+    "question_en": "Does pausing a subscription reset the consecutive month count?",
+    "expected_answer": "No. Pausing (not canceling) the subscription does not reset the consecutive month count. The pause period still counts toward the streak. Only canceling and then resubscribing resets the count to zero.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "subscription",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q034",
+    "question_ko": "걍 환불해주세요 ㅠㅠ",
+    "question_en": "I just want a refund please",
+    "expected_answer": "To process a refund, please go to My Orders, select the relevant order, and tap Request Return. Choose your reason, upload at least one photo, and select a pickup date. For change of mind, a 3,000 won handling fee is deducted. Kakao Pay refunds are typically instant after inspection.",
+    "tier": "hard",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "get_refund",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q035",
+    "question_ko": "배송 언제 와요?",
+    "question_en": "When will my delivery arrive?",
+    "expected_answer": "Delivery time depends on the shipping tier selected. Economy shipping takes 2-4 business days. Priority shipping guarantees delivery by noon the next business day. Orders placed before 1 PM KST on business days are dispatched the same day.",
+    "tier": "hard",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q036",
+    "question_ko": "배송 지연됐는데 보상받은 사례가 있나요?",
+    "question_en": "Have other customers received compensation for delivery delays?",
+    "expected_answer": "Yes. Based on customer support records, delivery delays exceeding 3 business days (non-island) typically result in a 2,000 won coupon compensation. For significant delays or damaged items, replacements and larger coupons have been issued.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": "precedent"
+  },
+  {
+    "id": "Q037",
+    "question_ko": "저번에 물어본 배송 건 어떻게 됐어요?",
+    "question_en": "What happened to the shipping issue I asked about last time?",
+    "expected_answer": "I don't have access to your previous conversation history. Please provide your order number and I can look up the current status of your shipment directly.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog"
+    ],
+    "primary_intent": "track_order",
+    "wall_type": "memory"
+  },
+  {
+    "id": "Q038",
+    "question_ko": "냉장 상품 오늘 금요일에 주문하면 언제 와요?",
+    "question_en": "If I order a cold-chain product today (Friday), when will it arrive?",
+    "expected_answer": "Cold-chain delivery is only available Monday through Thursday. An order placed on Friday will be dispatched the following Monday. Add 1-2 business days for delivery, so the earliest expected arrival would be Tuesday or Wednesday of next week.",
+    "tier": "hard",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q039",
+    "question_ko": "비슷한 환불 문제 겪은 고객들 보통 어떻게 해결했나요?",
+    "question_en": "How have other customers typically resolved similar refund issues?",
+    "expected_answer": "Based on customer support logs, most refund issues are resolved by submitting a return request through My Orders with photos. For defective items, couriers collect for free. For change-of-mind returns, a 3,000 won handling fee applies. Complex cases involving VIP members or high-value orders are escalated to senior agents.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "get_refund",
+    "wall_type": "precedent"
+  },
+  {
+    "id": "Q040",
+    "question_ko": "포인트 환금되나요?",
+    "question_en": "Can I cash out my loyalty points?",
+    "expected_answer": "No. Loyalty points cannot be converted to cash. They can only be used for purchases (1 point = 1 won, minimum 1,000 points) or converted to Carbon Points for eco donations.",
+    "tier": "hard",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q041",
+    "question_ko": "반품 기간 지났는데 결함 발견됨 어떡하죠",
+    "question_en": "The return window passed but I found a defect — what can I do?",
+    "expected_answer": "Even after the standard 14-day return window, defects discovered during use may be eligible for a warranty claim. Go to My Orders > Warranty Claim and submit photos of the defect. VIP members may also be eligible for extended consideration at agent discretion for defects that only appeared after extended use.",
+    "tier": "hard",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "return_request",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q042",
+    "question_ko": "이미 발송된 거 주소 바꿀 수 없나요?",
+    "question_en": "My order already shipped — can I still change the delivery address?",
+    "expected_answer": "Address changes are not possible once the order status is Shipped. You can try contacting Hanjin Express directly with the tracking number to request a redirect, though this is not guaranteed. For future orders, address changes are only possible while the status is Preparing.",
+    "tier": "hard",
+    "source_layers": [
+      "faq",
+      "chatlog"
+    ],
+    "primary_intent": "change_shipping_address",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q043",
+    "question_ko": "다른 고객들 마켓플레이스 반품 어떻게 해결했어요?",
+    "question_en": "How have other customers handled Marketplace return disputes?",
+    "expected_answer": "Based on support records, most Marketplace disputes are resolved by first contacting the seller directly through in-app messaging. If the seller is unresponsive for 3 business days, escalating to Cholog Buyer Protection via Open Dispute in My Orders resulted in resolution within 5 business days for cases involving non-delivery or item not as described.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "marketplace",
+    "wall_type": "precedent"
+  },
+  {
+    "id": "Q044",
+    "question_ko": "환불 안해주려고 버티는 판매자 어떻게 해요",
+    "question_en": "What do I do about a seller refusing to give a refund?",
+    "expected_answer": "If a Marketplace seller refuses to process a valid return within their stated policy window, escalate to Cholog Buyer Protection by selecting Open Dispute in My Orders. Cholog will mediate and may issue a full refund under buyer protection within 5 business days. For disputes outside the seller's policy window and not covered by buyer protection, you can also contact the Korea Consumer Agency.",
+    "tier": "hard",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "marketplace",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q045",
+    "question_ko": "VIP 30일 반품 가능하다고 들었는데요",
+    "question_en": "I heard VIP members can return items within 30 days — is that true?",
+    "expected_answer": "The standard return window for all members including VIP is 14 calendar days. However, in certain exceptional cases (documented absence during return window, defect discovered after extended use), VIP members may be granted an extended return window at CS agent discretion. This is not a publicized policy and is applied case-by-case.",
+    "tier": "hard",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "contradiction"
+  },
+  {
+    "id": "Q046",
+    "question_ko": "플러스 구독하면 포인트 더 쌓이나요?",
+    "question_en": "Do I earn more points if I subscribe to a plan?",
+    "expected_answer": "Yes. Active subscribers earn double loyalty points (2x the base rate) on subscription deliveries. For example, a Plus member (3% base rate) would earn 6% on subscription deliveries. Non-subscription purchases use the standard tier rate.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "subscription",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q047",
+    "question_ko": "명절에 냉장식품 주문하면 어떻게 되나요?",
+    "question_en": "What happens if I order cold-chain products during a holiday?",
+    "expected_answer": "Cold-chain orders are suspended a few days before major holidays (Lunar New Year, Chuseok) and resume after the holiday. For example, during Chuseok 2024, cold-chain orders were suspended from September 11 and resumed September 19. Orders placed during the suspension are dispatched on the first available dispatch day after the holiday.",
+    "tier": "hard",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q048",
+    "question_ko": "스탠다드에서 플러스로 업그레이드되는 시점이 언제인가요?",
+    "question_en": "When does a tier upgrade from Standard to Plus take effect?",
+    "expected_answer": "Tier upgrades are evaluated annually on January 1st based on the prior year's spending. There is no mid-year upgrade. Returned items are deducted from the annual total, and tier downgrades take effect on the 1st of the following month if spending drops below the threshold.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q049",
+    "question_ko": "냉장배송비 4000원은 VIP도 내야 하나요?",
+    "question_en": "Does the 4,000 won cold-chain fee apply to VIP members too?",
+    "expected_answer": "Yes. The 4,000 won cold-chain fee applies to all members including VIP. Cold-chain uses a separate courier (CJ Logistics Fresh) with specialized packaging, and the fee covers these additional costs. VIP free Priority shipping benefit does not extend to cold-chain orders.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q050",
+    "question_ko": "반품 신청 후 환불받기까지 가장 빠른 경우 얼마나 걸려요?",
+    "question_en": "What is the fastest possible refund timeline after initiating a return?",
+    "expected_answer": "The fastest scenario: courier picks up the item, inspection completes in 1 business day, and Kakao Pay or Naver Pay refund is processed instantly. Minimum total time is approximately 2-3 business days from return request to refund. Credit card refunds take an additional 3-5 business days after inspection.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "get_refund",
+    "wall_type": null
+  },
+  {
+    "id": "Q051",
+    "question_ko": "회원가입은 어떻게 하나요?",
+    "question_en": "How do I create an account?",
+    "expected_answer": "You can sign up via Kakao, Naver, or Google SSO (social login) or directly with an email address. Membership is open to anyone aged 14 or older. After signing up, you receive a 3,000 won welcome coupon valid for 30 days.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "create_account",
+    "wall_type": null
+  },
+  {
+    "id": "Q052",
+    "question_ko": "뉴스레터 수신을 해지하려면 어떻게 하나요?",
+    "question_en": "How do I unsubscribe from the newsletter?",
+    "expected_answer": "Click the Unsubscribe link at the bottom of any newsletter email. Alternatively, go to My Page > Notification Settings and turn off Newsletter. Changes take effect within 24-48 hours.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "newsletter_subscription",
+    "wall_type": null
+  },
+  {
+    "id": "Q053",
+    "question_ko": "고객센터 전화번호와 운영 시간이 어떻게 되나요?",
+    "question_en": "What is the customer service phone number and hours?",
+    "expected_answer": "Customer service is available at 1588-1234 on weekdays from 9 AM to 6 PM KST. Phone and live chat are not available on weekends or public holidays. The automated chatbot is available 24/7.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "contact_customer_service",
+    "wall_type": null
+  },
+  {
+    "id": "Q054",
+    "question_ko": "리뷰를 작성하면 포인트가 얼마나 쌓이나요?",
+    "question_en": "How many points do I earn for writing a review?",
+    "expected_answer": "Text-only review earns 100 points. A review with at least one photo earns 600 points total (100 text + 500 photo bonus). Points are credited 1-2 business days after the review is approved by the moderation team.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "review",
+    "wall_type": null
+  },
+  {
+    "id": "Q055",
+    "question_ko": "비밀번호 재설정 링크가 만료됐어요. 유효시간이 얼마인가요?",
+    "question_en": "My password reset link expired. How long is it valid?",
+    "expected_answer": "Password reset links are valid for 30 minutes after being sent. If the link has expired, go to the login screen and request a new one via Forgot Password.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "recover_password",
+    "wall_type": null
+  },
+  {
+    "id": "Q056",
+    "question_ko": "CU 편의점 수령 시 보관 기간이 얼마나 되나요?",
+    "question_en": "How long will my order be held at a CU convenience store?",
+    "expected_answer": "Orders are held at the designated CU store for 5 days at no charge. If not picked up within 5 days, the order is returned and a refund is processed.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": null
+  },
+  {
+    "id": "Q057",
+    "question_ko": "예약 배송은 최대 며칠 후까지 지정할 수 있나요?",
+    "question_en": "How far in advance can I schedule a reserved delivery?",
+    "expected_answer": "You can schedule a reserved delivery up to 14 days in the future. Economy and Priority shipping both support reserved delivery. Same-day delivery cannot be reserved in advance.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": null
+  },
+  {
+    "id": "Q058",
+    "question_ko": "어떤 결제 수단을 지원하나요?",
+    "question_en": "What payment methods are supported?",
+    "expected_answer": "Supported payment methods include credit/debit cards, Kakao Pay, Naver Pay, real-time bank transfer, loyalty points, and discount coupons. Points and coupons can be combined with other payment methods. Virtual account (가상계좌) is not supported.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "check_payment_methods",
+    "wall_type": null
+  },
+  {
+    "id": "Q059",
+    "question_ko": "주문번호는 어디서 확인하나요?",
+    "question_en": "Where can I find my order number?",
+    "expected_answer": "Your order number is in the Kakao AlimTalk notification sent after placing the order, and also in the app under My Orders. Order numbers follow the format YYYYMMDD-XXXX.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "place_order",
+    "wall_type": null
+  },
+  {
+    "id": "Q060",
+    "question_ko": "선물 포장을 추가하면 비용이 얼마인가요?",
+    "question_en": "How much does gift wrapping cost?",
+    "expected_answer": "Gift wrapping costs 1,500 won per item. A gift message card can be included at no extra charge. If the order is canceled before packaging begins, the wrapping fee is fully refunded.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "place_order",
+    "wall_type": null
+  },
+  {
+    "id": "Q061",
+    "question_ko": "배송 메모를 남길 수 있나요?",
+    "question_en": "Can I leave a delivery note for the courier?",
+    "expected_answer": "Yes. You can enter a delivery note at checkout or edit it in My Orders before the order is dispatched. Notes such as 'Leave at door' or 'Leave with security guard' are passed to the courier.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "set_up_shipping_address",
+    "wall_type": null
+  },
+  {
+    "id": "Q062",
+    "question_ko": "리뷰는 배송 후 며칠 안에 써야 하나요?",
+    "question_en": "Within how many days of delivery can I write a review?",
+    "expected_answer": "Reviews can be submitted within 90 days of delivery confirmation. After 90 days, the review button is no longer available for that order.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "review",
+    "wall_type": null
+  },
+  {
+    "id": "Q063",
+    "question_ko": "포인트는 최소 몇 점부터 쓸 수 있나요?",
+    "question_en": "What is the minimum number of points I can redeem at once?",
+    "expected_answer": "The minimum redemption is 1,000 points (= 1,000 won). You can use any amount above that in 1-point increments. Points can be combined with other payment methods.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": null
+  },
+  {
+    "id": "Q064",
+    "question_ko": "실시간 GPS 배송 추적은 어떤 배송에서 가능한가요?",
+    "question_en": "Which delivery type supports real-time GPS tracking?",
+    "expected_answer": "Real-time GPS tracking is available only with Priority shipping. Economy shipping provides step-by-step status updates but no live GPS. VIP members, who receive free Priority shipping, always have access to GPS tracking.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "track_order",
+    "wall_type": null
+  },
+  {
+    "id": "Q065",
+    "question_ko": "회원 탈퇴하면 포인트는 어떻게 되나요?",
+    "question_en": "What happens to my loyalty points when I delete my account?",
+    "expected_answer": "All points and coupons are immediately forfeited upon account deletion and cannot be restored. It is recommended to use remaining points before deleting your account.",
+    "tier": "easy",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delete_account",
+    "wall_type": null
+  },
+  {
+    "id": "Q066",
+    "question_ko": "준비중 상태에서 취소할 때와 발송 후 반품할 때 수수료 차이가 있나요?",
+    "question_en": "Is there a fee difference between canceling while Preparing vs. returning after shipment?",
+    "expected_answer": "Yes. Canceling while the status is Preparing incurs no fee — a full refund is issued instantly. Returning an item after shipment costs 3,000 won for change-of-mind returns, deducted from the refund. Defect-related returns are free regardless of timing.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_cancellation_fee",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q067",
+    "question_ko": "포인트는 결제 즉시 쌓이나요, 아니면 나중에 쌓이나요?",
+    "question_en": "Do loyalty points accrue immediately at checkout or later?",
+    "expected_answer": "Points are credited 7 days after delivery confirmation, not at the time of payment. This allows time for returns to be processed. If an order is returned, the pending points are canceled before they are credited.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q068",
+    "question_ko": "탈퇴 후 같은 이메일로 바로 재가입할 수 있나요?",
+    "question_en": "Can I re-register with the same email immediately after deleting my account?",
+    "expected_answer": "No. The same email address cannot be used to register again for 30 days after account deletion. After the 30-day waiting period, re-registration is possible, but all previous purchase history, points, and tier status are permanently lost and cannot be restored.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delete_account",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q069",
+    "question_ko": "가상계좌로 결제할 수 있나요?",
+    "question_en": "Can I pay using a virtual bank account?",
+    "expected_answer": "No. Virtual account payment is not supported. For bank-transfer-style payment, use real-time bank transfer (실시간 계좌이체). This is distinct from a virtual account — funds are transferred immediately.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_payment_methods",
+    "wall_type": "contradiction"
+  },
+  {
+    "id": "Q070",
+    "question_ko": "플러스 등급 포인트 적립률이 5%라고 들었는데 맞나요?",
+    "question_en": "I heard Plus members earn 5% loyalty points — is that correct?",
+    "expected_answer": "No. The current Plus tier earning rate is 3%, not 5%. The previous rates were Standard 3%, Plus 5%, VIP 7%, but these were updated in 2024. Current rates are Standard 1%, Plus 3%, VIP 5%.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q071",
+    "question_ko": "한 주문에서 상품 하나만 취소할 수 있나요?",
+    "question_en": "Can I cancel just one item from a multi-item order?",
+    "expected_answer": "Partial cancellation is not supported. If you want to cancel one item in an order, you must cancel the entire order and re-place it with only the items you want. However, partial returns after delivery are supported.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "cancel_order",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q072",
+    "question_ko": "리뷰를 삭제하면 받은 포인트도 회수되나요?",
+    "question_en": "If I delete a review, will the points I earned be taken back?",
+    "expected_answer": "Yes. Review points are tied to the review being published. Deleting a review causes the credited points to be deducted from your balance. If your balance is insufficient, the deficit is carried forward.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "review",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q073",
+    "question_ko": "탈퇴하면 포인트가 재가입 후 복구되나요?",
+    "question_en": "If I delete my account and re-register, will my points be restored?",
+    "expected_answer": "No. Points, coupons, and tier status are permanently deleted upon account deletion and cannot be restored even after re-registration. Use any remaining points before deleting your account.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delete_account",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q074",
+    "question_ko": "일반 배송에서도 실시간 위치 추적이 되나요?",
+    "question_en": "Does Economy shipping also support real-time location tracking?",
+    "expected_answer": "No. Real-time GPS tracking is only available with Priority shipping. Economy shipping provides status updates at key milestones (dispatched, in transit, out for delivery) but not a live map view.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "track_order",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q075",
+    "question_ko": "부재중으로 배송을 못 받았을 때 재배송은 어떻게 신청하나요?",
+    "question_en": "How do I request redelivery if I missed the courier?",
+    "expected_answer": "After two failed delivery attempts, the item is stored at the nearest Hanjin Express depot for 7 days. You can request redelivery or self-pickup through the Hanjin Express app or hanjin.kr using your tracking number. If uncollected after 7 days, the item is returned and a refund is processed.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q076",
+    "question_ko": "체크카드로 할부 결제가 가능한가요?",
+    "question_en": "Can I pay in installments with a debit card?",
+    "expected_answer": "No. Installment payment is only available with credit cards, not debit cards. Debit card transactions are processed as a single full payment.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_payment_methods",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q077",
+    "question_ko": "뉴스레터 수신 거부 후 몇 시간 안에 적용되나요?",
+    "question_en": "How soon does an unsubscribe request take effect?",
+    "expected_answer": "Unsubscribe requests are typically processed within 24 to 48 hours. You may receive one more newsletter if it was already queued before your request was processed.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "newsletter_subscription",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q078",
+    "question_ko": "배송지는 최대 몇 개까지 저장할 수 있나요?",
+    "question_en": "How many delivery addresses can I save?",
+    "expected_answer": "You can save up to 10 delivery addresses in My Page > Delivery Address Management. To add more, delete an existing address first. One address can be designated as the default.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "set_up_shipping_address",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q079",
+    "question_ko": "무이자 할부가 모든 신용카드에 적용되나요?",
+    "question_en": "Is interest-free installment available for all credit cards?",
+    "expected_answer": "No. Interest-free installments are available only for select card issuers (currently Samsung Card, Shinhan Card, and Hyundai Card) for purchases of 50,000 won or more. Available periods and participating issuers may change by promotion period. Check the payment screen for the current list.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_payment_methods",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q080",
+    "question_ko": "구독 취소와 구독 상품 반품의 차이가 뭔가요?",
+    "question_en": "What is the difference between canceling a subscription and returning a subscription item?",
+    "expected_answer": "Canceling a subscription stops all future deliveries. Returning a subscription item means sending back an already-delivered item for a refund (same 14-day return policy applies). They are independent actions — you can return one delivery without canceling the overall subscription.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "subscription",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q081",
+    "question_ko": "쿠폰 할인 후 금액이 2만원 미만이면 배송비가 부과되나요?",
+    "question_en": "If my order total drops below 20,000 won after a coupon discount, will I be charged for shipping?",
+    "expected_answer": "Yes. The 20,000 won free shipping threshold for Standard members is based on the final product price before coupon and point deductions, not the payment amount. However, if the pre-discount product price meets the threshold, shipping is free regardless of coupon usage.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q082",
+    "question_ko": "리뷰를 수정하려면 어떻게 하고, 몇 번이나 수정할 수 있나요?",
+    "question_en": "How do I edit a review, and how many times can I edit it?",
+    "expected_answer": "Go to My Orders > Review History to edit a published review. Each review can be edited once, and only within 7 days of the original submission. After one edit or after 7 days, further changes are not possible.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "review",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q083",
+    "question_ko": "계좌이체로 환불받는 데 얼마나 걸리나요?",
+    "question_en": "How long does a bank transfer refund take?",
+    "expected_answer": "Bank transfer refunds take up to 7 business days from the date the refund is initiated. The delay is due to inter-bank settlement schedules. If the refund does not arrive within 7 business days, contact customer service.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "get_refund",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q084",
+    "question_ko": "당일 배송 신청 조건이 어떻게 되나요?",
+    "question_en": "What are the conditions for same-day delivery?",
+    "expected_answer": "Same-day delivery requires: order placed before 10 AM KST, delivery address in Seoul, Incheon, or Gyeonggi Province, and the item is not oversized or cold-chain. Same-day delivery costs 8,000 won and is unavailable on weekends and public holidays.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q085",
+    "question_ko": "준비중 상태에서 취소는 즉시 처리되나요?",
+    "question_en": "Is cancellation immediate when the order is in Preparing status?",
+    "expected_answer": "Yes. Canceling an order while it is in Preparing status is processed instantly with no fee. Some agents have mistakenly advised that cancellation takes 1-2 business days — this is incorrect. You can cancel directly in the app and the status updates immediately.",
+    "tier": "medium",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "cancel_order",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q086",
+    "question_ko": "마켓플레이스 상품 구매도 포인트가 쌓이나요?",
+    "question_en": "Do I earn loyalty points when buying from Marketplace sellers?",
+    "expected_answer": "Yes. Purchases from Marketplace sellers earn points at the same rate as direct Cholog products (Standard 1%, Plus 3%, VIP 5%). Marketplace purchases also count toward annual spending for tier calculation.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q087",
+    "question_ko": "VIP 전용 고객센터 번호가 따로 있나요?",
+    "question_en": "Is there a dedicated customer service number for VIP members?",
+    "expected_answer": "Yes. VIP members have access to a dedicated support line at 1588-1235, which connects with priority routing and shorter wait times. The general customer service number is 1588-1234.",
+    "tier": "medium",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "contact_customer_service",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q088",
+    "question_ko": "VIP 포인트가 7%라고 어디선가 봤는데 맞나요?",
+    "question_en": "I saw somewhere that VIP members earn 7% loyalty points — is that accurate?",
+    "expected_answer": "No. The current VIP earning rate is 5%. The previous rate was 7% under the old policy (Standard 3%, Plus 5%, VIP 7%), but this was updated in early 2024. Current rates are Standard 1%, Plus 3%, VIP 5%. Some older documents or chat logs may still reference the outdated 7% figure.",
+    "tier": "hard",
+    "source_layers": [
+      "policy",
+      "chatlog"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q089",
+    "question_ko": "취소하면 수수료 2천원 낸다고 들었는데요",
+    "question_en": "I was told there's a 2,000 won cancellation fee — is that right?",
+    "expected_answer": "No. There is no cancellation fee for orders canceled while in Preparing status. You receive a full refund. This may have been misinformation from a previous support interaction. The only fee associated with returns (not cancellations) is the 3,000 won handling fee for change-of-mind returns after the item has shipped.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "check_cancellation_fee",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q090",
+    "question_ko": "결제 왜 계속 안 돼요",
+    "question_en": "Why does my payment keep failing?",
+    "expected_answer": "Common causes of payment failure include: insufficient card limit, incorrect card details (number, expiry, CVC), card blocked for online transactions, or a temporary system issue. Try a different payment method (Kakao Pay, Naver Pay) or contact your card issuer. If the issue persists across all payment methods, contact Cholog customer service.",
+    "tier": "hard",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "payment_issue",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q091",
+    "question_ko": "플러스 회원이고 구독 중인데 반품을 많이 하면 등급이 떨어지나요?",
+    "question_en": "I'm a Plus subscriber — if I return a lot of items, can I lose my Plus tier?",
+    "expected_answer": "Yes. Returned item amounts are deducted from your annual spending total. If returns cause the total to drop below 2,000,000 won (the Plus threshold), your tier is downgraded to Standard at the next monthly recalculation. Subscription status does not protect you from tier downgrade due to returns. However, subscription itself still provides free shipping on all orders regardless of tier.",
+    "tier": "hard",
+    "source_layers": [
+      "policy",
+      "faq"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q092",
+    "question_ko": "오늘이 공휴일인데 전화 상담 가능한가요?",
+    "question_en": "Today is a public holiday — can I reach customer service by phone?",
+    "expected_answer": "No. Phone and live chat support are only available on weekdays from 9 AM to 6 PM KST. On public holidays and weekends, only the 24/7 automated chatbot is available. Email inquiries can be submitted anytime but are processed starting the next business day.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "contact_customer_service",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q093",
+    "question_ko": "비슷한 불만을 가진 고객들은 어떤 보상을 받았나요?",
+    "question_en": "What kind of compensation have other customers received for similar complaints?",
+    "expected_answer": "Based on support records, common compensations include: 2,000-3,000 won coupon for delivery delays over 3 business days, free return shipping for defective items, and replacement products for significant defects. VIP customers and complex cases are escalated to senior agents and may receive larger compensation. Compensation is not automatic and must be requested through the support team.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "complaint",
+    "wall_type": "precedent"
+  },
+  {
+    "id": "Q094",
+    "question_ko": "VIP 회원인데 마켓플레이스 상품도 30일 안에 반품할 수 있나요?",
+    "question_en": "As a VIP member, can I return a Marketplace item within 30 days?",
+    "expected_answer": "No. The VIP extended return consideration (case-by-case, not a published policy) applies only to Cholog direct products, not Marketplace items. Marketplace items follow the seller's own return policy. VIP status does not override Marketplace seller policies. If the seller's window has passed, the only recourse is Cholog Buyer Protection for cases involving non-delivery or significantly not-as-described items.",
+    "tier": "hard",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "contradiction"
+  },
+  {
+    "id": "Q095",
+    "question_ko": "탈퇴 후 주문 내역을 다시 볼 수 있나요?",
+    "question_en": "Can I access my order history after deleting my account?",
+    "expected_answer": "No. Once your account is deleted, you can no longer log in and therefore cannot access your order history in the app. Purchase records are retained internally for legal compliance for 3 years, but you cannot access them without a valid account. Download or screenshot any important order records before deleting your account.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "delete_account",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q096",
+    "question_ko": "포인트를 이미 썼는데 그 주문을 반품하면 포인트가 마이너스가 되나요?",
+    "question_en": "If I already used points earned from an order and then return that order, will my balance go negative?",
+    "expected_answer": "Yes. When an order is returned, the points earned from that order are clawed back. If you have already spent those points on another purchase, your point balance can go negative. A negative balance is carried forward and automatically deducted from future point earnings until cleared.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q097",
+    "question_ko": "반품 기간이 10일이라고 들었는데 맞나요?",
+    "question_en": "I heard the return window is 10 days — is that right?",
+    "expected_answer": "No. The current return window is 14 calendar days (policy v3, effective April 2024). A 10-day window existed under policy v2 and a 7-day window under policy v1, but neither is in effect. If you encountered this information in an older document or a chat transcript, it is outdated.",
+    "tier": "hard",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q098",
+    "question_ko": "포인트 얼마야",
+    "question_en": "How many points do I have?",
+    "expected_answer": "I don't have access to your account balance. Please check your current point balance in the app under My Page > Points, or I can help you with information about how points are earned and used.",
+    "tier": "hard",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q099",
+    "question_ko": "설날 연휴에 냉장 상품을 VIP로 주문하면 배송비가 무료인가요?",
+    "question_en": "If I order a cold-chain product during Lunar New Year as a VIP, is shipping free?",
+    "expected_answer": "No, for two reasons. First, cold-chain delivery carries a 4,000 won fee for all members including VIP — VIP free Priority shipping does not cover cold-chain. Second, cold-chain orders are typically suspended several days before Lunar New Year (e.g., from February 5 in 2024), so the order may not be accepted at all during the holiday window.",
+    "tier": "hard",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q100",
+    "question_ko": "배송 중인데 기사님한테 연락하고 싶어요",
+    "question_en": "My order is out for delivery — how can I contact the courier?",
+    "expected_answer": "The courier's personal contact details cannot be shared for privacy reasons. On the day of delivery, you can send a message to the courier through the Hanjin Express app using your tracking number. Alternatively, leave a delivery note in your order (e.g., 'Call before delivering') before the item is dispatched.",
+    "tier": "hard",
+    "source_layers": [
+      "chatlog",
+      "faq"
+    ],
+    "primary_intent": "track_order",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q101",
+    "question_ko": "Standard 회원이면 포인트가 3% 적립되는 거 맞죠?",
+    "question_en": "Standard members earn 3% points, right?",
+    "expected_answer": "No. Standard members currently earn 1% per purchase, not 3%. The 3% rate was for a previous policy version.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q102",
+    "question_ko": "VIP 회원 포인트 적립률이 7%라고 들었는데, 지금도 그런가요?",
+    "question_en": "I heard VIP members earn 7% points — is that still the case?",
+    "expected_answer": "No. VIP members currently earn 5% per purchase. The 7% rate was under a previous policy version.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q103",
+    "question_ko": "Plus 등급 포인트가 5%라고 나와 있던데 그게 현재 기준인가요?",
+    "question_en": "Plus tier points were listed as 5% — is that the current rate?",
+    "expected_answer": "No. Plus members now earn 3% per purchase. The 5% rate applied under the previous policy.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q104",
+    "question_ko": "Plus 등급이 되려면 연간 150만원 써야 한다고 들었는데 맞나요?",
+    "question_en": "I heard you need to spend 1.5 million won per year to reach Plus — is that right?",
+    "expected_answer": "No. Plus tier now requires annual spending of 2,000,000 won. The 1,500,000 won threshold was under the previous policy.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q105",
+    "question_ko": "VIP 등급 기준이 연 600만원 아닌가요? FAQ에서 그렇게 봤어요.",
+    "question_en": "Isn't VIP tier 6 million won annually? I saw that in the FAQ.",
+    "expected_answer": "That information is outdated. VIP tier currently requires annual spending of 8,000,000 won.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q106",
+    "question_ko": "반품 기간이 10일이라고 정책 문서에서 봤는데 맞나요?",
+    "question_en": "I saw in a policy document that the return period is 10 days — is that correct?",
+    "expected_answer": "No. The current return policy allows 14 calendar days from delivery. The 10-day period was an older policy version.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q107",
+    "question_ko": "무료배송 기준이 3만원이라고 봤는데 지금도 그런가요?",
+    "question_en": "I saw free shipping starts at 30,000 won — is that still the case?",
+    "expected_answer": "No. The free shipping threshold is currently 20,000 won for Standard members and above.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q108",
+    "question_ko": "이전에 이용했을 때 Standard 적립률이 3%였는데, 지금은 얼마인가요?",
+    "question_en": "When I used it before, Standard earned 3% — what is the current rate?",
+    "expected_answer": "The current Standard earning rate is 1% per purchase. The rate was reduced from 3% under the previous policy.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "versioning"
+  },
+  {
+    "id": "Q109",
+    "question_ko": "준비중 상태 주문 취소하면 취소 수수료 2,000원 나오나요?",
+    "question_en": "Is there a 2,000 won cancellation fee for orders in Preparing status?",
+    "expected_answer": "No. There is no cancellation fee for orders in Preparing status. Cancellation is free before shipping begins.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_cancellation_fee",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q110",
+    "question_ko": "고객센터가 24시간 운영한다고 들었는데 맞나요?",
+    "question_en": "I heard customer service operates 24 hours — is that correct?",
+    "expected_answer": "No. Customer service is available weekdays 9:00-18:00 only. There is no 24-hour support.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "contact_customer_service",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q111",
+    "question_ko": "페이코로 결제 가능하다고 상담사가 말했는데 실제로 되나요?",
+    "question_en": "A customer service agent told me Payco payments are supported — is that true?",
+    "expected_answer": "No. Payco is not a supported payment method. Supported methods include credit/debit cards, Kakao Pay, Naver Pay, and Toss Pay.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "check_payment_methods",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q112",
+    "question_ko": "가상계좌 결제 된다고 봤는데 지원이 되나요?",
+    "question_en": "I saw that virtual account (vbank) payments are supported — is that correct?",
+    "expected_answer": "No. Virtual account (vbank) payment is not supported. Please use credit/debit cards or mobile payment services.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "check_payment_methods",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q113",
+    "question_ko": "회원 탈퇴 후 재가입하면 포인트가 복원된다고 들었어요. 맞나요?",
+    "question_en": "I heard that points are restored when you re-register after account deletion — is that true?",
+    "expected_answer": "No. Points are permanently deleted upon account deletion and cannot be restored after re-registration.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "delete_account",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q114",
+    "question_ko": "탈퇴하고 바로 재가입할 수 있다고 들었는데 맞나요?",
+    "question_en": "I was told I can re-register immediately after account deletion — is that correct?",
+    "expected_answer": "No. There is a 30-day waiting period before you can re-register after account deletion.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "delete_account",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q115",
+    "question_ko": "이메일 수신거부는 고객센터에 전화해야만 된다고 상담사가 말했어요. 맞나요?",
+    "question_en": "A support agent told me I can only unsubscribe from emails by calling customer service — is that right?",
+    "expected_answer": "No. You can unsubscribe by clicking the unsubscribe link at the bottom of any newsletter email. No phone call is required.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "newsletter_subscription",
+    "wall_type": "noise"
+  },
+  {
+    "id": "Q116",
+    "question_ko": "환불어케함? 반품하고싶은데",
+    "question_en": "How do I return something?",
+    "expected_answer": "Go to My Orders in the app or website, tap the order, select Request Return, choose a reason, and upload a photo. Courier pickup is free for defect returns; a 3,000 won fee applies for non-defect returns.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "get_refund",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q117",
+    "question_ko": "배송언제옴ㅋ 얼마나걸림?",
+    "question_en": "How long does delivery take?",
+    "expected_answer": "Standard delivery takes 2-4 business days. Express delivery is available same-day or next-day for eligible areas. Jeju and remote islands add 2-3 extra days.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q118",
+    "question_ko": "포인트 언제씀? 어케씀?",
+    "question_en": "When can I use my points?",
+    "expected_answer": "Points can be used on any future order with a minimum redemption of 1,000 points. Points expire 2 years from the date earned.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q119",
+    "question_ko": "취소했는데 돈언제들어옴ㅠㅠ",
+    "question_en": "When does my refund arrive after cancellation?",
+    "expected_answer": "After cancellation, refunds are processed within 1-2 business days. Credit card refunds take 3-5 business days; Kakao/Naver Pay refunds are typically instant.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "get_refund",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q120",
+    "question_ko": "배송지바꾸고싶은데 어케함",
+    "question_en": "I want to change my shipping address",
+    "expected_answer": "You can change the shipping address only while the order status is Preparing. Once shipping has started, the address cannot be changed.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "change_shipping_address",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q121",
+    "question_ko": "결제취소 돼요? 어케함?",
+    "question_en": "Can I cancel my payment?",
+    "expected_answer": "You can cancel an order (and get a full refund) while it is in Preparing status. Once shipping begins, you must request a return instead.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "cancel_order",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q122",
+    "question_ko": "영수증 어디있음? 어케봄?",
+    "question_en": "Where do I find my receipt?",
+    "expected_answer": "You can view and download invoices from My Orders in the app or website. Tax invoices for business purchases require a separate request through customer service.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "get_invoice",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q123",
+    "question_ko": "비번까먹었는데ㅠ 어케함",
+    "question_en": "I forgot my password what do I do",
+    "expected_answer": "Click Forgot Password on the login page, enter your registered email, and you will receive a reset link valid for 24 hours.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "recover_password",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q124",
+    "question_ko": "Standard 회원인데 15만원 구매하면 포인트 몇 점 쌓여요?",
+    "question_en": "I am a Standard member and bought 150,000 won worth of items. How many points do I earn?",
+    "expected_answer": "Standard members earn 1% per purchase, so 150,000 won × 1% = 1,500 points. Points can be used when you have at least 1,000.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q125",
+    "question_ko": "지금 Plus 등급인데 VIP 되려면 얼마나 더 써야 해요? 올해 250만원 씀",
+    "question_en": "I am currently Plus tier and have spent 2.5 million won this year. How much more do I need to spend to reach VIP?",
+    "expected_answer": "VIP tier requires 8,000,000 won in annual spending. You have spent 2,500,000 won, so you need 5,500,000 won more to reach VIP.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q126",
+    "question_ko": "제주도에 사는데 20,000원짜리 주문하면 배송비 얼마예요?",
+    "question_en": "I live in Jeju. If I order 20,000 won worth of items, what is the shipping fee?",
+    "expected_answer": "Standard members get free shipping on orders 20,000 won or more, but Jeju and remote islands incur an additional surcharge of 3,000-5,000 won on top of standard rates.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_options",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q127",
+    "question_ko": "오늘 주문하면 내일 받을 수 있나요? 서울 거주이고 빠른배송 선택하면요",
+    "question_en": "If I order today and choose express delivery in Seoul, can I receive it tomorrow?",
+    "expected_answer": "Express delivery in Seoul and major metro areas offers same-day delivery if ordered before the cutoff time (typically 1pm), otherwise next-day delivery.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "delivery_period",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q128",
+    "question_ko": "VIP 회원인데 디지털 상품 반품 되나요? 며칠 안에 해야 해요?",
+    "question_en": "I am a VIP member. Can I return digital products and within how many days?",
+    "expected_answer": "Digital downloads cannot be returned regardless of membership tier. Only physical products are eligible for return within 14 calendar days.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q129",
+    "question_ko": "카드 결제했는데 배송 시작된 후에 취소하면 환불이 어떻게 되나요?",
+    "question_en": "I paid by credit card and shipping has started. If I cancel now, how does the refund work?",
+    "expected_answer": "Once shipping has started you cannot cancel — you must request a return instead. After the item is returned and inspected (1-2 days), a credit card refund takes 3-5 business days.",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "get_refund",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q130",
+    "question_ko": "Plus 회원이고 리뷰 포토 리뷰 썼어요. 포인트 언제, 얼마나 받아요?",
+    "question_en": "I am a Plus member and wrote a photo review. When and how many points do I receive?",
+    "expected_answer": "Photo review rewards are credited 1-2 business days after the review is approved. The reward amount depends on the current review incentive policy (typically 100-500 points per photo review).",
+    "tier": "medium",
+    "source_layers": [
+      "faq",
+      "policy"
+    ],
+    "primary_intent": "review",
+    "wall_type": "conditional"
+  },
+  {
+    "id": "Q131",
+    "question_ko": "포인트 어케써요 알려줭",
+    "question_en": "How do I use my points?",
+    "expected_answer": "Points can be applied at checkout. Minimum redemption is 1,000 points (equal to 1,000 won). Points expire 2 years from the date earned.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q132",
+    "question_ko": "주문취소 어케함? 급함",
+    "question_en": "How do I cancel my order?",
+    "expected_answer": "Go to My Orders, select the order, and tap Cancel Order. Cancellation is only available while the order status is Preparing.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "cancel_order",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q133",
+    "question_ko": "배송조회 어케함?? 어디서봄",
+    "question_en": "Where can I track my delivery?",
+    "expected_answer": "You can track your order in My Orders section of the app or website. A tracking link is also sent via SMS and email once shipping begins.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "track_order",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q134",
+    "question_ko": "등급어케올림? 뭐하면됨",
+    "question_en": "How do I upgrade my membership tier?",
+    "expected_answer": "Tiers are upgraded automatically based on annual spending. Standard is the default. Plus requires 2,000,000 won/year; VIP requires 8,000,000 won/year.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "membership_tiers",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q135",
+    "question_ko": "탈퇴하고싶은데 어케함ㅠ",
+    "question_en": "I want to delete my account",
+    "expected_answer": "Go to Account Settings and select Delete Account. Note that all points and order history are permanently deleted, and you cannot re-register for 30 days.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "delete_account",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q136",
+    "question_ko": "구독해지 어케함? 어디서함?",
+    "question_en": "I want to cancel my subscription",
+    "expected_answer": "You can cancel your subscription in Account Settings under Subscription Management. Cancellation takes effect at the end of the current billing cycle.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "subscription",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q137",
+    "question_ko": "메일수신거부 어케함??",
+    "question_en": "How do I unsubscribe from emails?",
+    "expected_answer": "Click the unsubscribe link at the bottom of any newsletter email. Changes take effect within 24-48 hours.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "newsletter_subscription",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q138",
+    "question_ko": "전화상담 몇시까지함? 주말도됨?",
+    "question_en": "What hours is phone support available?",
+    "expected_answer": "Phone support is available weekdays 9:00-18:00 (KST). No support on weekends or public holidays.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "contact_customer_service",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q139",
+    "question_ko": "교환어케함? 사이즈바꾸고싶은데",
+    "question_en": "How do I exchange an item?",
+    "expected_answer": "Direct exchanges are not supported. Please return the item and place a new order for the desired product.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "change_order",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q140",
+    "question_ko": "리뷰쓰면 뭐줌? 포인트얼마줌?",
+    "question_en": "What do I get for writing a review?",
+    "expected_answer": "Reviews earn points: text reviews earn a base amount, photo reviews earn more. Points are credited 1-2 business days after the review is approved.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "review",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q141",
+    "question_ko": "마켓판매자거 반품정책 따로있음?",
+    "question_en": "Is the refund policy different for marketplace sellers?",
+    "expected_answer": "Yes. Marketplace seller items follow the individual seller's return policy, which may differ from Cholog's standard 14-day window.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "check_refund_policy",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q142",
+    "question_ko": "세금계산서 어케받음?",
+    "question_en": "How do I get a tax invoice?",
+    "expected_answer": "Tax invoices for business purchases require a separate request through customer service. Personal receipts are available in My Orders.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "get_invoice",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q143",
+    "question_ko": "친환경포장 어케신청함?",
+    "question_en": "How do I request eco-friendly packaging?",
+    "expected_answer": "Select eco-friendly packaging option at checkout. Choosing eco packaging earns bonus green points.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "eco_green",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q144",
+    "question_ko": "배송주소 몇개저장됨?",
+    "question_en": "How many shipping addresses can I save?",
+    "expected_answer": "You can save up to 10 shipping addresses. One can be set as the default address.",
+    "tier": "medium",
+    "source_layers": [
+      "policy"
+    ],
+    "primary_intent": "set_up_shipping_address",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q145",
+    "question_ko": "할부몇개월까지됨?",
+    "question_en": "How many installment months are available?",
+    "expected_answer": "Installment options depend on the credit card issuer. Typically 2-12 months interest-free installments are available for purchases over a minimum amount, but this varies by card.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "check_payment_methods",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q146",
+    "question_ko": "앱어디서받음? 어디서다운?",
+    "question_en": "Where do I download the app?",
+    "expected_answer": "The Cholog app is available on the App Store (iOS) and Google Play Store (Android).",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "create_account",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q147",
+    "question_ko": "비번바꾸고싶은데 어케함",
+    "question_en": "I want to change my password",
+    "expected_answer": "Go to Account Settings and select Change Password. You will need to verify your current password first.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "edit_account",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q148",
+    "question_ko": "포인트 유효기간있음? 언제까지?",
+    "question_en": "Do points expire?",
+    "expected_answer": "Yes. Points expire 2 years from the date they were earned. Expiring points are notified via email 30 days in advance.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "loyalty_points",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q149",
+    "question_ko": "판매자한테 직접연락되냐?",
+    "question_en": "Can I contact the marketplace seller directly?",
+    "expected_answer": "Yes. You can contact marketplace sellers through the product page or order details page using the Contact Seller button.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "marketplace",
+    "wall_type": "cross_language"
+  },
+  {
+    "id": "Q150",
+    "question_ko": "불량품받았는데ㅠ 어케함 환불됨?",
+    "question_en": "I received a defective product what should I do?",
+    "expected_answer": "Request a return through My Orders and select Defective/Wrong Item as the reason. Upload photos of the defect. Courier pickup is free for defect returns and a full refund will be issued.",
+    "tier": "medium",
+    "source_layers": [
+      "faq"
+    ],
+    "primary_intent": "wrong_item_received",
+    "wall_type": "cross_language"
+  }
 ]

@@ -1,0 +1,8 @@
+// M8: 대화 기억 (멀티턴 대화, ChatMemory)
+// 벽: "이전 질문을 기억 못한다"
+// 신규 모듈
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+}

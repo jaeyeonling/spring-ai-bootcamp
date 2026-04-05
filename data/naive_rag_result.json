@@ -1,0 +1,66 @@
+{
+  "config": {
+    "top_k": 5,
+    "layer_filter": "all",
+    "total_chunks": 502
+  },
+  "summary": {
+    "easy": {
+      "correct": 13,
+      "total": 30,
+      "accuracy": 43.3
+    },
+    "medium": {
+      "correct": 17,
+      "total": 44,
+      "accuracy": 38.6
+    },
+    "hard": {
+      "correct": 17,
+      "total": 26,
+      "accuracy": 65.4
+    }
+  },
+  "wall_type": {
+    "null": {
+      "correct": 14,
+      "total": 31,
+      "accuracy": 45.2
+    },
+    "contradiction": {
+      "correct": 3,
+      "total": 5,
+      "accuracy": 60.0
+    },
+    "conditional": {
+      "correct": 15,
+      "total": 43,
+      "accuracy": 34.9
+    },
+    "versioning": {
+      "correct": 5,
+      "total": 6,
+      "accuracy": 83.3
+    },
+    "noise": {
+      "correct": 2,
+      "total": 4,
+      "accuracy": 50.0
+    },
+    "cross_language": {
+      "correct": 4,
+      "total": 6,
+      "accuracy": 66.7
+    },
+    "precedent": {
+      "correct": 3,
+      "total": 4,
+      "accuracy": 75.0
+    },
+    "memory": {
+      "correct": 1,
+      "total": 1,
+      "accuracy": 100.0
+    }
+  }
+}

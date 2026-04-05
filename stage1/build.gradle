@@ -1,0 +1,6 @@
+// Stage 1: 초록 코퍼레이션 챗봇 스켈레톤
+// 학습자가 시작하는 최소 구조 — POST /api/chat 엔드포인트만 존재
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+}

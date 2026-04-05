@@ -1,0 +1,5 @@
+// Stage 2: 개선 모듈 공통 설정
+// 각 모듈(m1~m11)은 Stage 1 완료 후 필요한 것을 선택해서 진행
+subprojects {
+    // 모듈별 build.gradle에서 개별 의존성 선언
+}

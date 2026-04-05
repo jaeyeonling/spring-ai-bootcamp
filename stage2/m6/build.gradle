@@ -1,0 +1,7 @@
+// M6: 멀티 에이전트 (Chain, Routing, Orchestrator-Worker)
+// 벽: "교차 소스 추론", "FAQ vs 정책 문서 불일치"
+// 소스: week08
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+}

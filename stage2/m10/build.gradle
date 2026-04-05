@@ -1,0 +1,7 @@
+// M10: 구조화 출력 (BeanOutputConverter, JSON Schema)
+// 벽: "LLM 응답 형식이 매번 달라진다"
+// 신규 모듈 (week02 청킹 전략 참고)
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+}

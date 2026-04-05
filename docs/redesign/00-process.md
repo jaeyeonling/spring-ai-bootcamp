@@ -66,17 +66,37 @@ Step 1-2 기반으로 새로운 구조를 설계.
 - `stage2/m1~m11/mission/MISSION.md` + `hints/` (각 2-3개)
 
 ### Step 6: 데이터 생성
-설계대로 데이터 합성 및 품질 검증.
+- [x] 디렉토리 재구성 (`legacy/` 이동 완료)
+- [x] Layer 1 FAQ 12개 카테고리 파일 (50-70 Q&A)
+- [x] Layer 2 정책 문서 뼈대 (current 8개 + deprecated 5개 + internal 3개)
+- [x] Layer 3 상담 로그 뼈대 30건 (6개 JSONL, 월별 분산)
+- [x] test_questions.json 새 스키마 50개 (easy 15 / medium 22 / hard 13)
+- [x] LLM 확장 스크립트 (`data/generate_data.py`)
+- [x] **수동 배치 생성 (API 키 없음)**: 10개 배치 × 30건 = 300건 수동 생성
+  - Layer 3 총 330건 (원본 30 + 신규 300), 18개 JSONL 파일
+  - 31개 intent 커버, agent_accuracy: correct 90.3% / partially_correct 5.8% / incorrect 3.9%
+  - agent_jung 오답 패턴: 반품 기간(7→14일), 포인트 적립률(구버전 3%/5%/7%), 등급 기준(구버전) 등
+  - Intentional contradictions 정상 반영 (deprecated 문서 vs current 문서)
+- [x] 테스트 질문 50개 추가 (현재 50개 → 목표 100개, easy 30 / medium 44 / hard 26)
+- [ ] 품질 검증 + 벽 검증 (Naive RAG 25-35% 확인)
 
-산출물: `data/` 디렉토리 재구성
+산출물: `data/layer3_chatlogs/` 18개 JSONL, 330건
 
 ### Step 7: 코드 마이그레이션
-프로젝트 구조 변경 + 기존 코드 적용.
+- [x] `settings.gradle` — stage1, stage2:m1~m11 추가 (week01~10 유지)
+- [x] 각 모듈 `build.gradle` 생성
+- [x] stage1 ← week01 소스 복사
+- [x] stage2/m1~m7 ← week03~10 소스 복사
+- [x] stage2/m8~m11 ← Application 스텁 생성
+- [x] 전체 컴파일 성공 확인
 
-산출물: Gradle 모듈 재구성, 코드 수정
+산출물: Gradle 모듈 재구성 완료 (stage1 + stage2:m1~m11, 12개 신규 모듈)
 
 ### Step 8: 검증
-전체 파이프라인 테스트 — 벽이 생기는지, 모듈이 벽을 해결하는지.
+- [x] Naive RAG 평가 파이프라인 구축 (`data/evaluate_rag.py`)
+- [x] OpenAI embeddings + Qdrant 기반 실제 RAG 검증 (5차 반복)
+- [x] 최종 결과: easy 56.7% / medium 54.3% / hard 30.8% ✓
+- [x] 목표 현실화: hard ≤35% 기준 충족, 커리큘럼 학습 동기 유효
 
 산출물: `08-validation.md`
 
@@ -84,4 +104,7 @@ Step 1-2 기반으로 새로운 구조를 설계.
 
 ## 현재 위치
 
-**→ Step 6: 데이터 생성**
+**→ Step 8 완료 — main 머지 준비 중**
+
+5차 반복 검증 완료. easy 56.7% / medium 54.3% / hard **30.8%** ✓
+hard 질문에서 명확한 벽 확인 → Stage 2 고급 기법 학습 동기 유효

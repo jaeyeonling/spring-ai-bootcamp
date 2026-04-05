@@ -1,0 +1,9 @@
+// M2: 검색 품질 (ReRanker, Query Transform, Hybrid Search)
+// 벽: "검색 결과 상위에 엉뚱한 문서가 올라온다"
+// 소스: week04
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+    implementation 'org.springframework.ai:spring-ai-tika-document-reader'
+}

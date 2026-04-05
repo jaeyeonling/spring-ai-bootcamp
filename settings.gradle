@@ -1,5 +1,6 @@
 rootProject.name = 'spring-ai-bootcamp'
 
+// ─── 레거시 (week 기반 커리큘럼) ──────────────────────────────────────────────
 include 'shared'
 include 'week01'
 include 'week02'
@@ -11,3 +12,18 @@ include 'week07'
 include 'week08'
 include 'week09'
 include 'week10'
+
+// ─── 재설계 커리큘럼 ─────────────────────────────────────────────────────────
+include 'stage1'
+
+include 'stage2:m1'   // 벡터 DB & ETL
+include 'stage2:m2'   // 검색 품질
+include 'stage2:m3'   // 관측성 & 평가
+include 'stage2:m4'   // Tool Use & MCP
+include 'stage2:m5'   // 비용 최적화
+include 'stage2:m6'   // 멀티 에이전트
+include 'stage2:m7'   // 프로덕션 통합
+include 'stage2:m8'   // 대화 기억
+include 'stage2:m9'   // 스트리밍 & 응답 제어
+include 'stage2:m10'  // 구조화 출력
+include 'stage2:m11'  // 데이터 피드백 루프

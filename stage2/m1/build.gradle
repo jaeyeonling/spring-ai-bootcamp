@@ -1,0 +1,9 @@
+// M1: 벡터 DB & ETL
+// 벽: "1000개 문서를 프롬프트에 넣을 수 없다"
+// 소스: week03
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+    implementation 'org.springframework.ai:spring-ai-tika-document-reader'
+}

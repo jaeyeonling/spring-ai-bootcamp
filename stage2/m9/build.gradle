@@ -1,0 +1,7 @@
+// M9: 스트리밍 & 응답 제어 (Server-Sent Events, 인터럽트)
+// 벽: "전체 답변이 완성될 때까지 대기해야 한다"
+// 신규 모듈
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+}

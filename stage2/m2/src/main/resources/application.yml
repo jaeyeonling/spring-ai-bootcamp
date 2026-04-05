@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: week04-advanced-rag
+  profiles:
+    active: baseline  # 변경 가능: baseline, reranker, query-transform, combined
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.1
+      embedding:
+        options:
+          model: text-embedding-3-small
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+        collection-name: week04-docs
+        initialize-schema: true
+
+# 검색 설정
+retrieval:
+  reranker:
+    candidate-count: 20        # 재순위화 전 검색할 후보 문서 수
+  query-transform:
+    number-of-queries: 3       # MultiQueryExpander가 생성할 확장 쿼리 수
+
+# 데이터 경로
+data:
+  file-path: ../data/faq.md
+  test-questions-path: ../data/test_questions.json

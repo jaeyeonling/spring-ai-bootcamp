@@ -1,0 +1,10 @@
+// M4: Tool Use & MCP
+// 벽: "실시간 데이터가 필요하다", "외부 도구를 연동하고 싶다"
+// 소스: week07 (Function Calling, Reflection) + week09 (MCP Server)
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+    implementation 'org.springframework.ai:spring-ai-tika-document-reader'
+    implementation 'org.springframework.ai:spring-ai-starter-mcp-server'
+}

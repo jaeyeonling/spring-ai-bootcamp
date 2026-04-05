@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: week05-observability
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.1
+      embedding:
+        options:
+          model: text-embedding-3-small
+    chat:
+      client:
+        observations:
+          include-input: true     # observation/트레이스에 프롬프트 내용 포함
+          include-output: true    # observation/트레이스에 완성 내용 포함
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+        collection-name: week05-docs
+        initialize-schema: true
+
+# -----------------------------------------------------------------------
+# Actuator 설정
+# -----------------------------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus, info
+  endpoint:
+    health:
+      show-details: always      # 상세 헬스 정보 표시 (벡터 저장소, OpenAI)
+    metrics:
+      enabled: true
+  # -----------------------------------------------------------------------
+  # OpenTelemetry 트레이싱 설정
+  # -----------------------------------------------------------------------
+  tracing:
+    sampling:
+      probability: 1.0           # 요청 100% 샘플링 (개발/디버깅용)
+  otlp:
+    tracing:
+      endpoint: http://localhost:4318/v1/traces
+    metrics:
+      export:
+        enabled: true
+        url: http://localhost:4318/v1/metrics
+        step: 30s                # 30초마다 메트릭 내보내기
+
+# -----------------------------------------------------------------------
+# 데이터 경로
+# -----------------------------------------------------------------------
+data:
+  file-path: ../data/faq.md
+  test-questions-path: ../data/test_questions.json
+
+# -----------------------------------------------------------------------
+# 평가 설정
+# -----------------------------------------------------------------------
+evaluation:
+  hallucination-threshold: 0.5   # 이 임계값 미만 점수의 답변을 환각으로 플래그
+  batch-schedule-rate: 3600000   # 배치 평가 실행 주기 (밀리초, 매시간)

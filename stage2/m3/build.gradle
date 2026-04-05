@@ -1,0 +1,13 @@
+// M3: 관측성 & 평가 (Micrometer, OpenTelemetry, 자동 평가)
+// 벽: "왜 틀렸는지 모르겠다", "답변이 맞는지 자동으로 판단할 방법이 없다"
+// 소스: week05
+dependencies {
+    implementation project(':shared')
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+    implementation 'org.springframework.ai:spring-ai-tika-document-reader'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-otlp'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+}

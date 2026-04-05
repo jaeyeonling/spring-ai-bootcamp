@@ -1,0 +1,1087 @@
+{
+  "pipeline": {
+    "embed_model": "text-embedding-3-small",
+    "chat_model": "gpt-4o-mini",
+    "top_k": 5
+  },
+  "summary": {
+    "easy": {
+      "correct": 17,
+      "total": 30,
+      "accuracy": 56.7
+    },
+    "medium": {
+      "correct": 51,
+      "total": 94,
+      "accuracy": 54.3
+    },
+    "hard": {
+      "correct": 8,
+      "total": 26,
+      "accuracy": 30.8
+    }
+  },
+  "wall_verdict": {
+    "easy_ok": false,
+    "medium_ok": false,
+    "hard_ok": true
+  },
+  "details": {
+    "easy": [
+      {
+        "id": "Q001",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "배송 준비중 상태라면 '나의 주문'에서 주문 선택 후 '주문 취소'를 눌러주세요. 즉시 처리되고 전액 환불됩니다."
+      },
+      {
+        "id": "Q002",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "스탠다드 회원은 2만원 이상 주문 시 일반 배송이 무료입니다. 플러스 회원은 금액 무관 무료, VIP 회원은 우선배송이 무료이며, 구독 회원은 "
+      },
+      {
+        "id": "Q003",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "반품은 배송 완료 후 14일 이내에 신청해야 합니다."
+      },
+      {
+        "id": "Q004",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "단순 변심 반품 시 왕복 배송비 3,000원이 환불 금액에서 차감됩니다."
+      },
+      {
+        "id": "Q005",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "1포인트 = 1원 적용입니다."
+      },
+      {
+        "id": "Q006",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "포인트는 적립일로부터 12개월 동안 유효합니다. 만료 30일 전에 앱 알림으로 안내드려요."
+      },
+      {
+        "id": "Q007",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "네, 냉장 배송은 월요일부터 목요일까지만 가능합니다."
+      },
+      {
+        "id": "Q008",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "배송비 추가는 없어요."
+      },
+      {
+        "id": "Q009",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "VIP 등급이 되려면 연간 80만원 이상 구매하셔야 합니다."
+      },
+      {
+        "id": "Q010",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q011",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "카카오페이는 취소 처리 완료 즉시 환불되며, 보통 몇 분 내로 카카오페이 잔액에 반영됩니다."
+      },
+      {
+        "id": "Q012",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "주문 완료 후 고객센터(cs@chorok.com)로 사업자등록번호, 주문번호, 담당자 이메일을 보내주시면 세금계산서 발행 요청을 처리해드립니다."
+      },
+      {
+        "id": "Q013",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "구독을 일시 정지하는 기능은 지원하지 않습니다. 잠시 이용을 중단하고 싶으시면 그냥 로그아웃 상태로 두시면 됩니다."
+      },
+      {
+        "id": "Q014",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "네, 친환경 포장(Green Packaging)을 선택하시면 주문당 200포인트가 추가로 적립됩니다."
+      },
+      {
+        "id": "Q015",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q051",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "앱이나 웹에서 카카오, 네이버, 구글 소셜 로그인으로 간편 가입하거나 이메일로 직접 가입 가능합니다. 만 14세 이상이면 가입 가능하고, 가입 "
+      },
+      {
+        "id": "Q052",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "뉴스레터 하단의 '수신거부' 링크를 클릭하시면 즉시 해제됩니다. 앱 마이페이지 > 알림 설정에서도 해제 가능합니다."
+      },
+      {
+        "id": "Q053",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "고객센터 전화번호는 1588-1234입니다. 운영 시간은 평일 오전 9시부터 오후 6시까지입니다. 주말과 공휴일은 전화 상담이 안 되고 앱 채팅"
+      },
+      {
+        "id": "Q054",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "텍스트 리뷰 작성 시 100포인트, 사진 포함 시 500포인트 추가 적립됩니다."
+      },
+      {
+        "id": "Q055",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "비밀번호 재설정 링크는 발송 후 30분 내에 사용하셔야 합니다."
+      },
+      {
+        "id": "Q056",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "보관 기간은 5일입니다."
+      },
+      {
+        "id": "Q057",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "최대 14일 이내 날짜로 예약 가능합니다."
+      },
+      {
+        "id": "Q058",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "신용카드/체크카드, 카카오페이, 네이버페이, 계좌이체, 포인트, 쿠폰을 지원합니다. 포인트와 쿠폰은 다른 결제 수단과 함께 사용 가능해요."
+      },
+      {
+        "id": "Q059",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "주문번호는 주문 완료 문자나 카카오 알림톡에서 확인하거나, 앱 나의 주문에서 확인 가능합니다."
+      },
+      {
+        "id": "Q060",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "선물 포장 비용은 상품당 1,500원입니다."
+      },
+      {
+        "id": "Q061",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "네, 주문 시 배송 메모 입력 가능합니다. 주문 완료 후에도 발송 전이라면 앱 나의 주문 > 해당 주문에서 수정 가능합니다. 원하시는 내용을 입"
+      },
+      {
+        "id": "Q062",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "리뷰는 수령 후 90일 이내에 작성 가능합니다."
+      },
+      {
+        "id": "Q063",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": false,
+        "answer_snippet": "포인트는 최소 1,000점 이상 보유 시 사용 가능합니다."
+      },
+      {
+        "id": "Q064",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "실시간 GPS 추적은 우선 배송에서만 가능합니다. 일반 배송은 GPS 추적이 지원되지 않습니다."
+      },
+      {
+        "id": "Q065",
+        "correct": true,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "탈퇴 시 모든 포인트와 쿠폰이 즉시 소멸됩니다. 포인트를 먼저 사용하신 후 탈퇴하시는 걸 권장드립니다."
+      }
+    ],
+    "medium": [
+      {
+        "id": "Q016",
+        "correct": true,
+        "wall_type": "contradiction",
+        "jung_contaminated": true,
+        "answer_snippet": "마켓플레이스 상품은 각 판매자의 반품 정책을 따릅니다. 기본적으로 7-14일이지만 판매자마다 다를 수 있습니다. 상품 페이지에서 판매자 반품 정"
+      },
+      {
+        "id": "Q017",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "냉장 배송은 별도 냉장 전용 쿠리어(CJ로지스틱스 프레시)를 사용하여 고정 4,000원 부과됩니다. 이 비용은 등급과 무관하게 모든 회원에게 동"
+      },
+      {
+        "id": "Q018",
+        "correct": false,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "현재는 스탠다드 1%, 플러스 3%, VIP 5%입니다."
+      },
+      {
+        "id": "Q019",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q020",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "네! 활성 구독 회원이시면 구독 외 일반 주문에도 배송비 무료 혜택이 적용됩니다. 금액 제한 없이요."
+      },
+      {
+        "id": "Q021",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "반품 시 해당 주문으로 적립된 포인트는 회수됩니다."
+      },
+      {
+        "id": "Q022",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q023",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "전월 주문 건은 세법상 소급 발급이 어렵습니다."
+      },
+      {
+        "id": "Q024",
+        "correct": false,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 기준으로 플러스 등급은 연 20만원 이상입니다."
+      },
+      {
+        "id": "Q025",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q026",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "판매자와 직접 연락이 안 되는 경우 '나의 주문 > 분쟁 신청'을 통해 초록 바이어 보호 프로그램을 이용하실 수 있습니다."
+      },
+      {
+        "id": "Q027",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "네, 냉장 식품은 제주도로 배송됩니다. 다만, 제주도까지는 일반 배송에서 1-2일 추가 소요됩니다."
+      },
+      {
+        "id": "Q028",
+        "correct": false,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "환불 기간은 결제 수단에 따라 다릅니다. 신용카드의 경우 3-5영업일입니다. 7일이 아니라 3-5영업일로 확인해 주세요."
+      },
+      {
+        "id": "Q029",
+        "correct": true,
+        "wall_type": "contradiction",
+        "jung_contaminated": true,
+        "answer_snippet": "맞습니다. 판매자 배송 정책이 3일이라면 그 정책이 적용됩니다. 초록의 14일 반품 정책은 마켓플레이스 상품에는 적용되지 않습니다."
+      },
+      {
+        "id": "Q030",
+        "correct": true,
+        "wall_type": "versioning",
+        "jung_contaminated": false,
+        "answer_snippet": "2024년 1월부터 2만원으로 기준이 변경되었습니다! 예전에는 3만원이었는데 지금은 2만원이에요."
+      },
+      {
+        "id": "Q031",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "네, VIP 고객도 판매자 반품 정책을 따르기 때문에 3일이 지나면 원칙적으로 반품이 어렵습니다."
+      },
+      {
+        "id": "Q032",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "네, 구독 회원이시면 금액 상관없이 배송비 무료 혜택이 적용됩니다."
+      },
+      {
+        "id": "Q033",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "아니요, 구독 일시정지(Pause)는 연속 개월 수 카운트에 포함됩니다."
+      },
+      {
+        "id": "Q046",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "구독 자체에 별도 추가 적립은 없지만 구독 유지 시 별도 구독 혜택(배송비 무료 등)이 있습니다."
+      },
+      {
+        "id": "Q048",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q049",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "네, 냉장 배송은 별도 냉장 전용 쿠리어를 사용하여 고정 4,000원이 부과됩니다. 이 비용은 등급과 무관하게 모든 회원에게 동일 적용됩니다. "
+      },
+      {
+        "id": "Q050",
+        "correct": false,
+        "wall_type": "-",
+        "jung_contaminated": true,
+        "answer_snippet": "반품 신청 후 환불받기까지 가장 빠른 경우는 카카오페이 기준으로 3-5일 걸립니다."
+      },
+      {
+        "id": "Q066",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "네, 준비중 상태에서 취소할 때는 수수료 없이 전액 환불됩니다. 반면, 발송 후 반품의 경우 단순 변심이면 3,000원이 차감됩니다."
+      },
+      {
+        "id": "Q067",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "네, 결제 즉시 포인트 적립됩니다."
+      },
+      {
+        "id": "Q068",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "탈퇴 후 동일 이메일로는 30일 이내 재가입이 불가합니다."
+      },
+      {
+        "id": "Q069",
+        "correct": true,
+        "wall_type": "contradiction",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 가상계좌 결제는 지원하지 않습니다. 계좌이체(실시간)는 지원합니다."
+      },
+      {
+        "id": "Q070",
+        "correct": true,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 플러스 등급의 포인트 적립률은 3%입니다. 5%는 이전 정책이었습니다."
+      },
+      {
+        "id": "Q071",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 하나의 주문 건 내에서 일부 상품만 취소하는 부분 취소 기능은 지원하지 않습니다. 전체 취소 후 원하시는 상품만 재주문하셔야 합니다."
+      },
+      {
+        "id": "Q072",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "네, 리뷰를 삭제하면 받은 포인트가 회수됩니다."
+      },
+      {
+        "id": "Q073",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "탈퇴 시 포인트는 즉시 소멸되고 재가입해도 복구되지 않습니다."
+      },
+      {
+        "id": "Q074",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "일반 배송은 GPS 추적이 지원되지 않고 단계별 상태 업데이트만 제공됩니다."
+      },
+      {
+        "id": "Q075",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "부재중으로 배송을 못 받았을 때는 한진택배 앱이나 hanjin.kr에서 운송장번호로 재배송 신청이 가능합니다."
+      },
+      {
+        "id": "Q076",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "체크카드는 할부 결제가 불가합니다. 할부는 신용카드에서만 가능합니다. 체크카드는 일시불로만 결제됩니다."
+      },
+      {
+        "id": "Q077",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "뉴스레터 수신 거부는 보통 24-48시간 내에 적용됩니다."
+      },
+      {
+        "id": "Q078",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "최대 10개까지 저장 가능합니다."
+      },
+      {
+        "id": "Q079",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "아니요, 무이자 할부는 모든 신용카드에 적용되지 않습니다. 지원 카드사와 기간은 결제 화면에서 확인하시거나 프로모션 페이지에서 최신 정보 확인하"
+      },
+      {
+        "id": "Q080",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "구독 취소는 정기 배송 자체를 멈추는 것이고, 반품은 이미 받은 상품을 돌려보내는 것입니다. 둘 다 필요하시면 각각 신청하셔야 합니다."
+      },
+      {
+        "id": "Q081",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "네, 쿠폰 할인 후 금액이 2만원 미만이면 배송비가 부과됩니다. 배송비 기준은 쿠폰/포인트 적용 후 최종 결제 금액이 아닌 상품 정가 기준입니다"
+      },
+      {
+        "id": "Q082",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "앱 나의 주문 > 리뷰 내역에서 작성한 리뷰를 수정할 수 있습니다. 단 리뷰당 1회 수정 가능하고, 최초 작성 후 7일 이내에만 수정 가능합니다"
+      },
+      {
+        "id": "Q083",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "계좌이체로 환불받는 데 최대 7영업일 소요됩니다."
+      },
+      {
+        "id": "Q084",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "당일 배송은 서울, 인천, 경기 지역에서 오전 10시 이전 주문 시 가능합니다. 배송비는 8,000원이며 주문 시 '당일 배송' 옵션을 선택하셔"
+      },
+      {
+        "id": "Q085",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "네, 준비중 상태면 버튼 하나로 즉시 취소됩니다."
+      },
+      {
+        "id": "Q086",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "네, 마켓플레이스 판매자 상품 구매 금액도 포인트가 적립됩니다. 포인트 적립률은 본사 상품과 동일하게 적용됩니다."
+      },
+      {
+        "id": "Q087",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "네, VIP 전용 상담 번호는 1588-1235입니다."
+      },
+      {
+        "id": "Q101",
+        "correct": true,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "아니요, 스탠다드 회원은 구매 금액의 1%가 적립됩니다. 플러스 회원이 3%입니다."
+      },
+      {
+        "id": "Q102",
+        "correct": true,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 VIP 적립률은 5%입니다. 이전에 7%였는데 정책이 바뀌었어요."
+      },
+      {
+        "id": "Q103",
+        "correct": false,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q104",
+        "correct": true,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 기준으로 플러스 등급은 연 200만원 이상 구매하셔야 합니다. 이전에는 150만원이었지만 정책이 변경되었습니다."
+      },
+      {
+        "id": "Q105",
+        "correct": false,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 VIP 등급 기준은 연 800만원입니다. 이전에는 600만원이었지만, 기준이 변경되었습니다."
+      },
+      {
+        "id": "Q106",
+        "correct": false,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q107",
+        "correct": true,
+        "wall_type": "versioning",
+        "jung_contaminated": false,
+        "answer_snippet": "2024년 1월부터 무료배송 기준이 2만원으로 변경되었습니다. 예전에는 3만원이었지만 지금은 2만원입니다."
+      },
+      {
+        "id": "Q108",
+        "correct": false,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 스탠다드 적립률은 1%입니다."
+      },
+      {
+        "id": "Q109",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "아니요, 준비중 상태에서 취소하시면 수수료 없이 전액 환불됩니다."
+      },
+      {
+        "id": "Q110",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "죄송합니다, 제가 잘못 안내드렸어요. 전화와 채팅 상담은 평일 오전 9시 ~ 오후 6시에만 운영합니다. 24시간은 자동 챗봇만 이용 가능합니다."
+      },
+      {
+        "id": "Q111",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "죄송합니다, 확인해보니 현재 페이코는 지원하지 않습니다. 제가 잘못 안내드렸어요. 지원 수단은 신용카드, 카카오페이, 네이버페이, 계좌이체, 포"
+      },
+      {
+        "id": "Q112",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 가상계좌 결제는 지원하지 않습니다."
+      },
+      {
+        "id": "Q113",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "탈퇴 시 포인트는 즉시 소멸되고 재가입해도 복구되지 않습니다."
+      },
+      {
+        "id": "Q114",
+        "correct": false,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "탈퇴 후 30일 이내에는 동일 이메일로 재가입이 불가하지만, 다른 이메일이나 소셜 계정으로는 즉시 가입 가능합니다."
+      },
+      {
+        "id": "Q115",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "아니요, 상담사가 말씀하신 내용은 잘못된 정보입니다. 뉴스레터 하단에 '수신거부' 링크가 있어서 클릭하시면 즉시 해제됩니다. 고객센터 연락 없이"
+      },
+      {
+        "id": "Q116",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "반품을 원하시면 앱 반품/취소 신청 화면에서 반품 신청을 하시면 됩니다. 신청 후 예상 환불 금액을 확인할 수 있습니다."
+      },
+      {
+        "id": "Q117",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "일반 배송 기준으로 영업일 2-4일 소요됩니다."
+      },
+      {
+        "id": "Q118",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q119",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "취소하신 주문의 결제 수단이 무엇인지 알려주시면 확인해드릴 수 있습니다."
+      },
+      {
+        "id": "Q120",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "주문이 준비중 상태라면 앱에서 직접 배송지를 수정하시면 됩니다. 마이페이지 > 배송지 관리에서 변경하실 수 있습니다."
+      },
+      {
+        "id": "Q121",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q122",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "앱 나의 주문 > 해당 주문 > '결제 상세' > '영수증 다운로드'에서 PDF로 저장 가능합니다."
+      },
+      {
+        "id": "Q123",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q124",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "스탠다드 회원은 구매 금액의 1%가 적립되므로, 15만원 구매 시 1,500포인트가 쌓입니다."
+      },
+      {
+        "id": "Q125",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 Plus 등급에서 VIP 등급으로 올라가려면 연간 800만원 이상 구매해야 합니다. 올해 250만원을 사용하셨으니, VIP 등급을 위해 추"
+      },
+      {
+        "id": "Q126",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "배송비 추가는 없어요."
+      },
+      {
+        "id": "Q127",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "오늘 오후 1시 이전에 주문하셨다면 오늘 발송, 일반 배송으로 내일 받으실 수 있습니다. 빠른 배송(5,000원)을 선택하시면 내일 정오까지 보"
+      },
+      {
+        "id": "Q128",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q129",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "배송 시작 후에는 취소가 불가능합니다. 수령 후 반품 신청하셔야 합니다."
+      },
+      {
+        "id": "Q130",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "포토 리뷰를 작성하셨다면 500포인트가 적립됩니다. 포인트는 리뷰 작성 승인 후 1-2영업일 내에 지급됩니다."
+      },
+      {
+        "id": "Q131",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q132",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "주문번호를 알려주시면 바로 확인해드릴게요. '배송 준비중' 상태라면 앱에서 '나의 주문' > '주문 취소' 탭하시면 즉시 처리되고 전액 환불됩니"
+      },
+      {
+        "id": "Q133",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "앱 나의 주문에서 해당 주문 선택 후 '배송 추적' 버튼을 누르시면 됩니다. 발송 후 한진택배 운송장번호가 발급되면 한진 앱이나 홈페이지에서도 "
+      },
+      {
+        "id": "Q134",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "등급을 올리기 위해서는 연간 누적 구매 금액을 기준으로 해야 합니다. Plus 등급은 연간 20만원 이상, VIP 등급은 연간 80만원 이상 구"
+      },
+      {
+        "id": "Q135",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "앱 마이페이지 > 설정 > 회원 탈퇴에서 직접 처리 가능합니다. 탈퇴 전 진행 중인 주문이나 미처리 환불이 없는지 확인해주세요."
+      },
+      {
+        "id": "Q136",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q137",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q138",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "전화 상담은 평일 오전 9시부터 오후 6시까지 운영합니다. 주말과 공휴일은 전화 상담이 불가합니다."
+      },
+      {
+        "id": "Q139",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "교환 신청은 앱 반품/교환 신청에서 '교환'을 선택하시면 됩니다. 수령 후 14일 이내, 미개봉 또는 착용 흔적이 없어야 합니다. 동일 상품 다"
+      },
+      {
+        "id": "Q140",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "텍스트 리뷰 작성 시 100포인트, 사진 포함 시 600포인트(텍스트 100 + 사진 500)가 적립됩니다. 또한 '이달의 베스트 리뷰'에 선정"
+      },
+      {
+        "id": "Q141",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "네, 마켓플레이스 판매자 상품은 각 판매자의 반품 정책을 따릅니다."
+      },
+      {
+        "id": "Q142",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "세금계산서를 받으시려면, 개인사업자나 법인의 경우 주문 완료 후 고객센터(cs@chorok.com)로 사업자등록번호, 주문번호, 담당자 이메일을"
+      },
+      {
+        "id": "Q143",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q144",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "최대 10개까지 저장 가능합니다."
+      },
+      {
+        "id": "Q145",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "12개월까지 무이자 가능합니다. 카드사마다 다르며 일부 카드사는 6개월까지만 무이자가 적용됩니다."
+      },
+      {
+        "id": "Q146",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q147",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q148",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "포인트 유효기간은 적립일로부터 12개월 동안 유효합니다. 만료 30일 전에 앱 알림으로 안내드려요."
+      },
+      {
+        "id": "Q149",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q150",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "불량 상품을 받으셨다면, 불량 부위 사진과 주문번호를 알려주시면 즉시 무료 반품 및 교체 또는 전액 환불을 진행해드릴 수 있습니다."
+      }
+    ],
+    "hard": [
+      {
+        "id": "Q034",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "불편을 드려서 정말 죄송합니다 고객님. 어떤 상품 건인지 주문번호 알려주시면 바로 처리해드릴게요."
+      },
+      {
+        "id": "Q035",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "오늘 오후 1시 이전 결제 확인 주문은 오늘 오후 발송되고, 이후 주문은 내일 오전 발송됩니다. 일반 배송 기준으로 수령까지 영업일 기준 2-4"
+      },
+      {
+        "id": "Q036",
+        "correct": false,
+        "wall_type": "precedent",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q037",
+        "correct": false,
+        "wall_type": "memory",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q038",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q039",
+        "correct": false,
+        "wall_type": "precedent",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q040",
+        "correct": true,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "포인트를 현금으로 환전하는 기능은 지원하지 않습니다. 포인트는 저희 앱 결제 시에만 사용 가능합니다."
+      },
+      {
+        "id": "Q041",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q042",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "발송 후에는 시스템상 배송지 변경이 불가합니다. 한진 고객센터(1588-0011)에 직접 운송장번호로 문의해보시는 방법밖에 없습니다."
+      },
+      {
+        "id": "Q043",
+        "correct": false,
+        "wall_type": "precedent",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q044",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "판매자와 직접 연락이 안 되는 경우 '나의 주문 > 분쟁 신청'을 통해 초록 바이어 보호 프로그램을 이용하실 수 있습니다."
+      },
+      {
+        "id": "Q045",
+        "correct": true,
+        "wall_type": "contradiction",
+        "jung_contaminated": false,
+        "answer_snippet": "VIP 고객님은 특정 사유에 따라 30일 반품이 가능할 수 있습니다. 그러나 일반적으로는 반품은 배송 완료 후 14일 이내에만 가능합니다. 30"
+      },
+      {
+        "id": "Q047",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q088",
+        "correct": false,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "현재 VIP 적립률은 5%입니다. 이전에 7%였는데 정책이 바뀌었어요."
+      },
+      {
+        "id": "Q089",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "죄송합니다, 제가 잘못 안내드렸어요. 준비중 상태 취소는 수수료가 없습니다. 전액 환불됩니다."
+      },
+      {
+        "id": "Q090",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q091",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q092",
+        "correct": true,
+        "wall_type": "noise",
+        "jung_contaminated": true,
+        "answer_snippet": "죄송합니다, 공휴일은 전화 및 채팅 상담이 운영하지 않습니다. 평일 9시-18시에만 가능합니다."
+      },
+      {
+        "id": "Q093",
+        "correct": false,
+        "wall_type": "precedent",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q094",
+        "correct": false,
+        "wall_type": "contradiction",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q095",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "탈퇴 후에는 주문 내역을 볼 수 없습니다."
+      },
+      {
+        "id": "Q096",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "네, 반품 시 이미 사용하신 포인트는 회수되므로 포인트 잔액이 마이너스가 될 수 있습니다."
+      },
+      {
+        "id": "Q097",
+        "correct": false,
+        "wall_type": "versioning",
+        "jung_contaminated": true,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q098",
+        "correct": false,
+        "wall_type": "cross_language",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q099",
+        "correct": false,
+        "wall_type": "conditional",
+        "jung_contaminated": false,
+        "answer_snippet": "I cannot find this information."
+      },
+      {
+        "id": "Q100",
+        "correct": true,
+        "wall_type": "conditional",
+        "jung_contaminated": true,
+        "answer_snippet": "배송 기사 직접 연락처는 개인정보 보호상 안내드리기 어렵습니다. 대신 한진택배 앱에서 '배달 당일' 기사님과 메시지 주고받기 기능이 있어요. 운"
+      }
+    ]
+  }
+}
