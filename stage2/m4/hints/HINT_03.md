@@ -43,14 +43,28 @@ public class Application {
 java -jar app.jar --spring.ai.mcp.server.transport=STDIO
 ```
 
-MCP 클라이언트 설정 (`.mcp.json` 또는 Claude Desktop `claude_desktop_config.json`):
+MCP 클라이언트 설정 예시:
 
+**Claude Code** (`.mcp.json`):
 ```json
 {
   "mcpServers": {
     "cholog-faq": {
       "command": "java",
       "args": ["-jar", "/path/to/app.jar", "--spring.ai.mcp.server.transport=STDIO"]
+    }
+  }
+}
+```
+
+**OpenCode** (`opencode.jsonc`):
+```jsonc
+{
+  "mcp": {
+    "cholog-faq": {
+      "type": "local",
+      "command": ["java", "-jar", "/path/to/app.jar", "--spring.ai.mcp.server.transport=STDIO"],
+      "enabled": true
     }
   }
 }
