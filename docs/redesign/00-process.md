@@ -59,9 +59,11 @@ Step 1-2 기반으로 새로운 구조를 설계.
 - 벽 검증 기준 (naive RAG로 35-40% 나오는지)
 
 ### Step 5: 커리큘럼 문서 작성
-MISSION.md, 힌트, README 등 교육 콘텐츠 작성.
+- [x] MISSION.md, 힌트, README 등 교육 콘텐츠 작성.
 
 산출물: 각 Stage/모듈의 `mission/MISSION.md`, `hints/`
+- `stage1/mission/MISSION.md` + `hints/` (HINT_01~05)
+- `stage2/m1~m11/mission/MISSION.md` + `hints/` (각 2-3개)
 
 ### Step 6: 데이터 생성
 설계대로 데이터 합성 및 품질 검증.
@@ -82,4 +84,4 @@ MISSION.md, 힌트, README 등 교육 콘텐츠 작성.
 
 ## 현재 위치
 
-**→ Step 1: 커리큘럼의 의미 정리**
+**→ Step 6: 데이터 생성**
