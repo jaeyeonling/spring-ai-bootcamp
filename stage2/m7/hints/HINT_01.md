@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   qdrant:
-    image: qdrant/qdrant:v1.9.0
+    image: qdrant/qdrant:v1.13.6
     ports:
       - "6333:6333"
       - "6334:6334"

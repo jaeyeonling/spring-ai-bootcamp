@@ -49,5 +49,5 @@ Qdrant Docker를 실행하고 Spring AI 연결이 되면 HINT_02로 넘어가세
 ```bash
 docker run -p 6333:6333 -p 6334:6334 \
   -v $(pwd)/qdrant_storage:/qdrant/storage \
-  qdrant/qdrant:v1.9.0
+  qdrant/qdrant:v1.13.6
 ```

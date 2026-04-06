@@ -65,7 +65,7 @@ Stage 1 정확도 측정을 다시 실행하세요. 수치가 바뀌는지 확�
 # docker-compose.yml
 services:
   qdrant:
-    image: qdrant/qdrant:v1.9.0
+    image: qdrant/qdrant:v1.13.6
     ports:
       - "6333:6333"
     volumes:
