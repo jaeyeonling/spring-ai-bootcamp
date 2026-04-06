@@ -10,9 +10,9 @@ public class CostTracker {
 
     // OpenAI 가격 (2024년 기준, 달러)
     private static final Map<String, double[]> TOKEN_COST = Map.of(
-        "gpt-4o",       new double[]{2.50, 10.00},   // [입력, 출력] per 1M tokens
-        "gpt-4o-mini",  new double[]{0.15, 0.60},
-        "gpt-3.5-turbo",new double[]{0.50, 1.50}
+        "gpt-4.1",      new double[]{2.00, 8.00},    // [입력, 출력] per 1M tokens
+        "gpt-4.1-nano", new double[]{0.10, 0.40},
+        "gpt-4.1-mini", new double[]{0.40, 1.60}
     );
 
     private final MeterRegistry registry;
@@ -39,16 +39,16 @@ public class CostTracker {
 Stage 1에서 테스트 100개를 돌렸을 때:
 
 ```
-gpt-4o-mini 기준:
+gpt-4.1-nano 기준:
 - 평균 프롬프트 토큰: 1,500 (컨텍스트 + 질문)
 - 평균 완성 토큰: 200
-- 요청당 비용: (1500 × $0.15 + 200 × $0.60) / 1,000,000 = $0.000345
-- 100개 테스트: $0.035
-- 하루 1,000요청: $0.345
-- 월간: ~$10
+- 요청당 비용: (1500 × $0.10 + 200 × $0.40) / 1,000,000 = $0.000230
+- 100개 테스트: $0.023
+- 하루 1,000요청: $0.230
+- 월간: ~$7
 
-gpt-4o 사용 시:
-- 월간: ~$167 (17배 차이)
+gpt-4.1 사용 시:
+- 월간: ~$140 (20배 차이)
 ```
 
 이 계산으로 현재 상황을 파악한 후, 절감 전략을 선택하세요.

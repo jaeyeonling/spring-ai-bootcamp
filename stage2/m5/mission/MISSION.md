@@ -20,7 +20,7 @@ Stage 1에서 측정한 비용을 기준으로, **동일한 품질**을 유지�
 
 ```
 [ ] 비용 추적 대시보드: 요청별 토큰 사용량, 일/월 비용 집계
-[ ] Ollama 로컬 모델 연결 (gpt-4o-mini 대체)
+[ ] Ollama 로컬 모델 연결 (gpt-4.1-nano 대체)
 [ ] 모델 라우팅: 질문 난이도에 따라 로컬/클라우드 모델 분배
 [ ] 시맨틱 캐싱: 유사 질문 재사용으로 LLM 호출 절감
 [ ] 비용 절감 전후 비교 수치 기록
@@ -72,7 +72,7 @@ public String route(String question) {
         return "ollama/llama3.2";
     }
     // 복잡한 추론, 교차 소스: 클라우드 모델
-    return "openai/gpt-4o-mini";
+    return "openai/gpt-4.1-nano";
 }
 ```
 

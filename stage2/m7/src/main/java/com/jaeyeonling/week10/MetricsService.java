@@ -68,9 +68,9 @@ public class MetricsService {
         long total = promptTokens + completionTokens;
         tokenUsageCounter.increment(total);
 
-        // gpt-4o-mini 가격 기준: input $0.15/1M, output $0.60/1M
-        double cost = (promptTokens * 0.15 / 1_000_000.0)
-                    + (completionTokens * 0.60 / 1_000_000.0);
+        // gpt-4.1-nano 가격 기준: input $0.10/1M, output $0.40/1M
+        double cost = (promptTokens * 0.10 / 1_000_000.0)
+                    + (completionTokens * 0.40 / 1_000_000.0);
         tokenCostCounter.increment(cost);
     }
 

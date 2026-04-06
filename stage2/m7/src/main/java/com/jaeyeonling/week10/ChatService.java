@@ -88,7 +88,7 @@ public class ChatService {
             String answer = orchestratorService.answer(userMessage, faqContext);
             // 오케스트레이터는 내부적으로 분해(1) + 에이전트(3) + 합성(1) = 5회 LLM 호출을 하므로
             // 단일 응답의 Usage 추출이 불가능하다. -1로 표시하여 집계 불가 상태를 명시.
-            metricsService.recordTokenUsage(0, 0, "gpt-4o-mini");
+            metricsService.recordTokenUsage(0, 0, "gpt-4.1-nano");
             return new ChatResult(answer, sources, TokenUsage.unavailable());
         }
 
@@ -107,7 +107,7 @@ public class ChatService {
         metricsService.recordTokenUsage(
                 usage.getPromptTokens(),
                 usage.getCompletionTokens(),
-                "gpt-4o-mini");
+                "gpt-4.1-nano");
 
         TokenUsage tokenUsage = new TokenUsage(
                 usage.getPromptTokens(),
