@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -64,6 +65,7 @@ class QueryControllerTest {
         );
 
         mockMvc.perform(multipart("/api/ingest").file(faqFile))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.filename").value("test-faq.txt"))
             .andExpect(jsonPath("$.chunks").isNumber())
@@ -79,6 +81,7 @@ class QueryControllerTest {
                 .content("""
                     {"question": "반품 정책이 어떻게 되나요?"}
                     """))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.answer").isNotEmpty())
             .andExpect(jsonPath("$.sources").isArray())
@@ -95,6 +98,7 @@ class QueryControllerTest {
                 .content("""
                     {"question": "상품을 반품할 수 있는 기간은 며칠인가요?"}
                     """))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.answer").value(
                 org.hamcrest.Matchers.containsStringIgnoringCase("30")
@@ -110,6 +114,7 @@ class QueryControllerTest {
                 .content("""
                     {"question": ""}
                     """))
+            .andDo(print())
             .andExpect(status().isBadRequest());
     }
 
@@ -125,6 +130,7 @@ class QueryControllerTest {
         );
 
         mockMvc.perform(multipart("/api/ingest").file(emptyFile))
+            .andDo(print())
             .andExpect(status().isBadRequest());
     }
 }

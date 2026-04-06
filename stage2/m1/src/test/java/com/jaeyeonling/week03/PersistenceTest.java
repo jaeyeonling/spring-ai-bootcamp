@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -46,6 +47,7 @@ class PersistenceTest {
                 .content("""
                     {"question": "반품 정책이 어떻게 되나요?"}
                     """))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.answer").isNotEmpty())
             .andExpect(jsonPath("$.sources").isArray());
@@ -59,6 +61,7 @@ class PersistenceTest {
                 .content("""
                     {"question": "상품을 반품할 수 있는 기간은 며칠인가요?"}
                     """))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.answer").value(
                 org.hamcrest.Matchers.containsStringIgnoringCase("30")

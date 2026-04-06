@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -38,6 +39,7 @@ class ObservabilityTest {
     @DisplayName("Actuator health 엔드포인트가 200을 반환한다")
     void actuatorHealthReturns200() throws Exception {
         mockMvc.perform(get("/actuator/health"))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").exists());
     }
@@ -46,6 +48,7 @@ class ObservabilityTest {
     @DisplayName("Actuator health에 커스텀 헬스 인디케이터가 포함된다")
     void actuatorHealthIncludesCustomIndicators() throws Exception {
         mockMvc.perform(get("/actuator/health"))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.components.openAi").exists())
             .andExpect(jsonPath("$.components.vectorStore").exists());
@@ -55,6 +58,7 @@ class ObservabilityTest {
     @DisplayName("Actuator metrics 엔드포인트가 사용 가능한 메트릭 목록을 반환한다")
     void actuatorMetricsListsMetrics() throws Exception {
         mockMvc.perform(get("/actuator/metrics"))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.names").isArray());
     }
@@ -64,18 +68,22 @@ class ObservabilityTest {
     void customRagMetricsAreRegistered() throws Exception {
         // 커스텀 메트릭이 레지스트리에 존재하는지 검증
         mockMvc.perform(get("/actuator/metrics/rag.search.latency"))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("rag.search.latency"));
 
         mockMvc.perform(get("/actuator/metrics/rag.llm.token.usage"))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("rag.llm.token.usage"));
 
         mockMvc.perform(get("/actuator/metrics/rag.hallucination.detected"))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("rag.hallucination.detected"));
 
         mockMvc.perform(get("/actuator/metrics/rag.answer.quality.score"))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("rag.answer.quality.score"));
     }
