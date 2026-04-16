@@ -1,4 +1,4 @@
-package com.jaeyeonling.week01;
+package com.jaeyeonling.stage1;
 
 /**
  * FAQ 챗봇의 REST API.

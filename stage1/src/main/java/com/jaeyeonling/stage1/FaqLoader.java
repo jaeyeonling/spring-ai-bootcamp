@@ -1,4 +1,4 @@
-package com.jaeyeonling.week01;
+package com.jaeyeonling.stage1;
 
 import org.springframework.stereotype.Component;
 
@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * FAQ 문서를 로드하고 청크로 분할합니다.
@@ -19,17 +20,31 @@ import java.util.List;
 public class FaqLoader {
 
     /**
-     * FAQ 파일을 읽어 전체 내용을 반환합니다.
+     * 디렉토리 내 모든 .md 파일을 읽어 하나의 문서로 합칩니다.
      */
-    public String loadDocument(String filePath) {
+    public String loadDirectory(String dirPath) {
+        Path dir = Path.of(dirPath);
+        if (!Files.isDirectory(dir)) {
+            throw new IllegalArgumentException("디렉토리를 찾을 수 없습니다: " + dirPath);
+        }
+
+        try (Stream<Path> paths = Files.list(dir)) {
+            return paths
+                    .filter(p -> p.toString().endsWith(".md"))
+                    .sorted()
+                    .map(this::readFile)
+                    .reduce((a, b) -> a + "\n\n" + b)
+                    .orElseThrow(() -> new IllegalStateException("디렉토리에 .md 파일이 없습니다: " + dirPath));
+        } catch (IOException e) {
+            throw new RuntimeException("디렉토리 읽기 실패: " + dirPath, e);
+        }
+    }
+
+    private String readFile(Path path) {
         try {
-            Path path = Path.of(filePath);
-            if (!Files.exists(path)) {
-                throw new IllegalArgumentException("FAQ 파일을 찾을 수 없습니다: " + filePath);
-            }
             return Files.readString(path);
         } catch (IOException e) {
-            throw new RuntimeException("FAQ 파일 읽기 실패: " + filePath, e);
+            throw new RuntimeException("파일 읽기 실패: " + path, e);
         }
     }
 

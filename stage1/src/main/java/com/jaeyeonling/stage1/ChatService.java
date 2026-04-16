@@ -1,4 +1,4 @@
-package com.jaeyeonling.week01;
+package com.jaeyeonling.stage1;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +30,8 @@ public class ChatService {
     private final InMemoryVectorStore vectorStore;
     private final FaqLoader faqLoader;
 
-    @Value("${faq.file-path}")
-    private String faqFilePath;
+    @Value("${faq.data-dir}")
+    private String faqDataDir;
 
     // 검색할 청크 수 — 적을수록 토큰 절감, 많을수록 정확도 향상
     private static final int TOP_K = 3;
@@ -54,8 +54,8 @@ public class ChatService {
         if (vectorStore.size() == 0) {
             log.info("=== 벡터 스토어 초기화 시작 ===");
 
-            String document = faqLoader.loadDocument(faqFilePath);
-            log.info("[로드] FAQ 파일: {}, 문서 길이: {} 글자", faqFilePath, document.length());
+            String document = faqLoader.loadDirectory(faqDataDir);
+            log.info("[로드] FAQ 디렉토리: {}, 문서 길이: {} 글자", faqDataDir, document.length());
 
             List<String> chunks = faqLoader.splitIntoChunks(document);
             log.info("[청킹] {} 개의 청크로 분할", chunks.size());
@@ -100,7 +100,7 @@ public class ChatService {
                 당신은 초록 코퍼레이션의 고객지원 도우미입니다.
                 아래 FAQ 내용만을 기반으로 질문에 답하세요.
                 FAQ에 없는 내용은 "해당 내용은 FAQ에서 찾을 수 없습니다"라고 답하세요.
-                
+
                 FAQ 내용:
                 """ + context;
 

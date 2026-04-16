@@ -1,4 +1,4 @@
-package com.jaeyeonling.week01;
+package com.jaeyeonling.stage1;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

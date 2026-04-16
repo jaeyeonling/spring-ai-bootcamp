@@ -2,7 +2,7 @@ logging.level.com.jaeyeonling: DEBUG
 
 spring:
   application:
-    name: week01-faq-chatbot
+    name: stage1-faq-chatbot
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
@@ -14,6 +14,6 @@ spring:
         options:
           model: text-embedding-3-small
 
-# FAQ 문서 경로
+# 데이터 경로
 faq:
-  file-path: ../data/faq.md
+  data-dir: ../data/layer1_faq

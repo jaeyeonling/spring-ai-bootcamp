@@ -1,4 +1,4 @@
-package com.jaeyeonling.week01;
+package com.jaeyeonling.stage1;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,10 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Week 01 미션의 인수 테스트.
+ * Stage 1 미션의 인수 테스트.
  *
  * 이 테스트들은 "완료"가 어떤 모습인지를 정의합니다.
- * 실행: ./gradlew :week01:test
+ * 실행: ./gradlew :stage1:test
  *
  * 참고: 이 테스트들은 실제 OpenAI API를 호출합니다.
  * 환경변수에 OPENAI_API_KEY가 설정되어 있어야 합니다.
@@ -67,9 +67,6 @@ class ChatControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.answer").isNotEmpty())
-            // 답변이 사소하지 않아야 합니다 (20자 이상)
-            // LLM 출력이 달라지므로 특정 문구를 하드코딩하지 않습니다.
-            // week02의 RelevancyEvaluator 테스트에서 더 깊은 의미 검사를 합니다.
             .andExpect(jsonPath("$.answer").isString());
     }
 

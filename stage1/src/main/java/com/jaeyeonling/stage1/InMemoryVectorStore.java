@@ -1,4 +1,4 @@
-package com.jaeyeonling.week01;
+package com.jaeyeonling.stage1;
 
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.stereotype.Component;
