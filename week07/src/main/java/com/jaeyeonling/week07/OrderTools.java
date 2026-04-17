@@ -59,10 +59,6 @@ public class OrderTools {
 
         log.info("툴 호출됨: getOrderStatus(orderId={})", orderId);
 
-        // TODO: 모의 데이터를 실제 주문 서비스 API 호출로 교체하세요.
-        //  실제 운영에서는 이런 형태:
-        //    return orderServiceClient.getStatus(orderId);
-
         OrderStatus status = MOCK_ORDERS.get(orderId);
         if (status == null) {
             return new OrderStatus(orderId, "찾을 수 없음",
@@ -85,10 +81,6 @@ public class OrderTools {
             @ToolParam(description = "월 번호 (1-12), 예: 1월은 1") int month) {
 
         log.info("툴 호출됨: getMonthlyRevenue(year={}, month={})", year, month);
-
-        // TODO: 모의 데이터를 실제 분석 API 호출로 교체하세요.
-        //  실제 운영에서는:
-        //    return analyticsClient.getMonthlyRevenue(year, month);
 
         String key = "%d-%02d".formatted(year, month);
         BigDecimal revenue = MOCK_REVENUE.getOrDefault(key, BigDecimal.ZERO);

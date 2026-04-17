@@ -28,15 +28,6 @@ public class BaselineRetrieval implements RetrievalStrategy {
 
     @Override
     public List<Document> retrieve(String query, int topK) {
-        // TODO: 벡터 저장소를 사용해 단순 유사도 검색을 수행하세요.
-        //
-        // 단계:
-        // 1. 쿼리와 topK로 SearchRequest 구성
-        // 2. vectorStore.similaritySearch(...) 호출
-        // 3. 결과 반환
-        //
-        // 힌트: SearchRequest.builder().query(query).topK(topK).build()
-
         return vectorStore.similaritySearch(
                 SearchRequest.builder().query(query).topK(topK).build());
     }

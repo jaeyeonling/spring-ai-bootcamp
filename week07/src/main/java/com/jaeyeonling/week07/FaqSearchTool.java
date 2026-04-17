@@ -46,24 +46,6 @@ public class FaqSearchTool {
 
         log.info("툴 호출됨: searchFaq(query={})", query);
 
-        // TODO: VectorStore를 사용해 유사도 검색을 수행하세요.
-        //  상위 K개의 가장 관련 있는 문서 청크를 하나의 문자열로 반환하세요.
-        //
-        //  구현 예시:
-        //    List<Document> results = vectorStore.similaritySearch(
-        //        SearchRequest.builder()
-        //            .query(query)
-        //            .topK(3)
-        //            .build());
-        //
-        //    if (results.isEmpty()) {
-        //        return "검색에서 관련 FAQ 항목을 찾을 수 없습니다: " + query;
-        //    }
-        //
-        //    return results.stream()
-        //        .map(Document::getText)
-        //        .collect(Collectors.joining("\n\n---\n\n"));
-
         var results = vectorStore.similaritySearch(
                 SearchRequest.builder()
                         .query(query)

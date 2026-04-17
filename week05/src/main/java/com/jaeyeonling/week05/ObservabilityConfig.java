@@ -27,10 +27,6 @@ public class ObservabilityConfig {
     @Value("${spring.ai.vectorstore.qdrant.port:6334}")
     private int qdrantPort;
 
-    // TODO: ObservationRegistry는 Spring Boot가 자동 설정합니다.
-    //       Micrometer Tracing이 observation을 자동으로 OTel 스팬으로 브릿징합니다.
-    //       기본 설정에는 수동 빈 정의가 필요하지 않습니다.
-
     /**
      * 벡터 저장소(Qdrant)를 위한 커스텀 헬스 인디케이터.
      * Qdrant에 연결 가능하면 UP을 보고하고, 그렇지 않으면 DOWN을 보고합니다.
@@ -60,16 +56,6 @@ public class ObservabilityConfig {
     @Bean("openAiHealthIndicator")
     public HealthIndicator openAiHealth() {
         return () -> {
-            // TODO: OpenAI API 연결을 확인하세요.
-            //
-            // 옵션:
-            // 1. 가벼운 API 호출 수행 (예: 모델 목록 조회)
-            // 2. API 키 환경변수가 설정되어 있는지 확인
-            // 3. 최소한의 임베딩 호출 시도
-            //
-            // 비용에 주의하세요 — 헬스 체크에서 비싼 호출을 하지 마세요.
-            // 단순한 "API 키가 설정되어 있나요?" 확인으로 충분한 경우가 많습니다.
-
             String apiKey = System.getenv("OPENAI_API_KEY");
             if (apiKey != null && !apiKey.isBlank()) {
                 return Health.up()
