@@ -54,7 +54,6 @@ class OrchestratorTest {
     @Test
     @DisplayName("CodeReviewAgent가 코드 리뷰 결과를 생성한다")
     void codeReviewAgent_producesOutput() {
-        // TODO: CodeReviewAgent가 샘플 diff에 대해 비어있지 않은 출력을 생성하는지 검증
         String result = codeReviewAgent.execute(SAMPLE_PR_DIFF, "");
         assertThat(result).isNotBlank();
         // 리뷰에 최소 하나의 이슈가 언급되어야 함 (예: orElse(null), 검증 누락)
@@ -64,7 +63,6 @@ class OrchestratorTest {
     @Test
     @DisplayName("TestWriterAgent가 테스트 제안을 생성한다")
     void testWriterAgent_producesOutput() {
-        // TODO: TestWriterAgent가 비어있지 않은 출력을 생성하는지 검증
         String result = testWriterAgent.execute(SAMPLE_PR_DIFF, "");
         assertThat(result).isNotBlank();
         // 테스트 제안에 테스트 관련 용어가 포함되어야 함
@@ -74,7 +72,6 @@ class OrchestratorTest {
     @Test
     @DisplayName("DocWriterAgent가 문서화 제안을 생성한다")
     void docWriterAgent_producesOutput() {
-        // TODO: DocWriterAgent가 비어있지 않은 출력을 생성하는지 검증
         String result = docWriterAgent.execute(SAMPLE_PR_DIFF, "");
         assertThat(result).isNotBlank();
         // 문서 제안에 문서 관련 용어가 포함되어야 함
@@ -84,7 +81,6 @@ class OrchestratorTest {
     @Test
     @DisplayName("오케스트레이터가 에이전트 출력을 결합한 리포트를 생성한다")
     void orchestrator_combinesAgentOutputs() {
-        // TODO: 오케스트레이터가 세 에이전트의 출력을 포함하는 결합된 리포트를 생성하는지 검증
         String report = orchestratorService.review(SAMPLE_PR_DIFF);
 
         assertThat(report).isNotBlank();

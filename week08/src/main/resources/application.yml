@@ -7,7 +7,7 @@ spring:
       chat:
         options:
           model: gpt-4o-mini
-          temperature: 0.2
+          temperature: 0.1
 
 # 워크플로우 설정
 workflow:

@@ -33,7 +33,7 @@ logging:
   pattern:
     console:
   file:
-    name: /tmp/week09-mcp-server.log
+    name: ${LOG_FILE:build/week09-mcp-server.log}
 
 # FAQ 문서 경로
 faq:
