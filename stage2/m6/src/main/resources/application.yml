@@ -1,6 +1,6 @@
 spring:
   application:
-    name: week08-multi-agent
+    name: stage2-m6-multi-agent
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}

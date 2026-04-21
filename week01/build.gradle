@@ -1,9 +1,0 @@
-// Week 01: FAQ chatbot — pure embedding search, no framework RAG
-// jar.enabled = true is needed so that week02 can depend on this module's classes
-bootJar.enabled = true
-jar.enabled = true
-
-dependencies {
-    implementation project(':shared')
-    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
-}

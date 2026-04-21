@@ -4,28 +4,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Week 10 — 운영 AI 서비스.
+ * M7 — 인프라 (Docker Compose 멀티 서비스 오케스트레이션).
  *
- * Week 01~09의 모든 기능을 통합한 최종 프로젝트:
- * - 하이브리드 RAG (FaqReranker: QueryTransform + LLM ReRanker + 벡터 검색)
- * - 툴 호출 (@Tool: 주문 조회, FAQ 검색)
- * - MCP 서버 (HTTP 모드, /mcp/message) — Spring AI MCP 자동설정이 ToolCallbackProvider 빈을 스캔하여 등록
- * - OpenTelemetry 트레이싱 (Micrometer → OTel 자동 브릿지)
- * - Actuator (health, metrics, prometheus)
- * - 평가 파이프라인 (RelevancyEvaluator + FactCheckingEvaluator)
+ * 학습 목표:
+ * - Docker Compose 멀티 서비스 구성 및 의존성 관리
+ * - Spring Boot 프로파일 분리 (dev/prod)
+ * - 서비스 헬스체크와 depends_on 전략
+ * - ETL 데이터 영속화 (재시작 시 재적재 방지)
+ * - 환경 변수 관리 (.env)
  *
- * 컴포넌트 빈은 각 클래스에 @Service/@Component/@Configuration으로 정의됩니다:
- * - FaqIngestionService  — 시작 시 FAQ 문서 적재
- * - FaqSearchTool        — FAQ 벡터 검색 툴 (@Tool, VectorStore만 의존 — 순환 의존성 방지)
- * - FaqReranker          — QueryTransform + LLM ReRanker 파이프라인 (ChatClient 의존)
- * - OrderTools           — 주문 조회 툴
- * - ToolConfig           — ToolCallbackProvider (ChatClient + MCP 서버 공용)
- * - FaqOrchestratorService — 복합 질문용 멀티 에이전트 오케스트레이터 (Week 08)
- * - ChatService          — LLM 호출 + 라우팅 + 토큰 추적
- * - ChatController       — REST API (/api/chat)
- * - EvaluationService    — 배치 평가 파이프라인
- * - MetricsService       — 커스텀 Micrometer 메트릭
- * - ObservabilityConfig  — 헬스 인디케이터
+ * 실행: docker compose up --build
  */
 @SpringBootApplication
 public class Stage2M7Application {

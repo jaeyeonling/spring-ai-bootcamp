@@ -1,6 +1,6 @@
 spring:
   application:
-    name: week06-local-models
+    name: stage2-m5-local-models
   ai:
     model:
       chat: openai
@@ -18,7 +18,7 @@ spring:
       qdrant:
         host: localhost
         port: 6334
-        collection-name: week06-faq
+        collection-name: stage2-m5-faq
         initialize-schema: true
 
 server:

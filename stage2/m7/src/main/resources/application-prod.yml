@@ -1,0 +1,17 @@
+# Prod 프로파일 — Docker Compose 환경
+# 활성화: SPRING_PROFILES_ACTIVE=prod (docker-compose.yml에서 설정)
+
+spring:
+  ai:
+    vectorstore:
+      qdrant:
+        # Docker 네트워크 내 서비스명으로 접근
+        host: qdrant
+        port: 6334
+        initialize-schema: false
+
+# 로깅: INFO 레벨 (운영 환경)
+logging:
+  level:
+    com.jaeyeonling: INFO
+    org.springframework.ai: WARN

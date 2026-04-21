@@ -8,21 +8,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
- * 운영 FAQ 챗봇 REST 컨트롤러.
+ * Docker 환경에서 앱이 정상 동작하는지 확인하기 위한 간단한 채팅 API.
  *
- * MISSION.md 요구사항에 따라 answer, sources, tokenUsage를 반환합니다:
- * {
- *   "answer": "30일 이내에 반품이 가능합니다...",
- *   "sources": ["chunk-id-1", "chunk-id-2"],
- *   "tokenUsage": {
- *     "promptTokens": 150,
- *     "completionTokens": 80,
- *     "totalTokens": 230
- *   }
- * }
+ * 이 컨트롤러는 인프라 검증용입니다:
+ * - 앱 컨테이너가 OpenAI에 연결 가능한지
+ * - 환경 변수가 올바르게 주입되었는지
  */
 @RestController
 @RequestMapping("/api")
@@ -36,35 +27,24 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    /**
-     * FAQ 질문 및 주문 조회 질문을 처리하는 통합 엔드포인트.
-     * LLM이 자동으로 적절한 툴(FAQ 검색 또는 주문 조회)을 선택합니다.
-     */
     @PostMapping("/chat")
     public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
+        log.info("[요청] POST /api/chat — question: \"{}\"", request.question());
+
         if (request.question() == null || request.question().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
 
-        log.info("chat 요청: {}", request.question());
-        ChatService.ChatResult result = chatService.chat(request.question());
-
-        ChatResponse response = new ChatResponse(
-                result.answer(),
-                result.sources(),
-                result.tokenUsage()
-        );
-
-        return ResponseEntity.ok(response);
+        try {
+            String answer = chatService.ask(request.question());
+            return ResponseEntity.ok(new ChatResponse(answer));
+        } catch (Exception e) {
+            log.error("[에러] 채팅 처리 실패: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
-
-    // --- 요청/응답 레코드 ---
 
     public record ChatRequest(String question) {}
 
-    public record ChatResponse(
-            String answer,
-            List<String> sources,
-            ChatService.TokenUsage tokenUsage
-    ) {}
+    public record ChatResponse(String answer) {}
 }

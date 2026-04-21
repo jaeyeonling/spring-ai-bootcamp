@@ -20,10 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * 사용법:
  *   1. 먼저 QueryControllerTest를 실행 (ingest + query)
- *      ./gradlew :week03:test --tests "*.QueryControllerTest"
+ *      ./gradlew :stage2:m1:test --tests "*.QueryControllerTest"
  *
  *   2. 그 다음 이 테스트만 실행 (query만 — 새로운 Spring Context)
- *      ./gradlew :week03:test --tests "*.PersistenceTest"
+ *      ./gradlew :stage2:m1:test --tests "*.PersistenceTest"
  *
  *   인메모리였다면 2번에서 실패한다 — 데이터가 없으니까.
  *   Qdrant라면 2번도 통과한다 — Docker 볼륨에 데이터가 살아있으니까.

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 앱 시작 시 FAQ 문서를 Qdrant(week05-docs)에 적재하는 ETL 파이프라인.
+ * 앱 시작 시 FAQ 문서를 Qdrant(stage2-m3-docs)에 적재하는 ETL 파이프라인.
  * 이미 데이터가 있으면 재적재하지 않는다 (idempotent).
  */
 @Component

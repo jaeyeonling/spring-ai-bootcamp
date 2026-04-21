@@ -23,7 +23,7 @@ import java.util.Map;
  * Spring AI 1.1.x부터는 org.springframework.ai.rag 패키지의
  * RewriteQueryTransformer, MultiQueryExpander를 직접 사용할 수 있습니다.
  * 이 구현은 ChatClient를 직접 호출해 동일한 효과를 냅니다.
- * week04/hints/HINT_02.md에서 두 방식을 모두 참고하세요.
+ * stage2/m2/hints/HINT_02.md에서 두 방식을 모두 참고하세요.
  */
 @Component
 @Profile("query-transform")

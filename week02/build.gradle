@@ -1,6 +1,0 @@
-// Week 02: Chunking strategies, prompt engineering, evaluation
-dependencies {
-    implementation project(':shared')
-    implementation project(':week01')
-    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
-}

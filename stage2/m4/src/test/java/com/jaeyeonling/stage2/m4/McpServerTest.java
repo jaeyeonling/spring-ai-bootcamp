@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @Tool 메서드는 Spring 빈의 일반 Java 메서드이므로
  * MCP 프로토콜 레이어 없이 직접 호출하여 검증합니다.
  *
- * 실행: ./gradlew :week09:test
+ * 실행: ./gradlew :stage2:m4:test
  *
  * 참고: OPENAI_API_KEY와 실행 중인 Qdrant 인스턴스가 필요합니다.
  */

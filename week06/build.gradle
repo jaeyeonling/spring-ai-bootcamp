@@ -1,7 +1,0 @@
-// Week 06: Cost optimization — Ollama local models, deployment
-dependencies {
-    implementation project(':shared')
-    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
-    implementation 'org.springframework.ai:spring-ai-starter-model-ollama'
-    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
-}

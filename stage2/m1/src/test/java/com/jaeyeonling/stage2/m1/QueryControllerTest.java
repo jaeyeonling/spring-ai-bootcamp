@@ -18,10 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Week 03 미션의 통합 테스트.
+ * M1 벡터 DB & ETL 미션의 통합 테스트.
  *
  * 이 테스트들은 "완료"가 어떤 모습인지를 정의합니다.
- * 실행: ./gradlew :week03:test
+ * 실행: ./gradlew :stage2:m1:test
  *
  * 사전 조건:
  *   - Qdrant가 실행 중이어야 합니다 (docker-compose up -d qdrant)

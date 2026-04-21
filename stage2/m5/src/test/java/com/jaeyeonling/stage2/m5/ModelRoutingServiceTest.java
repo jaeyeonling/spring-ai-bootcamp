@@ -12,10 +12,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Week 06 테스트 — 모델 라우팅과 프로파일 기반 공급자 전환.
  *
  * 기본 프로파일(OpenAI)로 실행:
- *   ./gradlew :week06:test
+ *   ./gradlew :stage2:m5:test
  *
  * Ollama 프로파일로 실행:
- *   ./gradlew :week06:test --args='--spring.profiles.active=ollama'
+ *   ./gradlew :stage2:m5:test --args='--spring.profiles.active=ollama'
  *
  * 참고: 이 테스트들은 OPENAI_API_KEY 또는 실행 중인 Ollama 인스턴스가 필요합니다.
  */

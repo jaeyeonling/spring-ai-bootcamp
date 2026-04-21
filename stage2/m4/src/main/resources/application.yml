@@ -1,6 +1,6 @@
 spring:
   application:
-    name: week09-mcp-server
+    name: stage2-m4-mcp-server
   # MCP STDIO 모드: 배너와 콘솔 로그를 반드시 꺼야 합니다.
   # stdout은 JSON-RPC 전용이어야 하므로 콘솔 패턴을 비우고 로그는 파일로 출력합니다.
   main:
@@ -20,11 +20,11 @@ spring:
       qdrant:
         host: localhost
         port: 6334
-        collection-name: week09-faq
+        collection-name: stage2-m4-faq
         initialize-schema: true
     mcp:
       server:
-        name: week09-ai-tools
+        name: stage2-m4-ai-tools
         version: 1.0.0
         stdio: true
 
@@ -33,7 +33,7 @@ logging:
   pattern:
     console:
   file:
-    name: /tmp/week09-mcp-server.log
+    name: /tmp/stage2-m4-mcp-server.log
 
 # FAQ 문서 경로
 faq:

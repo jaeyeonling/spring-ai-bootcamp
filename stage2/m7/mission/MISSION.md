@@ -1,120 +1,100 @@
-# M7 미션: 프로덕션 통합
+# M7 미션: 인프라
 
-## 이 모듈의 위치
+## Stage 1에서 겪은 벽
 
-Stage 1부터 지금까지 만든 것들을 **하나의 운영 가능한 서비스**로 통합합니다.
+벽 리포트에 이런 내용이 있을 것입니다:
 
-이 모듈에는 새로운 알고리즘이나 개념이 없습니다.
-대신 "실제로 배포하면 어떤 일이 생기는가"를 경험합니다.
+> "로컬에서는 되는데, 다른 환경에서 실행하려면 설정을 하나하나 알려줘야 한다."
+> "Qdrant를 먼저 띄우고, API 키 넣고, 포트 맞추고... 실행까지 5단계."
+> "서버 재시작할 때마다 ETL을 다시 돌려야 하나?"
+
+이 벽을 해결합니다.
 
 ---
 
 ## 미션
 
-선택한 모듈들을 Docker Compose로 통합하고,
-Stage 1에서 측정한 정확도보다 유의미하게 향상됐음을 수치로 보여주세요.
+Stage 1 챗봇(또는 다른 모듈에서 만든 서비스)을 **한 줄로 실행 가능한 상태**로 만드세요.
+
+"내 노트북에서 돌아간다"에서 "누구의 노트북에서든 돌아간다"로 바꾸는 것이 목표입니다.
 
 ### 완료 기준
 
 ```
-[ ] Docker Compose로 전체 스택 단일 명령 실행
-[ ] Stage 1 vs 현재 정확도 비교 (수치로)
-[ ] 운영 체크리스트 완료 확인
-[ ] README에 배포 방법 문서화
+[ ] `docker compose up` 한 줄로 전체 서비스가 실행된다
+[ ] 개발/프로덕션 환경 설정이 분리되어 있다 (dev/prod 프로파일)
+[ ] 서비스 의존성 순서가 보장된다 (healthcheck + depends_on)
+[ ] ETL 데이터가 영속되고, 재시작 시 불필요한 재적재를 하지 않는다
+[ ] 환경변수로만 민감 정보를 주입한다 (.env 파일, 코드에 하드코딩 없음)
+[ ] README에 실행 방법이 3단계 이내로 문서화되어 있다
 ```
 
 ---
 
-## Docker Compose 통합
+## 설계 포인트
 
-```yaml
-# docker-compose.yml
-services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - SPRING_PROFILES_ACTIVE=prod
-    depends_on:
-      qdrant:
-        condition: service_healthy
+### 컨테이너화
 
-  qdrant:
-    image: qdrant/qdrant:v1.13.6
-    ports:
-      - "6333:6333"
-    volumes:
-      - qdrant_data:/qdrant/storage
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
-      interval: 10s
+Spring AI 앱의 컨테이너화에는 일반 웹 앱과 다른 고려사항이 있습니다:
 
-  # M5 선택 시
-  ollama:
-    image: ollama/ollama:latest
-    volumes:
-      - ollama_data:/root/.ollama
+| 일반 웹 앱 | AI 서비스 |
+|-----------|----------|
+| DB 하나에 의존 | 벡터 DB + LLM API + (선택) 로컬 모델 서비스 |
+| 스키마 마이그레이션 | 임베딩 데이터 초기 적재 (ETL) |
+| 환경변수 몇 개 | 모델명, API 키, 벡터 컬렉션명, 포트 다수 |
+| 시작 시간 수 초 | ETL 포함 시 수 분 |
 
-volumes:
-  qdrant_data:
-  ollama_data:
+### 서비스 의존성 관리
+
+서비스 시작 순서가 중요합니다:
+
+```
+1. Qdrant 시작 → healthcheck 통과
+2. (선택) Ollama 시작 → 모델 pull 완료
+3. Spring Boot 앱 시작 → Qdrant 연결 확인 → (필요시) ETL 실행
+```
+
+`depends_on`만으로는 부족합니다 — `condition: service_healthy`와 healthcheck를 조합해야 합니다.
+
+### ETL 초기화 전략
+
+매 시작마다 수 분씩 ETL을 돌리면 개발이 고통스럽습니다:
+
+- **최초 1회**: 벡터 DB가 비어있으면 ETL 실행
+- **재시작**: 데이터가 존재하면 건너뜀
+- **강제 재적재**: 환경변수 플래그로 트리거
+
+이 판단 로직을 어떻게 구현할 것인가가 핵심입니다.
+
+### 프로파일 분리
+
+```
+application.yml          # 공통 (포트, 앱 이름)
+application-dev.yml      # 로컬 개발 (localhost, DEBUG 로그, 스키마 자동 생성)
+application-prod.yml     # Docker 환경 (서비스명 호스트, INFO 로그, 스키마 생성 비활성화)
+```
+
+Docker 내부에서 `localhost`는 컨테이너 자신을 가리킵니다.
+서비스 간 통신은 Docker Compose의 서비스 이름을 호스트로 사용해야 합니다.
+
+### 환경변수 관리
+
+```bash
+# .env (절대 커밋 금지)
+OPENAI_API_KEY=sk-...
+
+# .env.example (커밋용 템플릿)
+OPENAI_API_KEY=your-api-key-here
 ```
 
 ---
 
-## 운영 체크리스트
+## 핵심 질문
 
-배포 전 반드시 확인하세요:
-
-### 보안
-```
-[ ] API 키가 환경변수로 관리됨 (코드에 하드코딩 없음)
-[ ] /actuator 엔드포인트가 외부에 노출되지 않음
-[ ] 입력값 검증: 빈 질문, 너무 긴 질문 처리
-```
-
-### 안정성
-```
-[ ] OpenAI API 오류 시 폴백 처리
-[ ] Qdrant 연결 실패 시 동작 (graceful degradation)
-[ ] 타임아웃 설정 (LLM 호출 최대 30초)
-```
-
-### 관측성
-```
-[ ] /actuator/health 응답 확인
-[ ] 로그에 요청/응답 추적 가능
-[ ] 비용 추적 활성화 (M3/M5 연동)
-```
-
-### 성능
-```
-[ ] ETL 적재가 서버 시작 시간에 포함되지 않음
-[ ] 응답 시간 p95 < 5초 (스트리밍 제외)
-[ ] 동시 요청 10개 처리 가능
-```
-
----
-
-## Stage 1 vs 현재 비교
-
-```
-Stage 1:
-- 정확도: ?% (벽 리포트에서 측정한 수치)
-- 요청당 비용: ?원
-- 평균 응답 시간: ?ms
-
-현재:
-- 정확도: ?% (Stage 1 대비 향상 목표)
-- 요청당 비용: ?원
-- 평균 응답 시간: ?ms
-
-개선폭: 정확도 +?%p, 비용 ?% 절감, 응답 시간 ?% 변화
-```
-
-이 비교가 커리큘럼 전체의 성과 요약입니다.
+- Spring Boot 앱 이미지의 적정 크기는? JRE 베이스 이미지 선택은?
+- Qdrant 볼륨을 어떻게 관리할 것인가? 로컬 볼륨 vs named 볼륨?
+- 로컬 모델(Ollama)을 사용한다면 모델 다운로드는 언제 하는가?
+- Actuator 엔드포인트를 외부에 노출해도 안전한가?
 
 ---
 
@@ -122,5 +102,5 @@ Stage 1:
 
 | 힌트 | 이럴 때 열어보세요 |
 |------|-------------------|
-| `HINT_01.md` | Docker Compose 멀티 서비스 설정이 막힐 때 |
-| `HINT_02.md` | Spring Boot 프로덕션 프로파일 설정이 막힐 때 |
+| `HINT_01.md` | Docker Compose 멀티 서비스 설정과 healthcheck가 막힐 때 |
+| `HINT_02.md` | Spring Boot dev/prod 프로파일 분리가 막힐 때 |

@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * 관찰 가능성 설정 테스트.
  *
  * Actuator, Micrometer 메트릭, 트레이싱이 올바르게 설정되었는지 검증합니다.
- * 실행: ./gradlew :week05:test
+ * 실행: ./gradlew :stage2:m3:test
  *
  * 참고: 일부 테스트는 실행 중인 Qdrant 인스턴스와 OPENAI_API_KEY가 필요합니다.
  */

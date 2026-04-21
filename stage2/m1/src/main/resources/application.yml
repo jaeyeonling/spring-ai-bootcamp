@@ -1,6 +1,6 @@
 spring:
   application:
-    name: week03-vector-db
+    name: stage2-m1-vector-db
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
@@ -15,7 +15,7 @@ spring:
       qdrant:
         host: localhost
         port: 6334
-        collection-name: week03-faq
+        collection-name: stage2-m1-faq
         initialize-schema: true
 
   servlet:

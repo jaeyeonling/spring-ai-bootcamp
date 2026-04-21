@@ -1,6 +1,5 @@
 // M5: 비용 최적화 (Ollama 로컬 모델, 모델 라우팅)
 // 벽: "API 비용이 너무 많이 나온다"
-// 소스: week06
 dependencies {
     implementation project(':shared')
     implementation 'org.springframework.ai:spring-ai-starter-model-openai'

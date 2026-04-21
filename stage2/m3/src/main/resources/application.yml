@@ -1,6 +1,6 @@
 spring:
   application:
-    name: week05-observability
+    name: stage2-m3-observability
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
@@ -20,7 +20,7 @@ spring:
       qdrant:
         host: localhost
         port: 6334
-        collection-name: week05-docs
+        collection-name: stage2-m3-docs
         initialize-schema: true
 
 # -----------------------------------------------------------------------

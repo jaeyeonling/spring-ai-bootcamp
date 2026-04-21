@@ -1,6 +1,6 @@
 spring:
   application:
-    name: week04-advanced-rag
+    name: stage2-m2-advanced-rag
   profiles:
     active: baseline  # 변경 가능: baseline, reranker, query-transform, combined
   ai:
@@ -17,7 +17,7 @@ spring:
       qdrant:
         host: localhost
         port: 6334
-        collection-name: week04-docs
+        collection-name: stage2-m2-docs
         initialize-schema: true
 
 # 검색 설정

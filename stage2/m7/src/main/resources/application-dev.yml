@@ -1,0 +1,16 @@
+# Dev 프로파일 — 로컬 개발 환경
+# 활성화: SPRING_PROFILES_ACTIVE=dev 또는 --spring.profiles.active=dev
+
+spring:
+  ai:
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+        initialize-schema: true
+
+# 로깅: DEBUG 레벨로 상세 출력
+logging:
+  level:
+    com.jaeyeonling: DEBUG
+    org.springframework.ai: DEBUG

@@ -1,0 +1,72 @@
+# M7 — Docker Compose 멀티 서비스 오케스트레이션
+#
+# 실행: docker compose up --build
+# 종료: docker compose down
+# 볼륨 포함 삭제: docker compose down -v
+#
+# 학습 포인트:
+# - depends_on + healthcheck로 서비스 시작 순서 제어
+# - 볼륨으로 데이터 영속화 (재시작해도 Qdrant 데이터 유지)
+# - .env 파일로 환경 변수 관리
+# - profiles로 선택적 서비스 실행
+
+services:
+  # === Spring Boot 앱 ===
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - QDRANT_HOST=qdrant
+      - QDRANT_GRPC_PORT=6334
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # === Qdrant 벡터 DB ===
+  qdrant:
+    image: qdrant/qdrant:v1.12.5
+    ports:
+      - "6333:6333"   # REST API
+      - "6334:6334"   # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:6333/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  # TODO: Ollama 서비스 추가 (Docker Compose profiles 사용)
+  # 힌트:
+  # - profiles: ["ollama"] 로 선택적 실행
+  # - docker compose --profile ollama up 으로 활성화
+  # - GPU 사용 시 deploy.resources.reservations.devices 설정 필요
+  #
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   profiles: ["ollama"]
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+volumes:
+  qdrant_data:
+  # ollama_data:
