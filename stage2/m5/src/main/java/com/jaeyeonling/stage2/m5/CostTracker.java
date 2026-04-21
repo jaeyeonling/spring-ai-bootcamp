@@ -25,7 +25,7 @@ public class CostTracker {
     /**
      * 모델별 토큰 사용량과 비용을 기록합니다.
      *
-     * @param model            사용된 모델명 (예: "gpt-4o-mini", "ollama/llama3.2")
+     * @param model            사용된 모델명 (예: "gpt-4.1-nano", "ollama/llama3.2")
      * @param promptTokens     프롬프트 토큰 수
      * @param completionTokens 완성 토큰 수
      */

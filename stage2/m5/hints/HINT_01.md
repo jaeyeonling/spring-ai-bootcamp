@@ -8,11 +8,13 @@
 @Component
 public class CostTracker {
 
-    // OpenAI 가격 (2024년 기준, 달러)
+    // OpenAI 가격 (per 1M tokens, USD)
+    // 최신 가격은 https://openai.com/api/pricing 에서 확인하세요
     private static final Map<String, double[]> TOKEN_COST = Map.of(
-        "gpt-4.1",      new double[]{2.00, 8.00},    // [입력, 출력] per 1M tokens
-        "gpt-4o-mini", new double[]{0.10, 0.40},
-        "gpt-4.1-mini", new double[]{0.40, 1.60}
+        "gpt-4.1",      new double[]{2.00, 8.00},    // [입력, 출력]
+        "gpt-4.1-mini", new double[]{0.40, 1.60},
+        "gpt-4.1-nano", new double[]{0.10, 0.40},
+        "gpt-4o-mini",  new double[]{0.15, 0.60}     // 비교용 (이전 기본 모델)
     );
 
     private final MeterRegistry registry;
@@ -39,7 +41,7 @@ public class CostTracker {
 Stage 1에서 테스트 100개를 돌렸을 때:
 
 ```
-gpt-4o-mini 기준:
+gpt-4.1-nano 기준 (이 프로젝트 기본 모델):
 - 평균 프롬프트 토큰: 1,500 (컨텍스트 + 질문)
 - 평균 완성 토큰: 200
 - 요청당 비용: (1500 × $0.10 + 200 × $0.40) / 1,000,000 = $0.000230
@@ -48,6 +50,7 @@ gpt-4o-mini 기준:
 - 월간: ~$7
 
 gpt-4.1 사용 시:
+- 요청당 비용: (1500 × $2.00 + 200 × $8.00) / 1,000,000 = $0.004600
 - 월간: ~$140 (20배 차이)
 ```
 

@@ -38,6 +38,15 @@ public class Application {
 
 ## STDIO 트랜스포트 실행
 
+> **주의**: STDIO 모드에서는 stdout으로 로그가 출력되면 MCP 프로토콜이 깨집니다.
+> 반드시 로그를 파일로 리다이렉트하세요:
+> ```yaml
+> # application.yml
+> logging:
+>   file:
+>     name: /tmp/cholog-mcp.log
+> ```
+
 ```bash
 # MCP 서버를 STDIO 모드로 실행
 java -jar app.jar --spring.ai.mcp.server.transport=STDIO
@@ -125,8 +134,4 @@ STDIO 모드에서 흔한 문제:
 
 문제: Tool이 목록에 안 나옴
 확인: @EnableMcpServer가 @SpringBootApplication과 같은 클래스에 있는지 확인
-
-문제: stdout에 로그가 섞임 (STDIO 오염)
-해결: 로그를 stderr 또는 파일로 리다이렉트
-  logging.file.name: /tmp/cholog-mcp.log
 ```

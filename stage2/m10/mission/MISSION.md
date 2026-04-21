@@ -130,3 +130,4 @@ public class StructuredChatService {
 |------|-------------------|
 | `HINT_01.md` | BeanOutputConverter, entity() 사용법이 막힐 때 |
 | `HINT_02.md` | 파싱 실패 재시도 및 폴백 전략이 막힐 때 |
+| `HINT_03.md` | 구조화 vs 자유 텍스트 성능 비교와 실패율 측정이 막힐 때 |

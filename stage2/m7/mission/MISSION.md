@@ -104,3 +104,4 @@ OPENAI_API_KEY=your-api-key-here
 |------|-------------------|
 | `HINT_01.md` | Docker Compose 멀티 서비스 설정과 healthcheck가 막힐 때 |
 | `HINT_02.md` | Spring Boot dev/prod 프로파일 분리가 막힐 때 |
+| `HINT_03.md` | Profile 활성화와 배포 검증이 막힐 때 |

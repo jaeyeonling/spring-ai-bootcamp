@@ -25,7 +25,7 @@ class CostOptimizationTest {
         @DisplayName("토큰 사용량을 기록하고 모델별 총 토큰을 조회할 수 있다")
         void recordsTokenUsagePerModel() {
             // Arrange
-            String model = "gpt-4o-mini";
+            String model = "gpt-4.1-nano";
             int promptTokens = 100;
             int completionTokens = 50;
 
@@ -40,7 +40,7 @@ class CostOptimizationTest {
         @DisplayName("동일 모델에 여러 번 기록하면 토큰이 누적된다")
         void accumulatesTokensForSameModel() {
             // Arrange
-            String model = "gpt-4o-mini";
+            String model = "gpt-4.1-nano";
 
             // Act
             costTracker.record(model, 100, 50);
@@ -54,21 +54,21 @@ class CostOptimizationTest {
         @DisplayName("모델별 비용을 계산한다")
         void calculatesCostPerModel() {
             // Arrange & Act
-            costTracker.record("gpt-4o-mini", 1000, 500);
+            costTracker.record("gpt-4.1-nano", 1000, 500);
 
             // Assert — 비용이 0보다 크면 단가 기반 계산이 동작하는 것
-            assertThat(costTracker.getTotalCost("gpt-4o-mini")).isGreaterThan(0.0);
+            assertThat(costTracker.getTotalCost("gpt-4.1-nano")).isGreaterThan(0.0);
         }
 
         @Test
         @DisplayName("서로 다른 모델의 비용을 독립적으로 추적한다")
         void tracksDifferentModelsIndependently() {
             // Arrange & Act
-            costTracker.record("gpt-4o-mini", 1000, 500);
+            costTracker.record("gpt-4.1-nano", 1000, 500);
             costTracker.record("ollama/llama3.2", 1000, 500);
 
             // Assert
-            assertThat(costTracker.getTotalTokens("gpt-4o-mini")).isEqualTo(1500);
+            assertThat(costTracker.getTotalTokens("gpt-4.1-nano")).isEqualTo(1500);
             assertThat(costTracker.getTotalTokens("ollama/llama3.2")).isEqualTo(1500);
             // 로컬 모델은 비용이 0이어야 함
             assertThat(costTracker.getTotalCost("ollama/llama3.2")).isEqualTo(0.0);
@@ -78,8 +78,8 @@ class CostOptimizationTest {
         @DisplayName("전체 비용 합계를 조회할 수 있다")
         void calculatesOverallCost() {
             // Arrange & Act
-            costTracker.record("gpt-4o-mini", 1000, 500);
-            costTracker.record("gpt-4o-mini", 2000, 1000);
+            costTracker.record("gpt-4.1-nano", 1000, 500);
+            costTracker.record("gpt-4.1-nano", 2000, 1000);
 
             // Assert
             assertThat(costTracker.getOverallCost()).isGreaterThan(0.0);
@@ -89,7 +89,7 @@ class CostOptimizationTest {
         @DisplayName("모든 사용 기록을 리스트로 반환한다")
         void returnsAllRecords() {
             // Arrange & Act
-            costTracker.record("gpt-4o-mini", 100, 50);
+            costTracker.record("gpt-4.1-nano", 100, 50);
             costTracker.record("ollama/llama3.2", 200, 100);
 
             // Assert
@@ -100,12 +100,12 @@ class CostOptimizationTest {
         @DisplayName("모델별 비용 요약을 맵으로 반환한다")
         void returnsCostSummaryByModel() {
             // Arrange & Act
-            costTracker.record("gpt-4o-mini", 1000, 500);
+            costTracker.record("gpt-4.1-nano", 1000, 500);
             costTracker.record("ollama/llama3.2", 1000, 500);
 
             // Assert
             var summary = costTracker.getCostSummaryByModel();
-            assertThat(summary).containsKey("gpt-4o-mini");
+            assertThat(summary).containsKey("gpt-4.1-nano");
             assertThat(summary).containsKey("ollama/llama3.2");
         }
 

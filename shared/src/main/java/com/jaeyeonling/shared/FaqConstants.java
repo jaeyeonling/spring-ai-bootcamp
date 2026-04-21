@@ -31,7 +31,7 @@ public final class FaqConstants {
     // ── LLM 기본값 ──────────────────────────────────────────────────
 
     /** 기본 채팅 모델. */
-    public static final String DEFAULT_CHAT_MODEL = "gpt-4o-mini";
+    public static final String DEFAULT_CHAT_MODEL = "gpt-4.1-nano";
 
     /** 기본 임베딩 모델. */
     public static final String DEFAULT_EMBEDDING_MODEL = "text-embedding-3-small";
@@ -41,11 +41,11 @@ public final class FaqConstants {
 
     // ── 토큰 비용 추정 (1M 토큰당 USD) ─────────────────────
 
-    /** GPT-4o-mini 백만 토큰당 입력 비용. */
-    public static final double GPT4O_MINI_INPUT_COST = 0.15;
+    /** GPT-4.1-nano 백만 토큰당 입력 비용. */
+    public static final double DEFAULT_INPUT_COST = 0.10;
 
-    /** GPT-4o-mini 백만 토큰당 출력 비용. */
-    public static final double GPT4O_MINI_OUTPUT_COST = 0.60;
+    /** GPT-4.1-nano 백만 토큰당 출력 비용. */
+    public static final double DEFAULT_OUTPUT_COST = 0.40;
 
     /**
      * 단일 LLM 호출의 예상 비용을 계산합니다.
@@ -55,7 +55,7 @@ public final class FaqConstants {
      * @return USD 예상 비용
      */
     public static double estimateCost(long inputTokens, long outputTokens) {
-        return (inputTokens * GPT4O_MINI_INPUT_COST / 1_000_000.0)
-             + (outputTokens * GPT4O_MINI_OUTPUT_COST / 1_000_000.0);
+        return (inputTokens * DEFAULT_INPUT_COST / 1_000_000.0)
+             + (outputTokens * DEFAULT_OUTPUT_COST / 1_000_000.0);
     }
 }
