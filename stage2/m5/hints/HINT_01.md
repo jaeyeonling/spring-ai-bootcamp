@@ -13,8 +13,7 @@ public class CostTracker {
     private static final Map<String, double[]> TOKEN_COST = Map.of(
         "gpt-4.1",      new double[]{2.00, 8.00},    // [입력, 출력]
         "gpt-4.1-mini", new double[]{0.40, 1.60},
-        "gpt-4.1-nano", new double[]{0.10, 0.40},
-        "gpt-4o-mini",  new double[]{0.15, 0.60}     // 비교용 (이전 기본 모델)
+        "gpt-4.1-nano", new double[]{0.10, 0.40}
     );
 
     private final MeterRegistry registry;
