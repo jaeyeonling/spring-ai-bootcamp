@@ -35,6 +35,6 @@ logging:
   file:
     name: /tmp/stage2-m4-mcp-server.log
 
-# FAQ 문서 경로
+# FAQ 문서 경로 (프로젝트 루트 기준: data/legacy/faq.md)
 faq:
-  file-path: ../data/faq.md
+  file-path: ../../data/legacy/faq.md

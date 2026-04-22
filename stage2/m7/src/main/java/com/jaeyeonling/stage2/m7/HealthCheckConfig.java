@@ -26,10 +26,15 @@ public class HealthCheckConfig {
      * - Qdrant REST API (GET /collections)를 호출하여 응답 확인
      * - 또는 VectorStore에 간단한 쿼리를 날려 연결 확인
      * - 정상이면 Health.up().build(), 실패하면 Health.down().withException(e).build()
+     *
+     * 현재는 기본 구현(UNKNOWN)으로 앱이 기동됩니다.
+     * 실제 Qdrant 연결 확인 로직으로 교체하세요.
      */
     @Bean
     public HealthIndicator qdrantHealthIndicator() {
-        // TODO: 구현하세요
-        throw new UnsupportedOperationException("구현하세요");
+        // TODO: 실제 Qdrant 연결 확인 로직으로 교체하세요
+        return () -> Health.unknown()
+                .withDetail("reason", "미구현 — Qdrant 연결 확인 로직을 구현하세요")
+                .build();
     }
 }

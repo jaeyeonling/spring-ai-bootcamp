@@ -1,9 +1,9 @@
 package com.jaeyeonling.shared;
 
 /**
- * 모든 주차 모듈에서 공유하는 상수 모음.
+ * 모든 Stage 모듈에서 공유하는 상수 모음.
  *
- * 매주 코드에서 참조하는 공통 값들을 중복과 불일치를 피하기 위해
+ * 각 모듈에서 참조하는 공통 값들을 중복과 불일치를 피하기 위해
  * 여기에 중앙 집중화했습니다.
  */
 public final class FaqConstants {
@@ -14,11 +14,14 @@ public final class FaqConstants {
 
     // ── 파일 경로 ─────────────────────────────────────────────────────
 
-    /** 각 주차 프로젝트 루트를 기준으로 FAQ 문서의 기본 경로. */
-    public static final String DEFAULT_FAQ_PATH = "../data/faq.md";
+    /** stage1 모듈 기준 FAQ 디렉토리 경로. */
+    public static final String DEFAULT_FAQ_DIR = "../data/layer1_faq";
 
-    /** 테스트 질문 파일의 기본 경로. */
-    public static final String DEFAULT_TEST_QUESTIONS_PATH = "../data/test_questions.json";
+    /** stage2 모듈 기준 FAQ 단일 파일 경로. */
+    public static final String DEFAULT_FAQ_PATH = "../../data/legacy/faq.md";
+
+    /** stage2 모듈 기준 테스트 질문 파일 경로. */
+    public static final String DEFAULT_TEST_QUESTIONS_PATH = "../../data/test_questions.json";
 
     // ── 벡터 저장소 ───────────────────────────────────────────────────
 

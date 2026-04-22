@@ -14,6 +14,8 @@ spring:
     chat:
       client:
         observations:
+          # ⚠️ 보안 주의: 트레이스에 프롬프트/응답 전문이 포함됩니다.
+          # 운영 환경에서는 민감 정보 노출 위험이 있으므로 false로 설정하세요.
           include-input: true     # observation/트레이스에 프롬프트 내용 포함
           include-output: true    # observation/트레이스에 완성 내용 포함
     vectorstore:
@@ -33,6 +35,8 @@ management:
         include: health, metrics, prometheus, info
   endpoint:
     health:
+      # ⚠️ 보안 주의: 운영 환경에서는 when-authorized 또는 never로 변경하고
+      # Spring Security를 추가하여 인프라 정보 노출을 방지하세요.
       show-details: always      # 상세 헬스 정보 표시 (벡터 저장소, OpenAI)
     metrics:
       enabled: true
@@ -41,7 +45,7 @@ management:
   # -----------------------------------------------------------------------
   tracing:
     sampling:
-      probability: 1.0           # 요청 100% 샘플링 (개발/디버깅용)
+      probability: 1.0           # 요청 100% 샘플링 (개발용 — 운영 환경에서는 0.01~0.1 권장)
   otlp:
     tracing:
       endpoint: http://localhost:4318/v1/traces
@@ -52,11 +56,11 @@ management:
         step: 30s                # 30초마다 메트릭 내보내기
 
 # -----------------------------------------------------------------------
-# 데이터 경로
+# 데이터 경로 (프로젝트 루트 기준: data/legacy/faq.md)
 # -----------------------------------------------------------------------
 data:
-  file-path: ../data/faq.md
-  test-questions-path: ../data/test_questions.json
+  file-path: ../../data/legacy/faq.md
+  test-questions-path: ../../data/test_questions.json
 
 # -----------------------------------------------------------------------
 # 평가 설정

@@ -14,8 +14,8 @@ services:
   # === Spring Boot 앱 ===
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..          # 프로젝트 루트 (Gradle Wrapper, shared 모듈 접근 필요)
+      dockerfile: stage2/m7/Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -34,8 +34,11 @@ services:
       start_period: 30s
 
   # === Qdrant 벡터 DB ===
+  # ⚠️ 보안 주의: Qdrant는 기본적으로 인증이 없습니다.
+  # 운영 환경에서는 127.0.0.1 바인딩 또는 API 키 설정을 추가하세요.
+  # https://qdrant.tech/documentation/guides/security/
   qdrant:
-    image: qdrant/qdrant:v1.12.5
+    image: qdrant/qdrant:v1.13.6
     ports:
       - "6333:6333"   # REST API
       - "6334:6334"   # gRPC

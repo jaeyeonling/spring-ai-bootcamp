@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,6 +42,9 @@ public class OrchestratorService {
             - 이슈를 심각도순으로 정렬하세요 (critical > warning > info)
             - 가장 중요한 발견사항을 최상단 요약에 배치하세요
             - 코드 리뷰, 테스트 제안, 문서 업데이트 섹션을 명확하게 구분하세요""";
+
+    // LLM 호출은 블로킹이므로 공유 ForkJoinPool 대신 전용 스레드풀 사용
+    private final ExecutorService agentExecutor = Executors.newFixedThreadPool(3);
 
     private final ChatClient chatClient;
     private final CodeReviewAgent codeReviewAgent;
@@ -106,11 +111,11 @@ public class OrchestratorService {
         log.info("[Orchestrator] 2단계: 에이전트 병렬 실행");
         try {
             CompletableFuture<String> reviewFuture = CompletableFuture.supplyAsync(() ->
-                    codeReviewAgent.execute(prDiff, plan));
+                    codeReviewAgent.execute(prDiff, plan), agentExecutor);
             CompletableFuture<String> testFuture = CompletableFuture.supplyAsync(() ->
-                    testWriterAgent.execute(prDiff, plan));
+                    testWriterAgent.execute(prDiff, plan), agentExecutor);
             CompletableFuture<String> docFuture = CompletableFuture.supplyAsync(() ->
-                    docWriterAgent.execute(prDiff, plan));
+                    docWriterAgent.execute(prDiff, plan), agentExecutor);
 
             String review = reviewFuture.get(timeoutSeconds, TimeUnit.SECONDS);
             String tests = testFuture.get(timeoutSeconds, TimeUnit.SECONDS);

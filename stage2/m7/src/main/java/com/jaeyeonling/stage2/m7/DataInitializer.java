@@ -44,10 +44,14 @@ public class DataInitializer {
      * 힌트:
      * - VectorStore를 주입받아 similaritySearch로 빈 컬렉션 여부를 판단하거나
      * - Qdrant REST API (GET /collections/{name}/points/count)를 직접 호출
+     *
+     * 현재는 false를 반환하여 적재를 건너뜁니다.
+     * 실제 구현으로 교체하세요.
      */
     private boolean isVectorStoreEmpty() {
-        // TODO: 구현하세요
-        throw new UnsupportedOperationException("구현하세요");
+        // TODO: 실제 Qdrant 컬렉션 확인 로직으로 교체하세요
+        log.warn("[ETL] isVectorStoreEmpty() 미구현 — 기본값 false (적재 건너뜀)");
+        return false;
     }
 
     /**
@@ -57,9 +61,11 @@ public class DataInitializer {
      * - TikaDocumentReader 또는 TextReader로 문서 읽기
      * - TokenTextSplitter로 청크 분할
      * - VectorStore.add()로 적재
+     *
+     * 현재는 no-op입니다. 실제 ETL 로직으로 교체하세요.
      */
     private void ingestData() {
-        // TODO: 구현하세요
-        throw new UnsupportedOperationException("구현하세요");
+        // TODO: 실제 ETL 로직으로 교체하세요
+        log.warn("[ETL] ingestData() 미구현 — ETL 로직을 구현하세요");
     }
 }

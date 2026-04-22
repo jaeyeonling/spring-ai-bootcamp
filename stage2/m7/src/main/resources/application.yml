@@ -32,6 +32,7 @@ management:
         include: health,info,metrics
   endpoint:
     health:
+      # ⚠️ 보안 주의: 운영 환경에서는 when-authorized로 변경하고 Spring Security를 추가하세요.
       show-details: always
 
 # 서버 설정

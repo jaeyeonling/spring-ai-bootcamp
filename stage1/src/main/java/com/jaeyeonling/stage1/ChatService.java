@@ -36,6 +36,9 @@ public class ChatService {
     // 검색할 청크 수 — 적을수록 토큰 절감, 많을수록 정확도 향상
     private static final int TOP_K = 3;
 
+    // 초기화 완료 후에는 잠금 없이 통과하기 위한 플래그
+    private volatile boolean initialized = false;
+
     public ChatService(ChatClient.Builder chatClientBuilder,
                        EmbeddingModel embeddingModel,
                        InMemoryVectorStore vectorStore,
@@ -47,11 +50,17 @@ public class ChatService {
     }
 
     /**
-     * 앱 시작 시 FAQ를 로드하고 벡터 스토어를 초기화합니다.
-     * @PostConstruct 대신 첫 요청 시 lazy 초기화로 처리.
+     * 첫 요청 시 FAQ를 로드하고 벡터 스토어를 초기화합니다.
+     * Double-checked locking: 초기화 완료 후에는 volatile 읽기만으로 통과합니다.
      */
-    private synchronized void ensureInitialized() {
-        if (vectorStore.size() == 0) {
+    private void ensureInitialized() {
+        if (initialized) {
+            return;
+        }
+        synchronized (this) {
+            if (initialized) {
+                return;
+            }
             log.info("=== 벡터 스토어 초기화 시작 ===");
 
             String document = faqLoader.loadDirectory(faqDataDir);
@@ -66,6 +75,8 @@ public class ChatService {
             vectorStore.addAll(chunks, embeddingModel);
             log.info("[임베딩] {} 개의 청크를 벡터로 변환하여 저장 완료", chunks.size());
             log.info("=== 벡터 스토어 초기화 완료 ===");
+
+            initialized = true;
         }
     }
 
@@ -96,6 +107,9 @@ public class ChatService {
         String context = String.join("\n\n---\n\n", relevantChunks);
 
         // 2단계: 검색된 컨텍스트로 프롬프트 구성 → LLM 호출 (RAG의 G)
+        // ⚠️ 보안 주의: FAQ 데이터가 시스템 프롬프트에 직접 삽입됩니다.
+        // 운영 환경에서는 데이터 소스를 신뢰할 수 있는지 검증하거나,
+        // 프롬프트 인젝션 방어 (입력 검증, 출력 필터링)를 추가하세요.
         String systemPrompt = """
                 당신은 초록 코퍼레이션의 고객지원 도우미입니다.
                 아래 FAQ 내용만을 기반으로 질문에 답하세요.

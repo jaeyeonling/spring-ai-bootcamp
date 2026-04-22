@@ -60,6 +60,8 @@ cp .env.example .env
 
 > **팁**: `./gradlew :stage1:bootRun`으로 애플리케이션을 실행하면 `http://localhost:8080`에서 챗봇을 테스트할 수 있습니다.
 
+> **주의**: `.env` 파일의 환경변수는 `./gradlew test`에만 자동 주입됩니다. `bootRun`이나 IDE에서 직접 실행할 때는 환경변수를 별도로 설정하세요 (OS 환경변수, IntelliJ Run Configuration 등).
+
 ## 커리큘럼 구조
 
 ### Stage 1: 고객지원 챗봇 만들기

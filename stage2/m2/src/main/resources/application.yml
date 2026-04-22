@@ -27,7 +27,7 @@ retrieval:
   query-transform:
     number-of-queries: 3       # MultiQueryExpander가 생성할 확장 쿼리 수
 
-# 데이터 경로
+# 데이터 경로 (프로젝트 루트 기준: data/legacy/faq.md)
 data:
-  file-path: ../data/faq.md
-  test-questions-path: ../data/test_questions.json
+  file-path: ../../data/legacy/faq.md
+  test-questions-path: ../../data/test_questions.json

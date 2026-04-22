@@ -94,8 +94,10 @@ public class MetricsService {
         long total = promptTokens + completionTokens;
         tokenUsageCounter.increment(total);
 
-        double cost = (promptTokens * 0.15 / 1_000_000.0)
-                    + (completionTokens * 0.60 / 1_000_000.0);
+        // gpt-4.1-nano 기준 비용 (1M 토큰당 USD)
+        // 다른 모델 사용 시 model 파라미터를 활용하여 단가를 분기하세요
+        double cost = (promptTokens * com.jaeyeonling.shared.FaqConstants.DEFAULT_INPUT_COST / 1_000_000.0)
+                    + (completionTokens * com.jaeyeonling.shared.FaqConstants.DEFAULT_OUTPUT_COST / 1_000_000.0);
         tokenCostCounter.increment(cost);
     }
 

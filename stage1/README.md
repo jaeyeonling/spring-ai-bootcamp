@@ -48,7 +48,7 @@ curl -X POST http://localhost:8080/api/chat \
 ./gradlew :stage1:test --tests "com.jaeyeonling.stage1.FaqLoaderTest"
 ./gradlew :stage1:test --tests "com.jaeyeonling.stage1.InMemoryVectorStoreTest"
 
-# 통합 테스트 (API 키 필요)
+# 통합 테스트 (API 키 필요 — ChatControllerTest 포함)
 ./gradlew :stage1:test
 ```
 
@@ -65,7 +65,7 @@ cd data
 python -m venv .venv
 .venv/bin/pip install openai qdrant-client python-dotenv
 
-# 평가 실행
+# 평가 실행 (judge 모델 gpt-4o-mini 사용, 100문항 기준 약 $0.5~1 추가 비용)
 .venv/bin/python evaluate_rag.py
 ```
 

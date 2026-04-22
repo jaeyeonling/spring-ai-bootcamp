@@ -5,6 +5,8 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SessionManager {
 
+    private static final Logger log = LoggerFactory.getLogger(SessionManager.class);
     private static final Duration SESSION_TIMEOUT = Duration.ofMinutes(30);
 
     private final ChatMemory chatMemory;
@@ -28,38 +31,40 @@ public class SessionManager {
     /**
      * 세션 접근 시간을 갱신합니다.
      *
-     * TODO: 구현하세요
-     * - 현재 시간을 lastAccessTimes에 기록합니다.
-     *
      * @param sessionId 세션 식별자
      */
     public void touch(String sessionId) {
-        throw new UnsupportedOperationException("구현하세요");
+        lastAccessTimes.put(sessionId, Instant.now());
     }
 
     /**
      * 세션이 만료되었는지 확인합니다.
      *
-     * TODO: 구현하세요
-     * - 마지막 접근 시간으로부터 SESSION_TIMEOUT이 경과했는지 판단합니다.
-     * - 기록이 없는 세션은 만료된 것으로 간주합니다.
-     *
      * @param sessionId 세션 식별자
      * @return 만료 여부
      */
     public boolean isExpired(String sessionId) {
-        throw new UnsupportedOperationException("구현하세요");
+        Instant lastAccess = lastAccessTimes.get(sessionId);
+        if (lastAccess == null) {
+            return true;
+        }
+        return Duration.between(lastAccess, Instant.now()).compareTo(SESSION_TIMEOUT) > 0;
     }
 
     /**
      * 만료된 세션들을 정리합니다.
      *
-     * TODO: 구현하세요
-     * - lastAccessTimes에서 만료된 세션을 찾습니다.
-     * - ChatMemory에서 해당 세션의 대화 기록을 삭제합니다.
-     * - lastAccessTimes에서도 제거합니다.
+     * TODO: 주기적 실행을 위해 @Scheduled 어노테이션 추가를 고려하세요.
      */
     public void cleanupExpiredSessions() {
-        throw new UnsupportedOperationException("구현하세요");
+        lastAccessTimes.entrySet().removeIf(entry -> {
+            boolean expired = Duration.between(entry.getValue(), Instant.now())
+                    .compareTo(SESSION_TIMEOUT) > 0;
+            if (expired) {
+                chatMemory.clear(entry.getKey());
+                log.info("[Session] 만료된 세션 정리: {}", entry.getKey());
+            }
+            return expired;
+        });
     }
 }
