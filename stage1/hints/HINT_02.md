@@ -1,82 +1,50 @@
-# 힌트 02: 포맷 혼재 — 데이터 읽기가 생각보다 복잡하다
+# 힌트 02: 토큰 한계 — 데이터를 전부 넣을 수 없다
 
-데이터가 세 가지 포맷으로 나뉘어 있습니다.
+LLM을 호출할 수 있게 됐습니다.
+이제 FAQ 데이터를 프롬프트에 넣어서 답변하게 하려 합니다.
 
-## Layer 1: Markdown (`.md`)
+## 증상
 
-```markdown
-## Orders & Order Management
+- 데이터를 전부 프롬프트에 넣었더니 비용이 폭발한다
+- 혹은 넣을 수는 있는데, 관련 없는 내용이 섞여서 답변이 엉뚱하다
+- 매 요청마다 수만 토큰을 보내고 있다
 
-### How do I cancel an order?
+## 왜 이런 일이 생기는가
 
-You can cancel an order within 2 hours of placing it...
-```
+LLM에는 **컨텍스트 창**이 있고, 넣는 만큼 **비용이 발생**합니다.
 
-`Files.readString()`으로 읽히지만, 어디서 자를 것인가?
-- 파일 단위? → 너무 큼
-- 문단 단위? → Q&A가 분리됨
-- `###` 기준? → Q&A 단위로 자를 수 있음
+| 모델 | 컨텍스트 창 | 100만 토큰 입력 비용 |
+|------|------------|---------------------|
+| gpt-4.1-nano | 1M 토큰 | $0.10 |
+| gpt-4.1 | 1M 토큰 | $2.00 |
 
-## Layer 2: Markdown + YAML Frontmatter (`.md`)
+물리적으로 들어가더라도, 매 요청마다 전체 데이터를 보내면:
+- **비용 폭발** — 하루 수만 원
+- **품질 저하** — 관련 없는 문서가 섞이면 LLM이 혼란
 
-```markdown
----
-title: Return & Refund Policy
-version: v3
-status: current
-effective_date: 2024-04-01
-supersedes: return-policy-v2.md
----
+"반품 기간" 질문에 상담 로그 3,000건이 필요할까요?
 
-# Return & Refund Policy v3
-...
-```
+## 핵심 통찰
 
-Frontmatter(`---` 사이)에 메타데이터가 있습니다.
-`deprecated/` 폴더에는 구버전 정책도 있습니다 — v1, v2가 현행 v3와 다른 내용을 담고 있습니다.
-어떤 버전을 우선해야 할까요?
+매번 **전체**를 보낼 필요가 없습니다.
+질문과 **관련 있는 일부**만 찾아서 보내면 됩니다.
 
-## Layer 3: JSONL (`.jsonl`)
+문제는: 어떻게 자동으로 관련 문서를 찾느냐?
 
-한 줄 = 한 대화:
+키워드 매칭은 동작하지 않습니다:
+- "걍 환불해주세요 ㅠㅠ" → "refund" 키워드 없음
+- "배송 언제 와요?" → "delivery period" 키워드 없음
 
-```json
-{"conversation_id":"CHAT-2024-08-001","turns":[{"role":"customer","text":"어제 주문했는데 배송 언제 와요?"},{"role":"agent","text":"주문번호 알려주시면 확인해드릴게요."}],"primary_intent":"delivery_period","resolution":"resolved"}
-```
+**의미**로 찾아야 합니다.
 
-Jackson으로 파싱:
+## 다음에 조사해볼 것
 
-```java
-ObjectMapper mapper = new ObjectMapper();
-List<ChatLog> logs = Files.lines(Path.of("2024-01.jsonl"))
-    .map(line -> mapper.readValue(line, ChatLog.class))
-    .toList();
-```
+- "text embedding" — 텍스트를 숫자 벡터로 변환하는 것
+- "cosine similarity" — 두 벡터가 얼마나 비슷한지 측정
+- "semantic search" — 의미 기반 검색
+- Spring AI의 `EmbeddingModel` — 텍스트를 벡터로 변환하는 API
 
-그런데 상담 로그에서 무엇을 추출할 것인가?
-- 전체 대화? → 노이즈가 많음
-- 고객 질문만? → 문맥이 없음
-- agent 답변만? → 정확하지 않을 수 있음 (상담사 실수 포함)
+## 벽 리포트에 기록
 
-## 현실적인 접근
-
-지금은 완벽한 파싱보다 **동작하는 것**이 먼저입니다.
-
-Layer 1부터 시작하세요. FAQ 문서가 "정답의 앵커"입니다.
-Layer 2, 3는 나중에 추가해도 됩니다.
-
-다만 파싱하면서 발견한 문제 — 버전 충돌, 노이즈, 포맷 불일치 —
-이것들을 **벽 리포트에 기록**하세요. 이게 M1의 학습 내용이 됩니다.
-
-## Spring AI DocumentReader
-
-Spring AI에는 문서 읽기를 도와주는 클래스가 있습니다:
-
-```java
-// 마크다운 읽기
-Resource resource = new FileSystemResource("layer1_faq/orders.md");
-TextReader reader = new TextReader(resource);
-List<Document> docs = reader.get();
-```
-
-다만 청킹(분할)은 직접 해야 합니다.
+어떤 방식으로든 동작하게 만들고, 한계를 기록하세요.
+검색이 완벽하지 않아도 괜찮습니다 — 그 불완전함이 다음 단계의 출발점입니다.

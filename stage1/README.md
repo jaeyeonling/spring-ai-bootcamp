@@ -1,56 +1,38 @@
 # Stage 1: 고객지원 챗봇 만들기
 
-## 사전 조건
+Spring AI를 활용해 FAQ 챗봇을 직접 만들어보는 실습 과정입니다.
 
-- Java 17+
-- 환경변수 `OPENAI_API_KEY` 설정 (`.env` 파일 또는 shell export)
+커리큘럼 소개는 [SYLLABUS.md](SYLLABUS.md)를, 진행 방법은 [GUIDE.md](GUIDE.md)를 참고하세요.
 
-```bash
-# .env 파일 사용 시 (프로젝트 루트)
-cp .env.example .env
-# .env 파일을 열어 OPENAI_API_KEY=sk-... 입력
-```
+---
 
-## 실행
+## 필요한 것
+
+| 항목 | 비고 |
+|------|------|
+| Java 17+ | `java -version`으로 확인 |
+| OpenAI API 키 | [platform.openai.com](https://platform.openai.com)에서 발급 |
+| IDE | IntelliJ IDEA 권장 (VS Code + Java Extension Pack도 가능) |
+
+- Spring Boot로 REST API를 만들어 본 경험이 있으면 됩니다
+- AI/ML 사전 지식은 **불필요**합니다
+- API 비용은 전체 완료해도 **$1-5 이내**입니다 (GPT-4.1-nano)
+
+---
+
+## 빠른 시작
 
 ```bash
 # 프로젝트 루트에서
+cp .env.example .env   # OpenAI API 키 입력
 ./gradlew :stage1:bootRun
 ```
 
 서버가 `http://localhost:8080`에서 시작됩니다.
 
-## API 테스트
+그 다음 [mission/MISSION.md](mission/MISSION.md)를 여세요. 거기서부터 시작입니다.
 
-```bash
-curl -X POST http://localhost:8080/api/chat \
-  -H "Content-Type: application/json" \
-  -d '{"question": "반품은 어떻게 하나요?"}'
-```
-
-응답 예시:
-
-```json
-{
-  "answer": "...",
-  "tokenUsage": {
-    "promptTokens": 1234,
-    "completionTokens": 56,
-    "totalTokens": 1290
-  }
-}
-```
-
-## 테스트 실행
-
-```bash
-# 단위 테스트 (API 키 불필요)
-./gradlew :stage1:test --tests "com.jaeyeonling.stage1.FaqLoaderTest"
-./gradlew :stage1:test --tests "com.jaeyeonling.stage1.InMemoryVectorStoreTest"
-
-# 통합 테스트 (API 키 필요 — ChatControllerTest 포함)
-./gradlew :stage1:test
-```
+---
 
 ## 평가
 
@@ -69,29 +51,42 @@ python -m venv .venv
 .venv/bin/python evaluate_rag.py
 ```
 
-## 미션
-
-자세한 미션 내용은 `mission/MISSION.md`를 참고하세요.
+---
 
 ## 프로젝트 구조
 
 ```
 stage1/
 ├── mission/
-│   ├── MISSION.md          # 미션 설명
-│   └── wall-report.md      # 벽 리포트 템플릿
+│   ├── MISSION.md              # 미션 설명 (여기서 시작)
+│   └── wall-report.md          # 벽 리포트 (마지막에 작성)
 ├── hints/
-│   ├── HINT_01.md ~ HINT_05.md
+│   ├── HINT_01.md ~ HINT_06.md # 막혔을 때 열어보세요
+├── data/
+│   ├── layer1_faq/             # 공식 FAQ 문서
+│   ├── layer2_policies/        # 사내 정책 문서
+│   ├── layer3_chatlogs/        # 고객 상담 로그
+│   └── test_questions.json     # 평가용 질문 100개
 ├── src/
-│   ├── main/java/.../stage1/
-│   │   ├── Stage1Application.java
-│   │   ├── ChatController.java
-│   │   ├── ChatService.java
-│   │   ├── FaqLoader.java
-│   │   └── InMemoryVectorStore.java
-│   └── test/java/.../stage1/
-│       ├── ChatControllerTest.java
-│       ├── FaqLoaderTest.java
-│       └── InMemoryVectorStoreTest.java
+│   └── main/java/com/jaeyeonling/stage1/
+│       └── Application.java    # 여기서부터 만드세요
+├── SYLLABUS.md                 # 커리큘럼 소개 ← 과정 전체 그림
+├── GUIDE.md                    # 진행 가이드 ← 미션 중 참고
 └── build.gradle
 ```
+
+---
+
+## 자주 묻는 질문
+
+**Q: API 키 없이 시작할 수 있나요?**
+
+코드 작성과 컴파일은 가능하지만, 실제 실행에는 OpenAI API 키가 필요합니다.
+
+**Q: FAQ 데이터가 영어인데 질문은 한국어로 해도 되나요?**
+
+네. GPT-4.1-nano는 교차 언어 이해가 가능합니다.
+
+**Q: 어떤 도구를 써도 되나요?**
+
+네. 구현 방법에 제약은 없습니다.
