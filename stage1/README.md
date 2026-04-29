@@ -1,6 +1,6 @@
 # Stage 1: 고객지원 챗봇 만들기
 
-Spring AI를 활용해 FAQ 챗봇을 직접 만들어보는 실습 과정입니다.
+Spring AI로 FAQ 챗봇을 직접 만드는 실습입니다.
 
 커리큘럼 소개는 [SYLLABUS.md](SYLLABUS.md)를, 진행 방법은 [GUIDE.md](GUIDE.md)를 참고하세요.
 
@@ -15,8 +15,8 @@ Spring AI를 활용해 FAQ 챗봇을 직접 만들어보는 실습 과정입니�
 | IDE | IntelliJ IDEA 권장 (VS Code + Java Extension Pack도 가능) |
 
 - Spring Boot로 REST API를 만들어 본 경험이 있으면 됩니다
-- AI/ML 사전 지식은 **불필요**합니다
-- API 비용은 전체 완료해도 **$1-5 이내**입니다 (GPT-4.1-nano)
+- AI/ML 사전 지식은 없어도 됩니다
+- 끝까지 해도 API 비용은 **$1-5** 안쪽입니다 (GPT-4.1-nano)
 
 ---
 
